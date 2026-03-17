@@ -1,0 +1,244 @@
+nohup: ignoring input
+Running concurrent N_s pipelines with nested halo workers: ns_jobs=8, halo_jobs=8, max_processes~64
+main_spatial finished for N_s=3.0. log=/tmp/gao2023_main_spatial_i7e5o9ub/ns3p0/main_spatial_ns3p0.log
+main_spatial finished for N_s=1.0. log=/tmp/gao2023_main_spatial_i7e5o9ub/ns1p0/main_spatial_ns1p0.log
+main_spatial finished for N_s=1.5. log=/tmp/gao2023_main_spatial_i7e5o9ub/ns1p5/main_spatial_ns1p5.log
+main_spatial finished for N_s=2.5. log=/tmp/gao2023_main_spatial_i7e5o9ub/ns2p5/main_spatial_ns2p5.log
+N_s=3p0: completed 1/248 halos
+main_spatial finished for N_s=2.0. log=/tmp/gao2023_main_spatial_i7e5o9ub/ns2p0/main_spatial_ns2p0.log
+main_spatial finished for N_s=0.5. log=/tmp/gao2023_main_spatial_i7e5o9ub/ns0p5/main_spatial_ns0p5.log
+main_spatial finished for N_s=4.0. log=/tmp/gao2023_main_spatial_i7e5o9ub/ns4p0/main_spatial_ns4p0.log
+main_spatial finished for N_s=3.5. log=/tmp/gao2023_main_spatial_i7e5o9ub/ns3p5/main_spatial_ns3p5.log
+N_s=1p0: completed 1/248 halos
+N_s=1p5: completed 1/248 halos
+N_s=0p5: completed 1/248 halos
+FIGURES_WRITTEN 10
+ figure                                                                                    path  observables
+      2         /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.02_mgc_mhalo_ratio.png         True
+      3      /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.03_number_density_all.png         True
+      6                /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.06_zhm_hist.png         True
+      7          /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.07_density_by_zhm.png         True
+      8 /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.08_mass_function_mw_insitu.png         True
+     10         /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.10_cum_mass_mw_m31.png         True
+     11         /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.11_cum_mass_by_zhm.png         True
+     16         /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.16_corr_zhm_panels.png         True
+     17       /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.17_m_init_vs_m_final.png         True
+     18         /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/Fig.18_corr_nsc_panels.png         True
+MANIFEST /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots/figure_manifest.csv
+N_s=4p0: completed 1/248 halos
+N_s=2p5: completed 1/248 halos
+N_s=2p0: completed 1/248 halos
+N_s=3p5: completed 1/248 halos
+N_s=3p0: completed 10/248 halos
+N_s=1p0: completed 10/248 halos
+N_s=1p5: completed 10/248 halos
+N_s=0p5: completed 10/248 halos
+N_s=4p0: completed 10/248 halos
+N_s=2p0: completed 10/248 halos
+N_s=3p5: completed 10/248 halos
+N_s=2p5: completed 10/248 halos
+N_s=3p0: completed 20/248 halos
+N_s=1p0: completed 20/248 halos
+N_s=1p5: completed 20/248 halos
+N_s=4p0: completed 20/248 halos
+N_s=0p5: completed 20/248 halos
+N_s=2p5: completed 20/248 halos
+N_s=3p5: completed 20/248 halos
+N_s=2p0: completed 20/248 halos
+N_s=3p0: completed 30/248 halos
+N_s=4p0: completed 30/248 halos
+N_s=1p5: completed 30/248 halos
+N_s=3p5: completed 30/248 halos
+N_s=0p5: completed 30/248 halos
+N_s=2p0: completed 30/248 halos
+N_s=2p5: completed 30/248 halos
+N_s=1p0: completed 30/248 halos
+N_s=3p0: completed 40/248 halos
+N_s=1p5: completed 40/248 halos
+N_s=0p5: completed 40/248 halos
+N_s=3p5: completed 40/248 halos
+N_s=4p0: completed 40/248 halos
+N_s=2p0: completed 40/248 halos
+N_s=1p0: completed 40/248 halos
+N_s=2p5: completed 40/248 halos
+N_s=3p0: completed 50/248 halos
+N_s=0p5: completed 50/248 halos
+N_s=1p0: completed 50/248 halos
+N_s=1p5: completed 50/248 halos
+N_s=2p0: completed 50/248 halos
+N_s=3p5: completed 50/248 halos
+N_s=4p0: completed 50/248 halos
+N_s=2p5: completed 50/248 halos
+N_s=3p0: completed 60/248 halos
+N_s=1p0: completed 60/248 halos
+N_s=0p5: completed 60/248 halos
+N_s=2p0: completed 60/248 halos
+N_s=3p5: completed 60/248 halos
+N_s=1p5: completed 60/248 halos
+N_s=4p0: completed 60/248 halos
+N_s=2p5: completed 60/248 halos
+N_s=3p0: completed 70/248 halos
+N_s=1p0: completed 70/248 halos
+N_s=0p5: completed 70/248 halos
+N_s=1p5: completed 70/248 halos
+N_s=2p0: completed 70/248 halos
+N_s=3p5: completed 70/248 halos
+N_s=4p0: completed 70/248 halos
+N_s=2p5: completed 70/248 halos
+N_s=3p0: completed 80/248 halos
+N_s=0p5: completed 80/248 halos
+N_s=1p0: completed 80/248 halos
+N_s=1p5: completed 80/248 halos
+N_s=2p0: completed 80/248 halos
+N_s=4p0: completed 80/248 halos
+N_s=3p5: completed 80/248 halos
+N_s=2p5: completed 80/248 halos
+N_s=3p0: completed 90/248 halos
+N_s=1p0: completed 90/248 halos
+N_s=0p5: completed 90/248 halos
+N_s=1p5: completed 90/248 halos
+N_s=2p0: completed 90/248 halos
+N_s=4p0: completed 90/248 halos
+N_s=3p5: completed 90/248 halos
+N_s=2p5: completed 90/248 halos
+N_s=0p5: completed 100/248 halos
+N_s=1p0: completed 100/248 halos
+N_s=3p0: completed 100/248 halos
+N_s=1p5: completed 100/248 halos
+N_s=4p0: completed 100/248 halos
+N_s=3p5: completed 100/248 halos
+N_s=2p0: completed 100/248 halos
+N_s=2p5: completed 100/248 halos
+N_s=0p5: completed 110/248 halos
+N_s=1p0: completed 110/248 halos
+N_s=2p5: completed 110/248 halos
+N_s=1p5: completed 110/248 halos
+N_s=2p0: completed 110/248 halos
+N_s=3p5: completed 110/248 halos
+N_s=3p0: completed 110/248 halos
+N_s=4p0: completed 110/248 halos
+N_s=0p5: completed 120/248 halos
+N_s=3p0: completed 120/248 halos
+N_s=1p0: completed 120/248 halos
+N_s=4p0: completed 120/248 halos
+N_s=1p5: completed 120/248 halos
+N_s=3p5: completed 120/248 halos
+N_s=2p0: completed 120/248 halos
+N_s=2p5: completed 120/248 halos
+N_s=0p5: completed 130/248 halos
+N_s=3p0: completed 130/248 halos
+N_s=1p0: completed 130/248 halos
+N_s=2p5: completed 130/248 halos
+N_s=1p5: completed 130/248 halos
+N_s=3p5: completed 130/248 halos
+N_s=2p0: completed 130/248 halos
+N_s=4p0: completed 130/248 halos
+N_s=0p5: completed 140/248 halos
+N_s=1p0: completed 140/248 halos
+N_s=1p5: completed 140/248 halos
+N_s=2p5: completed 140/248 halos
+N_s=4p0: completed 140/248 halos
+N_s=3p0: completed 140/248 halos
+N_s=3p5: completed 140/248 halos
+N_s=2p0: completed 140/248 halos
+N_s=0p5: completed 150/248 halos
+N_s=1p0: completed 150/248 halos
+N_s=1p5: completed 150/248 halos
+N_s=2p0: completed 150/248 halos
+N_s=4p0: completed 150/248 halos
+N_s=3p5: completed 150/248 halos
+N_s=2p5: completed 150/248 halos
+N_s=3p0: completed 150/248 halos
+N_s=0p5: completed 160/248 halos
+N_s=1p0: completed 160/248 halos
+N_s=1p5: completed 160/248 halos
+N_s=2p0: completed 160/248 halos
+N_s=2p5: completed 160/248 halos
+N_s=3p5: completed 160/248 halos
+N_s=4p0: completed 160/248 halos
+N_s=3p0: completed 160/248 halos
+N_s=0p5: completed 170/248 halos
+N_s=1p0: completed 170/248 halos
+N_s=1p5: completed 170/248 halos
+N_s=3p0: completed 170/248 halos
+N_s=3p5: completed 170/248 halos
+N_s=2p5: completed 170/248 halos
+N_s=2p0: completed 170/248 halos
+N_s=4p0: completed 170/248 halos
+N_s=1p0: completed 180/248 halos
+N_s=0p5: completed 180/248 halos
+N_s=1p5: completed 180/248 halos
+N_s=2p5: completed 180/248 halos
+N_s=2p0: completed 180/248 halos
+N_s=3p5: completed 180/248 halos
+N_s=3p0: completed 180/248 halos
+N_s=4p0: completed 180/248 halos
+N_s=1p0: completed 190/248 halos
+N_s=0p5: completed 190/248 halos
+N_s=3p5: completed 190/248 halos
+N_s=1p5: completed 190/248 halos
+N_s=2p0: completed 190/248 halos
+N_s=2p5: completed 190/248 halos
+N_s=3p0: completed 190/248 halos
+N_s=4p0: completed 190/248 halos
+N_s=0p5: completed 200/248 halos
+N_s=1p0: completed 200/248 halos
+N_s=1p5: completed 200/248 halos
+N_s=3p5: completed 200/248 halos
+N_s=2p5: completed 200/248 halos
+N_s=2p0: completed 200/248 halos
+N_s=3p0: completed 200/248 halos
+N_s=4p0: completed 200/248 halos
+N_s=0p5: completed 210/248 halos
+N_s=2p5: completed 210/248 halos
+N_s=1p5: completed 210/248 halos
+N_s=1p0: completed 210/248 halos
+N_s=3p0: completed 210/248 halos
+N_s=2p0: completed 210/248 halos
+N_s=3p5: completed 210/248 halos
+N_s=4p0: completed 210/248 halos
+N_s=1p0: completed 220/248 halos
+N_s=0p5: completed 220/248 halos
+N_s=1p5: completed 220/248 halos
+N_s=2p5: completed 220/248 halos
+N_s=3p5: completed 220/248 halos
+N_s=3p0: completed 220/248 halos
+N_s=2p0: completed 220/248 halos
+N_s=4p0: completed 220/248 halos
+N_s=0p5: completed 230/248 halos
+N_s=1p0: completed 230/248 halos
+N_s=1p5: completed 230/248 halos
+N_s=2p5: completed 230/248 halos
+N_s=3p0: completed 230/248 halos
+N_s=3p5: completed 230/248 halos
+N_s=2p0: completed 230/248 halos
+N_s=4p0: completed 230/248 halos
+N_s=3p0: completed 240/248 halos
+N_s=0p5: completed 240/248 halos
+N_s=1p5: completed 240/248 halos
+N_s=1p0: completed 240/248 halos
+N_s=2p5: completed 240/248 halos
+N_s=3p5: completed 240/248 halos
+N_s=2p0: completed 240/248 halos
+N_s=4p0: completed 240/248 halos
+N_s=1p0: completed 248/248 halos
+N_s=3p0: completed 248/248 halos
+N_s=1p5: completed 248/248 halos
+N_s=0p5: completed 248/248 halos
+N_s=2p5: completed 248/248 halos
+N_s=4p0: completed 248/248 halos
+N_s=3p5: completed 248/248 halos
+N_s=2p0: completed 248/248 halos
+N_s batch: completed 1/8 N_s runs
+N_s batch: completed 2/8 N_s runs
+N_s batch: completed 3/8 N_s runs
+N_s batch: completed 4/8 N_s runs
+N_s batch: completed 5/8 N_s runs
+N_s batch: completed 6/8 N_s runs
+N_s batch: completed 7/8 N_s runs
+N_s batch: completed 8/8 N_s runs
+plot.py starting. output=/lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots
+plot.py finished. output=/lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots
+DONE ns=8 halos=248 rows_per_ns=1532101 elapsed_s=4729.35
+OUTPUT /lingshan/disk3/subonan/_outputs/Gao+2023_new
+PLOTS /lingshan/disk3/subonan/_outputs/Gao+2023_new/_plots

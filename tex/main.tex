@@ -1,0 +1,416 @@
+%% Beginning of file 'sample701.tex'
+%%
+%% Version 7.0.1. Created May 2025.
+%% Version 7. Created January 2025.  
+%%
+%% AASTeX v7+ calls the following external packages:
+%% times, hyperref, ifthen, hyphens, longtable, xcolor, 
+%% bookmarks, array, rotating, ulem, and lineno 
+%%
+%% RevTeX is no longer used in AASTeX v7+.
+%%
+\documentclass[trackchanges, twocolappendix, twocolumn]{aastex701}
+%%
+%% This initial command takes arguments that can be used to easily modify 
+%% the output of the compiled manuscript. Any combination of arguments can be 
+%% invoked like this:
+%%
+%% \documentclass[argument1,argument2,argument3,...]{aastex701}
+%%
+%% Six of the arguments are typestting options. They are:
+%%
+%%  twocolumn   : two text columns, 10 point font, single spaced article.
+%%                This is the most compact and represent the final published
+%%                derived PDF copy of the accepted manuscript from the publisher
+%%  default     : one text column, 10 point font, single spaced (default).
+%%  manuscript  : one text column, 12 point font, double spaced article.
+%%  preprint    : one text column, 12 point font, single spaced article.  
+%%  preprint2   : two text columns, 12 point font, single spaced article.
+%%  modern      : a stylish, single text column, 12 point font, article with
+%% 		  wider left and right margins. This uses the Daniel
+%% 		  Foreman-Mackey and David Hogg design.
+%%
+%% Note that you can submit to the AAS Journals in any of these 6 styles.
+%%
+%% There are other optional arguments one can invoke to allow other stylistic
+%% actions. The available options are:
+%%
+%%   astrosymb    : Loads Astrosymb font and define \astrocommands. 
+%%   tighten      : Makes baselineskip slightly smaller, only works with 
+%%                  the twocolumn substyle.
+%%   times        : uses times font instead of the default.
+%%   linenumbers  : turn on linenumbering. Note this is mandatory for AAS
+%%                  Journal submissions and revisions.
+%%   trackchanges : Shows added text in bold.
+%%   longauthor   : Do not use the more compressed footnote style (default) for 
+%%                  the author/collaboration/affiliations. Instead print all
+%%                  affiliation information after each name. Creates a much 
+%%                  longer author list but may be desirable for short 
+%%                  author papers.
+%% twocolappendix : make 2 column appendix.
+%%   anonymous    : Do not show the authors, affiliations, acknowledgments,
+%%                  and author contributions for dual anonymous review.
+%%  resetfootnote : Reset footnotes to 1 in the body of the manuscript.
+%%                  Useful when there are a lot of authors and affiliations
+%%		    in the front matter.
+%%   longbib      : Print article titles in the references. This option
+%% 		    is mandatory for PSJ manuscripts.
+%%
+%% Since v6, AASTeX has included \hyperref support. While we have built in 
+%% specific %% defaults into the classfile you can manually override them 
+%% with the \hypersetup command. For example,
+%%
+%% \hypersetup{linkcolor=red,citecolor=green,filecolor=cyan,urlcolor=magenta}
+%%
+%% will change the color of the internal links to red, the links to the
+%% bibliography to green, the file links to cyan, and the external links to
+%% magenta. Additional information on \hyperref options can be found here:
+%% https://www.tug.org/applications/hyperref/manual.html#x1-40003
+%%
+%% The "bookmarks" has been changed to "true" in hyperref
+%% to improve the accessibility of the compiled pdf file.
+%%
+%% If you want to create your own macros, you can do so
+%% using \newcommand. Your macros should appear before
+%% the \begin{document} command.
+%%
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{CJK}
+\usepackage{comment}
+\usepackage{txfonts} % replaces text and math fonts with Times-style fonts
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% The following section outlines numerous optional output that
+%% can be displayed in the front matter or as running meta-data.
+%%
+%% Running header information. A short title on odd pages and 
+%% short author list on even pages. Note that this
+%% information may be modified in production.
+\shorttitle{\textsc{Arepo-CD}}
+\shortauthors{C. Kong et al.}
+%%
+%% Include dates for submitted, revised, and accepted.
+\received{\today}
+\revised{\today}
+\accepted{\today}
+%%
+%% Indicate AAS Journal the manuscript was submitted to.
+\submitjournal{APJ}
+%% Note that this command adds "Submitted to " the argument.
+%%
+%% You can add a light gray and diagonal water-mark to the first page 
+%% with this command:
+%% \watermark{text}
+%% where "text", e.g. DRAFT, is the text to appear.  If the text is 
+%% long you can control the water-mark size with:
+%% \setwatermarkfontsize{dimension}
+%% where dimension is any recognized LaTeX dimension, e.g. pt, in, etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Use this command to indicate a subdirectory where figures are located.
+%%\graphicspath{{./}{figures/}}
+%% This is the end of the preamble.  Indicate the beginning of the
+%% manuscript itself with \begin{document}.
+
+\begin{document}
+\begin{CJK*}{UTF8}{gbsn}
+
+\title{Connecting intermediate-mass black holes formed in globular clusters to high redshift supermassive black holes}
+
+%% A significant change from AASTeX v6+ is in the author blocks. Now an email
+%% address is required for each author. This means that each author requires
+%% at least one of the following:
+%%
+%% \author
+%% \affiliation
+%% \email
+%%
+%% If these three commands are not available for each author, the latex
+%% compiler will issue an error and if you force the latex compiler to continue,
+%% it will generate an incomplete pdf.
+%%
+%% Multiple \affiliation commands are allowed and authors can also include
+%% an optional \altaffiliation to indicate a status, i.e. Hubble Fellow. 
+%% while affiliations are indexed as footnotes, altaffiliations are noted with
+%% with a non-numeric footnote that is set away from the numeric \affiliation 
+%% footnotes. NOTE that if an \altaffiliation command is used it must 
+%% come BEFORE the \affiliation call, right after the \author command, in 
+%% order to place the footnotes in the proper location. Because non-numeric
+%% symbols are used, \altaffiliation should be used sparingly.
+%%
+%% In v7+ the \author command takes an optional argument which provides 
+%% additional metadata about the author. Authors can provide the 16 digit 
+%% ORCID, the surname (family or last) name, the given (first or fore-) name, 
+%% and a name suffix, e.g. "Jr.". The syntax is:
+%%
+%% \author[orcid=0000-0002-9072-1121,gname=Gregory,sname=Schwarz]{Greg Schwarz}
+%%
+%% This name metadata in not shown, it is only for parsing by the peer review
+%% system so authors can be more easily identified. This name information will
+%% also be sent to the publisher so they can include it in the CROSSREF 
+%% metadata. Including an orcid will hyperlink the author name to the 
+%% author's ORCID page. Note that  during compilation, LaTeX will do some 
+%% limited checking of the format of the ID to make sure it is valid. If 
+%% the "orcid-ID.png" image file is  present or in the LaTeX pathway, the 
+%% ORCID icon will appear next to the authors name.
+%%
+%% Even though emails are now required for each author, the \email does not
+%% produce output in the compiled manuscript unless the optional "show" command
+%% is used. For example,
+%%
+%% \email[show]{greg.schwarz@aas.org}
+%%
+%% All "shown" emails are show in the bottom left of the first page. Due to
+%% space constraints, only a few emails should be shown. 
+%%
+%% To identify a corresponding author, use the \correspondingauthor command.
+%% The command appends "Corresponding Author: " to the argument it appears at
+%% the bottom left of the first page like the output from \email. 
+
+\author[0009-0003-9099-5805,gname=Chuizheng,sname=Kong]{Chuizheng Kong (孔垂政)}
+\affiliation{Department of Astronomy, Tsinghua Univeristy, Beijing, 100084, People's Republic of China}
+\email{kcz24@mails.tsinghua.edu.cn}
+
+\author[0000-0002-1253-2763,gname=Hui,sname=Li]{Hui Li (李辉)}
+\affiliation{Department of Astronomy, Tsinghua Univeristy, Beijing, 100084, People's Republic of China}
+\email[show]{hliastro@tsinghua.edu.cn}
+
+%% Use the \collaboration command to identify collaborations. This command
+%% takes an optional argument that is either a number or the word "all"
+%% which tells the compiler how many of the authors above the command to
+%% show. For example "\collaboration[all]{(DELVE Collaboration)}" wil include
+%% all the authors above this command.
+%%
+%% Mark off the abstract in the ``abstract'' environment. 
+\begin{abstract}
+
+This note summarizes the present implementation of the embedded intermediate-mass black hole (IMBH) treatment in the active Python version of the Gao+2023 globular-cluster (GC) model. The summary is restricted to behavior that is explicitly implemented in the current \texttt{src/} code. In the active pipeline, IMBH properties are assigned once at GC formation using a deterministic GC-scale seeding model in \texttt{src/IMBH.py}. The seeding step returns three birth-time quantities: a GC half-mass radius, a projected half-mass surface density, and an IMBH mass. These quantities are attached to each newly formed GC in \texttt{src/main\_spatial.py} and are then carried forward unchanged through the analytic disruption filter. No later IMBH update is present in the active \texttt{src/} evolution code.
+
+\end{abstract}
+
+%% Keywords should appear after the \end{abstract} command. 
+%% The AAS Journals now uses Unified Astronomy Thesaurus (UAT) concepts:
+%% https://astrothesaurus.org
+%% You will be asked to selected these concepts during the submission process
+%% but this old "keyword" functionality is maintained in case authors want
+%% to include these concepts in their preprints.
+%%
+%% You can use the \uat command to link your UAT concepts back its source.
+\keywords{\uat{Galaxies}{573} --- \uat{Cosmology}{343} --- \uat{High Energy astrophysics}{739} --- \uat{Interstellar medium}{847} --- \uat{Stellar astronomy}{1583} --- \uat{Solar physics}{1476}}
+
+%% From the front matter, we move on to the body of the paper.
+%% Sections are demarcated by \section and \subsection, respectively.
+%% Observe the use of the LaTeX \label
+%% command after the \subsection to give a symbolic KEY to the
+%% subsection for cross-referencing in a \ref command.
+%% You can use LaTeX's \ref and \label commands to keep track of
+%% cross-references to sections, equations, tables, and figures.
+%% That way, if you change the order of any elements, LaTeX will
+%% automatically renumber them.
+
+\section{Introduction} \label{sect:intro}
+
+\section{Methods} \label{sect:method}
+
+\subsection{Scope of the present implementation}
+
+In the present model, IMBH formation is treated as a birth property of each globular cluster. Every newly formed cluster is assigned a structural scale and an IMBH seed mass from its birth mass and metallicity. Thereafter the stellar cluster may lose mass through the adopted disruption prescription, but the IMBH seed itself is not further evolved. In particular, the current framework does not include later gas accretion, black-hole mergers, or any IMBH-dependent modification to the cluster orbit or tidal evolution.
+
+\subsection{Cluster structural model at birth}
+
+The seed prescription is anchored to a formation-time three-dimensional half-mass radius,
+\begin{equation}
+r_{\mathrm{h}}=
+\frac{f_{\mathrm{h}}R_{4}}{1.3}
+\left(\frac{M_{\mathrm{cl}}}{M_{\mathrm{pivot}}}\right)^{\beta},
+\end{equation}
+with the active default values listed in Table~\ref{tab:cfg}. Assuming a Plummer profile, this is converted to a projected half-mass radius,
+\begin{equation}
+R_{\mathrm{h,proj}}=\frac{r_{\mathrm{h}}}{1.305},
+\end{equation}
+and hence to the projected half-mass surface density
+\begin{equation}
+\Sigma_{\mathrm{h}}=\frac{M_{\mathrm{cl}}}{2\pi R_{\mathrm{h,proj}}^{2}}.
+\end{equation}
+The seed model therefore depends on the cluster birth mass through both the explicit mass term and the induced variation in cluster compactness.
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{lc}
+\toprule
+Quantity & Adopted value \\
+\midrule
+\(f_{\mathrm{h}}\) & 0.125 \\
+\(\beta\) & 0.180 \\
+\(R_{4}\) & \(2.365~\mathrm{pc}\) \\
+\(M_{\mathrm{pivot}}\) & \(10^{4}\,M_{\odot}\) \\
+\(\log_{10}\Sigma_{\mathrm{h,sw}}\) & 5.22 \\
+\(M_{\mathrm{IMBH,min}}\) & \(100\,M_{\odot}\) \\
+\bottomrule
+\end{tabular}
+\caption{Adopted parameters of the IMBH seeding prescription in the current implementation.}
+\label{tab:cfg}
+\end{table}
+
+\subsection{Metallicity dependence and IMBH seed mass}
+
+The cluster metallicity is written in the usual form
+\begin{equation}
+[\mathrm{Fe}/\mathrm{H}] = \log_{10}(Z/Z_{\odot}),
+\end{equation}
+so that
+\begin{equation}
+z \equiv Z/Z_{\odot} = 10^{[\mathrm{Fe}/\mathrm{H}]}.
+\end{equation}
+Before the IMBH fit is evaluated, the metallicity ratio is restricted to
+\begin{equation}
+10^{-2}\le z \le 1.
+\end{equation}
+Each newly formed GC receives an independent metallicity perturbation,
+\begin{equation}
+[\mathrm{Fe}/\mathrm{H}]_{\mathrm{GC}}=
+[\mathrm{Fe}/\mathrm{H}]_{\mathrm{event}}+\mathcal{N}(0,\sigma_{m}),
+\end{equation}
+with \(\sigma_{m}=0.3\) dex, and this scattered metallicity is used for the seed calculation.
+
+The IMBH mass itself is evaluated from metallicity-dependent fitting functions of \(\Sigma_{\mathrm{h}}\). In the lower-density regime the model adopts
+\begin{equation}
+M_{\mathrm{IMBH},9}=
+\begin{cases}
+A(z)\log_{10}\Sigma_{\mathrm{h}}+
+B(z)\left[\log_{10}\Sigma_{\mathrm{h}}\right]^{2}+C(z), &
+\Sigma_{\mathrm{h}}\ge \Sigma_{\mathrm{crit}}(z),\\
+0, & \Sigma_{\mathrm{h}}<\Sigma_{\mathrm{crit}}(z),
+\end{cases}
+\end{equation}
+where \(A\), \(B\), \(C\), and \(\Sigma_{\mathrm{crit}}\) are piecewise-linear functions of \(\log_{10}z\). In the high-density regime the continuation
+\begin{equation}
+M_{\mathrm{IMBH},10}=
+\begin{cases}
+D(z)\log_{10}\Sigma_{\mathrm{h}}+E(z), &
+\log_{10}\Sigma_{\mathrm{h}}\ge 5.22,\\
+0, & \log_{10}\Sigma_{\mathrm{h}}<5.22
+\end{cases}
+\end{equation}
+is used instead. The transition between the two branches is set by
+\begin{equation}
+M_{\mathrm{IMBH}}=
+\begin{cases}
+M_{\mathrm{IMBH},10}, & \log_{10}\Sigma_{\mathrm{h}}\ge 5.22,\\
+M_{\mathrm{IMBH},9}, & \log_{10}\Sigma_{\mathrm{h}}<5.22.
+\end{cases}
+\end{equation}
+Finally, seeds below
+\begin{equation}
+M_{\mathrm{IMBH,min}}=100\,M_{\odot}
+\end{equation}
+are discarded. The metallicity breakpoints entering the coefficient interpolation are \((0.126,\,0.398)\) for the first branch and \((0.079,\,0.316)\) for the second.
+
+\subsection{Coupling to GC formation and later evolution}
+
+The IMBH calculation is carried out once for every cluster formed in a GC-formation episode, including the most massive cluster in the event and all subsequent draws from the cluster initial mass function. The seeding step precedes the assignment of galactocentric radius, so the resulting IMBH mass depends only on the birth mass and metallicity of the cluster, not on its subsequent orbital placement within the host.
+
+After formation, the stellar cluster mass is evolved through the adopted analytic disruption prescription. The IMBH-related quantities,
+\begin{equation}
+\left(r_{\mathrm{h}},\,\Sigma_{\mathrm{h}},\,M_{\mathrm{IMBH}}\right),
+\end{equation}
+are then carried forward unchanged. Thus the present model allows the stellar component of a GC to evolve while keeping the associated IMBH seed mass and its birth structural proxies fixed.
+
+\subsection{Recorded quantities}
+
+Both the full formation catalog and the corresponding survivor catalog retain the IMBH-related birth properties of each cluster. In practice, the stored quantities are the galactocentric radius assigned to the cluster, the half-mass radius \(r_{\mathrm{h}}\), the projected half-mass surface density \(\Sigma_{\mathrm{h}}\), and the IMBH seed mass. The survivor catalog name is historical; if the calculation is terminated at a redshift \(z_{\mathrm{final}}>0\), it still refers to objects surviving to that chosen final epoch rather than strictly to \(z=0\).
+
+%% Please use the acknowledgment and contribution environments. This will 
+%% be anonomyized when the "anonymous" style option is used. 
+\begin{acknowledgments}
+We thank all the people that have made this AASTeX what it is today.  This
+includes but not limited to Bob Hanisch, Chris Biemesderfer, Lee Brotzman,
+Pierre Landau, Arthur Ogawa, Maxim Markevitch, Alexey Vikhlinin and Amy
+Hendrickson. Also special thanks to David Hogg and Daniel Foreman-Mackey
+for the new {\tt\string modern} style design. Considerable help was provided via bug
+reports and hacks from numerous people including Patricio Cubillos, Alex
+Drlica-Wagner, Sean Lake, Michele Bannister, Peter Williams, Jonathan
+Gagne, Arthur Adams, Nicholas Wogan, Aaron Pearlman, Jeff Mangum, Mark Durre, Joel Ong, and Stephen Thorp.
+\end{acknowledgments}
+
+\begin{contribution}
+%%This section gives authors the space to recognize author contributions. The text inside this environment is NOT counted towards the total word quanta. At a minimum, manuscripts are expected to include this text:
+
+All authors contributed equally to the Terra Mater collaboration.
+
+%% But authors are expected to provide more specific details, e.g. 
+%%
+%%SC was responsible for writing and submitting the manuscript.
+%%WWM came up with the initial research concept and edited the manuscript.
+%%OTS obtained the funding and edited the manuscript.
+%%EBF provided the formal analysis and validation. He also edited the manuscript.
+%%GEH Supervised the undergraduates, wrote the software and administers the project github and Zenodo repositories.
+%%
+%% Authors can use the Contributor Role Taxonomy (CRediT) at
+%% https://credit.niso.org
+%% for ideas on how write a good statement tailored to their needs.
+
+\end{contribution}
+
+%% To help institutions obtain information on the effectiveness of their 
+%% telescopes the AAS Journals has created a group of keywords for telescope 
+%% facilities.
+%
+%% Following the acknowledgments section, use the following syntax and the
+%% \facility{} or \facilities{} macros to list the keywords of facilities used 
+%% in the research for the paper.  Each keyword is check against the master 
+%% list during copy editing.  Individual instruments can be provided in 
+%% parentheses, after the keyword, but they are not verified.
+\facilities{HST(STIS), Swift(XRT and UVOT), AAVSO, CTIO:1.3m, CTIO:1.5m, CXO}
+
+%% Similar to \facility{}, there is the optional \software command to allow 
+%% authors a place to specify which programs were used during the creation of 
+%% the manuscript. Authors should list each code and include either a
+%% citation or url to the code inside ()s when available.
+\software{astropy \citep{2013A&A...558A..33A,2018AJ....156..123A,2022ApJ...935..167A},  
+          Cloudy \citep{2013RMxAA..49..137F}, 
+          Source Extractor \citep{1996A&AS..117..393B}
+          }
+
+%% Appendix material should be preceded with a single \appendix command.
+%% There should be a \section command for each appendix. Mark appendix
+%% subsections with the same markup you use in the main body of the paper.
+%%
+%% Each Appendix (indicated with \section) will be lettered A, B, C, etc.
+%% The equation counter will reset when it encounters the \appendix
+%% command and will number appendix equations (A1), (A2), etc. The
+%% Figure and Table counter will not reset.
+
+\appendix
+
+\section{Determining halo parameters}
+
+%% For this sample we use BibTeX plus aasjournalv7.bst to generate the
+%% the bibliography. The sample7.bib file was populated from ADS. To
+%% get the citations to show in the compiled file do the following:
+%%
+%% pdflatex sample7.tex
+%% bibtext sample7
+%% pdflatex sample7.tex
+%% pdflatex sample7.tex
+
+\bibliography{ref}{}
+\bibliographystyle{aasjournalv7}
+
+%% This command is needed to show the entire author+affiliation list when
+%% the collaboration and author truncation commands are used.  It has to
+%% go at the end of the manuscript.
+%\allauthors
+
+%% Include this line if you are using the \added, \replaced, \deleted
+%% commands to see a summary list of all changes at the end of the article.
+%\listofchanges
+
+\end{CJK*}
+\end{document}
+
+% End of file `sample7.tex'.
