@@ -49,6 +49,30 @@ mmr_evolution = .9 #redshift slope of the galaxy mass-metallicity relation
 pr = 0.5 #normalized period of rotation; t_tid \propto P
 miso = (pr/1.7)**3 #mass where tiso < ttid
 
+
+def _parse_exclude_halo_arg(text: str) -> tuple[int, ...]:
+    """Parse one comma-separated list of z=0 halo IDs."""
+
+    if text is None:
+        return tuple()
+    values = set()
+    for raw_token in str(text).split(","):
+        token = raw_token.strip()
+        if not token:
+            continue
+        try:
+            halo_id = int(token)
+        except ValueError as exc:
+            raise argparse.ArgumentTypeError(
+                f"invalid halo ID '{token}' in --exclude_halo; expected comma-separated integers"
+            ) from exc
+        if halo_id < 0:
+            raise argparse.ArgumentTypeError(
+                f"invalid halo ID '{token}' in --exclude_halo; expected non-negative integers"
+            )
+        values.add(halo_id)
+    return tuple(sorted(values))
+
 def _build_arg_parser():
     parser = argparse.ArgumentParser(description="Legacy Gao+2023 GC formation stage.")
     parser.add_argument("ns", type=float, help="Sersic index N_s")
@@ -78,6 +102,12 @@ def _build_arg_parser():
     parser.add_argument("--log-mh-min", type=float, default=11.5, help="minimum retained host halo log mass for selection")
     parser.add_argument("--log-mh-max", type=float, default=12.5, help="maximum retained host halo log mass for selection")
     parser.add_argument("--n-halos", type=int, default=10, help="number of halos to keep when --run-all=0")
+    parser.add_argument(
+        "--exclude_halo",
+        type=_parse_exclude_halo_arg,
+        default=tuple(),
+        help="comma-separated z=0 halo IDs to exclude before halo selection and counting",
+    )
     parser.add_argument("--IMBH", type=int, choices=[0, 1], default=1, help="enable the IMBH seeding module if 1, otherwise keep IMBH-related columns at zero")
     parser.add_argument("--final-z", "--final-redshift", dest="final_redshift", type=float, default=0.0, help="final redshift where the formation/survival stage stops")
     return parser
@@ -122,6 +152,7 @@ run_all = bool(args.run_all)
 log_mh_min = float(args.log_mh_min)
 log_mh_max = float(args.log_mh_max)
 N = int(args.n_halos)
+exclude_halo = set(int(hid) for hid in args.exclude_halo)
 final_redshift = float(args.final_redshift)
 final_epoch_label = "z=0" if(abs(final_redshift) < 1.0e-12) else ("z=" + str(np.round(final_redshift, 5)))
 
@@ -525,8 +556,12 @@ t0 = smhm.cosmicTime(final_redshift, units = 'yr')
 
 num = -1
 num_run = 0
+excluded_seen = set()
 for tree_path in _iter_tree_files(treedir):
-    fname = tree_path.name
+    hid_num = int(tree_path.stem)
+    if hid_num in exclude_halo:
+        excluded_seen.add(hid_num)
+        continue
     m, fp, subid, redshifts, jsp, mpi, msub, mpbi = loadTree(tree_path)
     if(len(m) == 0):
         continue
@@ -633,7 +668,6 @@ for tree_path in _iter_tree_files(treedir):
     # The historical output schema labels this as the z=0 halo mass; for
     # nonzero `final_redshift` it is the corresponding end-of-run halo mass proxy.
     # write to output files
-    hid_num = int(fname[0:fname.find(".")])
     for i in range(len(GC_masses)): #all clusters
         allcat.write(
             str(hid_num)
@@ -702,6 +736,16 @@ for tree_path in _iter_tree_files(treedir):
         )
 cat.close()
 allcat.close()
+if(len(exclude_halo) > 0):
+    excluded_requested = sorted(exclude_halo)
+    excluded_missing = sorted(exclude_halo - excluded_seen)
+    print("excluded halo IDs:", ", ".join(str(hid) for hid in excluded_requested))
+    print("excluded halo count applied:", len(excluded_seen))
+    if(len(excluded_missing) > 0):
+        print(
+            "warning: requested excluded halo IDs not found in tree directory:",
+            ", ".join(str(hid) for hid in excluded_missing),
+        )
 if(num_run < N and run_all == False):
     print("requested", N, "halos, but there were only", num_run, "halos stored in the mass range you requested. Model was run on all available halos.\n")
 print("all done!")

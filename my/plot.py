@@ -17,6 +17,7 @@ import json
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 plt.rcParams.update({"font.family": "Times New Roman",
+                     "font.size": 10,
                      "mathtext.default": "regular",
                      "xtick.direction": "in",
                      "ytick.direction": "in",
@@ -64,6 +65,19 @@ ALLCAT_COLUMNS = [
 ]
 ALLCAT_OPTIONAL_RADIUS_COLUMN = "r_galaxy_kpc"
 RUN_METADATA_NAME = "run_metadata.json"
+GAO_FIG2_ALLCAT_COLUMNS = [
+    "halo_id",
+    "logMh_z0",
+    "halo_id_form",
+    "logMh_form",
+    "logMstar_form",
+    "logMgas_form",
+    "logMcl_form",
+    "zform",
+    "feh",
+    "rGalaxy_kpc",
+]
+GAO_FIG2_NS_PATTERN = re.compile(r"haloSummary_ns([0-9]+(?:\.[0-9]+)?)\.csv$")
 
 
 @dataclass
@@ -74,6 +88,7 @@ class ModelResult:
     r_init: np.ndarray
     r_final: np.ndarray
     m_final: np.ndarray
+    status: np.ndarray
     deposit_profile: "DepositProfile | None" = None
     halo_summary: pd.DataFrame | None = None
 
@@ -173,43 +188,6 @@ def _get_mw_m31_observations() -> Tuple[GalaxyObs, GalaxyObs]:
     return mw, m31
 
 
-def _add_nsc_smbh_points(ax: plt.Axes, obs: GalaxyObs, show_labels: bool = True) -> None:
-    """Overlay separate SMBH and NSC reference masses on one axis."""
-
-    r_kpc = max(obs.r_nsc_pc / 1000.0, 1.0e-4)
-    xr = obs.r_nsc_err_pc / 1000.0
-    xerr = xr if xr > 0 else None
-
-    ax.errorbar(
-        [r_kpc],
-        [obs.m_smbh],
-        xerr=xerr,
-        yerr=obs.m_smbh_err if obs.m_smbh_err > 0 else None,
-        fmt="^",
-        ms=6,
-        mfc="white",
-        mec=obs.color,
-        color=obs.color,
-        capsize=3,
-        zorder=7,
-        label=f"{obs.name} SMBH" if show_labels else None,
-    )
-    ax.errorbar(
-        [r_kpc],
-        [obs.m_nsc],
-        xerr=xerr,
-        yerr=obs.m_nsc_err if obs.m_nsc_err > 0 else None,
-        fmt="o",
-        ms=6,
-        mfc="white",
-        mec=obs.color,
-        color=obs.color,
-        capsize=3,
-        zorder=7,
-        label=f"{obs.name} NSC" if show_labels else None,
-    )
-
-
 def _add_nsc_smbh_points_pc(ax: plt.Axes, obs: GalaxyObs, show_labels: bool = True) -> None:
     """Overlay separate SMBH and NSC reference masses using radius in pc."""
 
@@ -264,28 +242,223 @@ def _load_observational_overlays() -> Dict[str, object]:
     }
 
     # Fig. 3 / 7: digitized directly from Gao+2023 Fig. 3.
-    fig3_g14 = {
-        "r_kpc": np.array(
-            [0.0186, 0.0264, 0.0473, 0.0842, 0.4465, 0.6181, 1.0301, 2.4676, 3.8232, 8.4433, 24.4515, 35.2915],
-            dtype=float,
-        ),
-        "sigma": np.array(
-            [2732.0, 2011.0, 1178.0, 664.0, 92.74, 58.73, 25.58, 4.90, 1.732, 0.1807, 0.002509, 0.000394],
-            dtype=float,
-        ),
-    }
-    fig3_b21 = {
-        "r_kpc": np.array([0.6535, 2.095, 3.832, 5.685, 10.05, 34.70, 86.45], dtype=float),
-        "sigma": np.array([3.252, 0.7932, 0.4440, 0.1958, 0.04423, 0.001357, 0.0003268], dtype=float),
-        "xerr": np.array([0.30, 0.85, 1.20, 1.60, 4.0, 16.0, 15.0], dtype=float),
-        "yerr": np.array([0.90, 0.22, 0.12, 0.05, 0.015, 0.00045, 0.00012], dtype=float),
-    }
-    fig3_rbc = {
-        "r_kpc": np.array([0.6487, 3.425, 9.264, 28.07, 87.29], dtype=float),
-        "sigma": np.array([4.629, 0.8908, 0.2175, 0.00440, 0.0001504], dtype=float),
-        "xerr": np.array([0.40, 1.50, 3.0, 16.0, 20.0], dtype=float),
-        "yerr": np.array([1.5, 0.25, 0.07, 0.0018, 0.00008], dtype=float),
-    }
+    fig3_G14 = {
+        "r_kpc": np.array([
+            0.010794385163805828,
+            0.01230063722058812,
+            0.014017056540677553,
+            0.015885957941789649,
+            0.01842923049791171,
+            0.020638515286922114,
+            0.023642304107814576,
+            0.026812842640417521,
+            0.03068065649923201,
+            0.03481771932439584,
+            0.039944728888434461,
+            0.045330794603697426,
+            0.051869648283687858,
+            0.059153418073623108,
+            0.066998307644800793,
+            0.075030023455499988,
+            0.08402457640539729,
+            0.090262439565148898,
+            0.10537418035304692,
+            0.11800637212224759,
+            0.13365630391219327,
+            0.14799282057797614,
+            0.16572852903919233,
+            0.18350524251263223,
+            0.2055002785561595,
+            0.23013165132735636,
+            0.25771101537826174,
+            0.2886003948556277,
+            0.32319219179891506,
+            0.357847047984966,
+            0.40073878563086688,
+            0.44371618208541128,
+            0.49689187543497038,
+            0.55017198838376977,
+            0.63394171535009246,
+            0.71958255881831229,
+            0.81535237778154514,
+            0.9506437602765255,
+            1.089868724595188,
+            1.2434785508645683,
+            1.4255369651226457,
+            1.644812534271848,
+            1.888645818909842,
+            2.1673759695900916,
+            2.544302336245633,
+            2.8916691154160032,
+            3.2956103293560832,
+            3.7455550943770914,
+            4.268785741747607,
+            4.8594249503165067,
+            5.4826699487870456,
+            6.418497467163319,
+            7.1112540348782005,
+            8.6954469871221214,
+            9.726932001959788,
+            10.500459082798447,
+            11.603912847605024,
+            13.130690412962242,
+            14.840205316722507,
+            16.682616067302719,
+            18.076889860627674,
+            19.777484283556691,
+            20.920007308913025,
+            22.630583158099565,
+            24.711647271833773,
+            26.335538896278425,
+            28.066103151268432,
+            29.966053402457288,
+            31.995353864081775,
+            34.179033206174862,
+            36.679661547674753,
+            38.797207866128204,
+            40.578438805557404,
+            43.162118666779361], dtype=float),
+        "Sigma": np.array([
+            8356.6906981665297,
+            7450.4877471336271,
+            6630.5101644451859,
+            5990.5625300056756,
+            5184.5402755882734,
+            4646.8853913068772,
+            4164.9871911721458,
+            3662.9109698697434,
+            3240.6129273392885,
+            2890.5106302927908,
+            2515.8349213368992,
+            2228.8150959209024,
+            1958.4808373448052,
+            1734.7118302628096,
+            1512.8364376420081,
+            1355.9500298640685,
+            1215.3332890065183,
+            1123.4469597770997,
+            924.32492810547283,
+            828.46921364628328,
+            722.50525534194214,
+            647.57894388426928,
+            549.50327144061733,
+            492.51786827772384,
+            429.52320052341184,
+            374.58575956445,
+            317.85483802345385,
+            277.20015074194092,
+            241.74533270965966,
+            205.13306128001383,
+            178.89586284912812,
+            156.01448905814297,
+            132.38613290197867,
+            112.33628549851414,
+            91.787531311741657,
+            75.715525722891437,
+            63.006613557068478,
+            46.026759963792099,
+            36.732993025672044,
+            29.844960002687827,
+            22.416646421782012,
+            16.942303760837735,
+            12.485233615433351,
+            9.6144877678573601,
+            6.7950878638739867,
+            5.0453518582363536,
+            3.5296132212577125,
+            2.6251998909511541,
+            1.8427897663267763,
+            1.3766103273666472,
+            0.92361589529515589,
+            0.56648337995115339,
+            0.43739895848238897,
+            0.21716432104578792,
+            0.15386377948470603,
+            0.11087908658297818,
+            0.076722658163949368,
+            0.045190853404211646,
+            0.02793794213243249,
+            0.017399163122002924,
+            0.012356866785720583,
+            0.0085701081379953789,
+            0.0064746938468674902,
+            0.0041620571539204979,
+            0.0026201929496909872,
+            0.0018900301538419758,
+            0.0013602508999743794,
+            0.00095009068739038265,
+            0.00068875996529086335,
+            0.00046761155104868584,
+            0.00033222638607642097,
+            0.00023672801748033864,
+            0.00017699084920302209,
+            0.00011954084738975554], dtype=float)}
+    fig3_B21 = {
+        "r_kpc": np.array([
+            0.7540702727152646,
+            2.160672441976534,
+            3.8056650262561478,
+            5.850232283203228,
+            10.182134168792267,
+            41.86707810315064,
+            85.38374177603824], dtype=float),
+        "Sigma": np.array([
+            4.694827217503208,
+            1.100537270475359,
+            0.6026832936945054,
+            0.2651410481520248,
+            0.05570751921145461,
+            0.0014619520722739484,
+            0.0002606438897699442], dtype=float),
+        "xerr": np.array([
+            0.47264212016831164,
+            0.7716571916216417,
+            0.839539839261815,
+            1.2386275436453413,
+            3.096197916006476,
+            27.75639854980916,
+            11.693966387645133], dtype=float),
+        "yerr": np.array([
+            0.818592169595822,
+            0.21642346456663253,
+            0.1185192087147171,
+            0.057891633068793746,
+            0.012163334511347434,
+            0.000287496608247744,
+            0.00012916054965301022], dtype=float)}
+    fig3_RBCver5 = {
+        "r_kpc": np.array([
+            0.9041384861689454,
+            2.741559611696369,
+            4.829126281225719,
+            7.592894190931609,
+            11.03249993157838,
+            34.95270917442269,
+            91.35702638558539], dtype=float),
+        "Sigma": np.array([
+            6.887135586430595,
+            1.5284443417432307,
+            0.9338611704098484,
+            0.3486163061313284,
+            0.24423941460507742,
+            0.00501015788031781,
+            0.00014669625243617185], dtype=float),
+        "xerr": np.array([
+            0.7254758069964147,
+            1.0949316746346491,
+            0.979065566523039,
+            1.7416770358569362,
+            1.6180869704551153,
+            22.054883172778037,
+            26.32302452418736], dtype=float),
+        "yerr": np.array([
+            0.714219948138501,
+            0.19549309718602914,
+            0.11944393888558147,
+            0.04458918100834275,
+            0.031239030635288323,
+            0.000640815798563666,
+            5.703792632013463e-05], dtype=float)}
 
     # Fig. 8: in-situ GC mass-function reference (Baumgardt+2021 trend).
     fig8_mass_obs = {
@@ -295,9 +468,9 @@ def _load_observational_overlays() -> Dict[str, object]:
 
     return {
         "fig2_ratio_refs": fig2_ratio_refs,
-        "fig3_g14": fig3_g14,
-        "fig3_b21": fig3_b21,
-        "fig3_rbc": fig3_rbc,
+        "fig3_G14": fig3_G14,
+        "fig3_B21": fig3_B21,
+        "fig3_RBCver5": fig3_RBCver5,
         "fig8_mass_obs": fig8_mass_obs,
     }
 
@@ -346,6 +519,111 @@ def load_allcat(allcat_path: Path) -> pd.DataFrame:
     gc["M_halo_z0"] = np.power(10.0, gc["logMh_z0"].to_numpy())
     gc["M_halo_form"] = np.power(10.0, gc["logMh_form"].to_numpy())
     return gc
+
+
+def _gao_fig2_ns_label(ns_value: float) -> str:
+    """Return the Gao output label used in top-level filenames."""
+
+    return f"{float(ns_value):.1f}"
+
+
+def _discover_gao_fig2_ns_values(data_dir: Path) -> List[float]:
+    """Discover available N_s values from Gao halo-summary outputs."""
+
+    ns_values: List[float] = []
+    for path in data_dir.glob("haloSummary_ns*.csv"):
+        match = GAO_FIG2_NS_PATTERN.fullmatch(path.name)
+        if match is not None:
+            ns_values.append(float(match.group(1)))
+    ns_values = sorted(set(ns_values))
+    if len(ns_values) == 0:
+        raise FileNotFoundError(f"No Gao Figure 2 haloSummary_ns*.csv files found in {data_dir}")
+    return ns_values
+
+
+def _load_gao_fig2_halo_masses(allcat_path: Path) -> pd.Series:
+    """Load z=0 halo masses from Gao all_<Ns>.txt outputs."""
+
+    raw = pd.read_csv(
+        allcat_path,
+        sep=r"\s+",
+        comment="#",
+        header=None,
+        engine="python",
+    )
+    if raw.shape[1] < len(GAO_FIG2_ALLCAT_COLUMNS):
+        raise ValueError(
+            f"Gao allcat file has {raw.shape[1]} columns; expected at least {len(GAO_FIG2_ALLCAT_COLUMNS)}."
+        )
+    raw = raw.iloc[:, : len(GAO_FIG2_ALLCAT_COLUMNS)].copy()
+    raw.columns = GAO_FIG2_ALLCAT_COLUMNS
+    for col in ("halo_id", "logMh_z0"):
+        raw[col] = pd.to_numeric(raw[col], errors="coerce")
+    allcat = raw.dropna(subset=["halo_id", "logMh_z0"]).copy()
+    if allcat.empty:
+        raise ValueError(f"No valid Gao allcat rows found in {allcat_path}.")
+    allcat["halo_id"] = allcat["halo_id"].astype(int)
+    halo_mass = allcat.groupby("halo_id", sort=True)["logMh_z0"].first().astype(float)
+    return np.power(10.0, halo_mass)
+
+
+def _load_gao_fig2_ratio_table(data_dir: Path, ns_value: float) -> pd.DataFrame:
+    """Load one Gao per-halo M_GC/M_halo table for Figure 2."""
+
+    label = _gao_fig2_ns_label(ns_value)
+    summary_path = data_dir / f"haloSummary_ns{label}.csv"
+    allcat_path = data_dir / f"all_{label}.txt"
+    if not summary_path.exists():
+        raise FileNotFoundError(f"Missing Gao halo summary for N_s={label}: {summary_path}")
+    if not allcat_path.exists():
+        raise FileNotFoundError(f"Missing Gao allcat file for N_s={label}: {allcat_path}")
+
+    summary = pd.read_csv(summary_path)
+    required = ["halo_id", "sum_m_final_alive_msun", "gcevo_status", "gcevo_error"]
+    for col in required:
+        if col not in summary.columns:
+            raise ValueError(f"Missing required Gao Figure 2 column '{col}' in {summary_path}")
+    summary["halo_id"] = pd.to_numeric(summary["halo_id"], errors="coerce")
+    summary["sum_m_final_alive_msun"] = pd.to_numeric(summary["sum_m_final_alive_msun"], errors="coerce")
+    summary = summary.dropna(subset=["halo_id", "sum_m_final_alive_msun"]).copy()
+    summary["gcevo_status"] = summary["gcevo_status"].astype(str).str.strip().str.lower()
+    summary = summary.loc[summary["gcevo_status"] == "ok"].copy()
+    if summary.empty:
+        raise ValueError(
+            f"All Gao halos were filtered out for N_s={label} after applying gcevo_status == 'ok' "
+            f"to {summary_path}."
+        )
+    summary["halo_id"] = summary["halo_id"].astype(int)
+
+    halo_mass = _load_gao_fig2_halo_masses(allcat_path)
+    summary["m_halo_msun"] = summary["halo_id"].map(halo_mass)
+    if summary["m_halo_msun"].isna().any():
+        missing = summary.loc[summary["m_halo_msun"].isna(), "halo_id"].tolist()
+        raise ValueError(f"Missing Gao halo masses for halo IDs {missing} in {allcat_path}")
+
+    summary["ratio"] = summary["sum_m_final_alive_msun"] / summary["m_halo_msun"]
+    summary["ns"] = float(ns_value)
+    return summary.sort_values("halo_id").reset_index(drop=True)
+
+
+def _build_gao_fig2_summary(data_dir: Path) -> pd.DataFrame:
+    """Build Gao Figure 2 median and interquartile summary from merged outputs."""
+
+    rows: List[dict] = []
+    for ns_value in _discover_gao_fig2_ns_values(data_dir):
+        ratio_table = _load_gao_fig2_ratio_table(data_dir, ns_value)
+        ratios = ratio_table["ratio"].to_numpy(dtype=float)
+        q25, median, q75 = np.quantile(ratios, [0.25, 0.5, 0.75])
+        rows.append(
+            {
+                "ns": float(ns_value),
+                "n_halos": int(len(ratios)),
+                "q25": float(q25),
+                "median": float(median),
+                "q75": float(q75),
+            }
+        )
+    return pd.DataFrame(rows).sort_values("ns").reset_index(drop=True)
 
 
 def load_mpb(mpb_path: Path) -> pd.DataFrame:
@@ -598,12 +876,12 @@ def _load_final_gcs_table(
     path: Path,
     expected_len: int,
     expected_halo_ids: np.ndarray,
-) -> Tuple[np.ndarray, np.ndarray]:
+) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Load final GC masses/radii from the published merged finalGCs table."""
 
     columns = _read_comment_columns(path)
     col_index = {name: idx for idx, name in enumerate(columns)}
-    for required in ["halo_id_z0", "gc_index_halo", "m_final_msun", "r_final_kpc"]:
+    for required in ["halo_id_z0", "gc_index_halo", "status", "m_final_msun", "r_final_kpc"]:
         if required not in col_index:
             raise ValueError(f"Missing required column '{required}' in {path}.")
 
@@ -633,11 +911,12 @@ def _load_final_gcs_table(
             "when comparing gc_index_halo."
         )
 
+    status = np.asarray(arr[:, col_index["status"]], dtype=int)
     m_final = np.asarray(arr[:, col_index["m_final_msun"]], dtype=float)
     r_final = np.asarray(arr[:, col_index["r_final_kpc"]], dtype=float)
     m_final = np.where(np.isfinite(m_final) & (m_final > 0), m_final, 0.0)
     r_final = np.where(np.isfinite(r_final) & (r_final > 0), r_final, np.nan)
-    return m_final, r_final
+    return status, m_final, r_final
 
 
 def _load_halo_summary(path: Path) -> pd.DataFrame:
@@ -715,19 +994,28 @@ def _build_halo_summary_from_final_gcs(
     for hid, grp in gc_tmp.groupby("hid_z0", sort=True):
         s = grp["status"].to_numpy(dtype=int)
         seed_mass = grp["imbh_mass_msun"].to_numpy(dtype=float)
+        n_sunk_gc = int(np.sum(s == -3))
+        n_sunk_wanderer = int(np.sum(s == -5))
+        m_smbh_gc_sunk = float(seed_mass[s == -3].sum())
+        m_smbh_wanderer_sunk = float(seed_mass[s == -5].sum())
         rows.append(
             {
                 "hid_z0": int(hid),
                 "logMh_z0": float(grp["logMh_z0"].iloc[0]),
                 "n_gc_total": int(len(grp)),
                 "n_alive": int(np.sum(s == 1)),
+                "n_wanderer": int(np.sum(s == -4)),
                 "n_exhausted": int(np.sum(s == -1)),
                 "n_torn": int(np.sum(s == -2)),
-                "n_sunk": int(np.sum(s == -3)),
+                "n_sunk_gc": n_sunk_gc,
+                "n_sunk_wanderer": n_sunk_wanderer,
+                "n_sunk": n_sunk_gc + n_sunk_wanderer,
                 "m_gc_init_total_msun": float(grp["m_init_msun"].sum()),
                 "m_gc_final_total_msun": float(grp["m_final_msun"].sum()),
                 "m_imbh_seed_total_msun": float(seed_mass.sum()),
-                "m_smbh_est_msun": float(seed_mass[s == -3].sum()),
+                "m_smbh_gc_sunk_msun": m_smbh_gc_sunk,
+                "m_smbh_wanderer_sunk_msun": m_smbh_wanderer_sunk,
+                "m_smbh_est_msun": m_smbh_gc_sunk + m_smbh_wanderer_sunk,
             }
         )
     return pd.DataFrame(rows).sort_values("hid_z0").reset_index(drop=True)
@@ -840,7 +1128,7 @@ def simulate_models(
         r_init = np.where(np.isfinite(r_init) & (r_init > 0), r_init, np.nan)
 
         final_gcs_path = _find_final_gcs_file(allcat_ns_path)
-        m_final, r_final = _load_final_gcs_table(
+        status, m_final, r_final = _load_final_gcs_table(
             final_gcs_path,
             expected_len=n_tot,
             expected_halo_ids=np.asarray(gc_ns["hid_z0"], dtype=int),
@@ -862,6 +1150,7 @@ def simulate_models(
             r_init=r_init,
             r_final=r_final,
             m_final=m_final,
+            status=status,
             deposit_profile=deposit_profile,
             halo_summary=halo_summary,
         )
@@ -904,7 +1193,7 @@ def _surface_density_mean_by_halo(
 def _final_survivor_mask(model: ModelResult, extra_mask: np.ndarray | None = None) -> np.ndarray:
     """Return mask selecting only surviving GCs for final-state profiles."""
 
-    mask = np.asarray(model.m_final, dtype=float) > 0
+    mask = np.asarray(model.status, dtype=int) == 1
     if extra_mask is not None:
         mask &= np.asarray(extra_mask, dtype=bool)
     return mask
@@ -1183,7 +1472,7 @@ def _add_discrete_ns_colorbar(
     cbar.set_ticklabels([f"{ns:.1f}" for ns in ns_levels])
     cbar.ax.minorticks_off()
     cbar.ax.tick_params(length=0, width=0, pad=1.5)
-    cbar.outline.set_linewidth(0.5) # shrink border thickness
+    #cbar.outline.set_linewidth(0.5) # shrink border thickness
     return cbar
 
 
@@ -1269,6 +1558,7 @@ def build_reproduction(
     seed: int = 7,
     include_observables: bool = True,
     final_redshift: float | None = None,
+    gao_fig2_dir: Path | None = None,
 ) -> pd.DataFrame:
     """Main reproduction entry point.
 
@@ -1281,6 +1571,7 @@ def build_reproduction(
     output_dir.mkdir(parents=True, exist_ok=True)
     _apply_plot_settings_from_data()
     ns_values = [float(v) for v in ns_values]
+    gao_fig2_dir = gao_fig2_dir.resolve() if gao_fig2_dir is not None else None
     run_meta = _load_run_metadata(allcat_path)
     if final_redshift is None:
         final_redshift = float(run_meta.get("final_redshift", 0.0))
@@ -1354,7 +1645,7 @@ def build_reproduction(
         y.append(y_med / 1.0e-5)
         yerr_low.append(max((y_med - float(q25)) / 1.0e-5, 0.0))
         yerr_high.append(max((float(q75) - y_med) / 1.0e-5, 0.0))
-    plt.figure(constrained_layout=True, dpi=STD_DPI, figsize=(4.0, 3.0))
+    plt.figure(constrained_layout=True, dpi=STD_DPI, figsize=(4.8, 3.6))
     plt.errorbar(
         ns_values,
         y,
@@ -1365,7 +1656,28 @@ def build_reproduction(
         mec="black",
         capsize=4,
         lw=1.0,
+        label="High-z-SMBHs",
+        zorder=3,
     )
+    if gao_fig2_dir is not None:
+        gao_fig2_summary = _build_gao_fig2_summary(gao_fig2_dir)
+        gao_x = gao_fig2_summary["ns"].to_numpy(dtype=float)
+        gao_med = gao_fig2_summary["median"].to_numpy(dtype=float) / 1.0e-5
+        gao_q25 = gao_fig2_summary["q25"].to_numpy(dtype=float) / 1.0e-5
+        gao_q75 = gao_fig2_summary["q75"].to_numpy(dtype=float) / 1.0e-5
+        plt.errorbar(
+            gao_x,
+            gao_med,
+            yerr=[gao_med - gao_q25, gao_q75 - gao_med],
+            marker="o",
+            color="tab:orange",
+            mfc="white",
+            mec="tab:orange",
+            capsize=4,
+            lw=1.0,
+            label="Gao+2023",
+            zorder=2,
+        )
     if include_observables:
         ref_colors = {"S09": "blue", "G10": "red", "H14": "c", "H17": "green"}
         for label, ratio in obs_overlay["fig2_ratio_refs"].items():
@@ -1382,14 +1694,16 @@ def build_reproduction(
     plt.xlim(0.0, 4.5)
     plt.ylim(1.0, 9.0)
     plt.xticks([0, 1, 2, 3, 4])
-    if include_observables:
-        plt.legend(frameon=False, fontsize=9, loc="upper left", ncol=2)
+    plt.yticks([1, 3, 5, 7, 9])
+    plt.grid(True, alpha=0.2, linestyle=':', which='both')
+    if include_observables or (gao_fig2_dir is not None):
+        plt.legend(frameon=False, loc="upper left", ncol=2)
     save(2, "mgc_mhalo_ratio")
 
     ns_levels, ns_cmap, ns_norm, ns_boundaries, ns_color_lookup = _build_discrete_ns_style(ns_values)
 
     # Figure 3: global radial number-density profile, initial vs final.
-    fig, ax = plt.subplots(constrained_layout=True, dpi=STD_DPI, figsize=(4.2, 3.0))
+    fig, ax = plt.subplots(constrained_layout=True, dpi=STD_DPI, figsize=(4.8, 3.2))
     halo_ids = gc["hid_z0"].to_numpy(dtype=int)
     for i_ns, ns in enumerate(ns_values):
         model = models[float(ns)]
@@ -1404,41 +1718,32 @@ def build_reproduction(
         ax.plot(c0, d0, "--", lw=1.0, color=color)
         ax.plot(c1, d1, "-", lw=1.0, color=color)
     if include_observables:
-        f3_g14 = obs_overlay["fig3_g14"]
-        f3_b21 = obs_overlay["fig3_b21"]
-        f3_rbc = obs_overlay["fig3_rbc"]
-        ax.plot(
-            f3_g14["r_kpc"],
-            f3_g14["sigma"],
-            color="red",
-            lw=1.0,
-            ls=":",
-            label="G14",
-        )
+        f3_g14 = obs_overlay["fig3_G14"]
+        f3_b21 = obs_overlay["fig3_B21"]
+        f3_rbc = obs_overlay["fig3_RBCver5"]
+        ax.plot(f3_g14["r_kpc"], f3_g14["Sigma"], color="red", ls=":", label="G14")
         ax.errorbar(
             f3_b21["r_kpc"],
-            f3_b21["sigma"],
+            f3_b21["Sigma"],
             xerr=f3_b21["xerr"],
             yerr=f3_b21["yerr"],
             fmt="o",
             color="#d12ad1",
-            ms=2.0,
-            capsize=1.0,
+            ms=1.5,
+            capsize=1.5,
             lw=0.5,
-            label="B21",
-        )
+            label="B21")
         ax.errorbar(
             f3_rbc["r_kpc"],
-            f3_rbc["sigma"],
+            f3_rbc["Sigma"],
             xerr=f3_rbc["xerr"],
             yerr=f3_rbc["yerr"],
             fmt="o",
             color="black",
-            ms=2.0,
-            capsize=1.0,
+            ms=1.5,
+            capsize=1.5,
             lw=0.5,
-            label="RBCver.5",
-        )
+            label="RBCver.5")
     ax.set_xscale("log")
     ax.set_yscale("log")
     ax.set_xlabel(r"$r~[\mathrm{kpc}]$")
@@ -1495,11 +1800,11 @@ def build_reproduction(
         plt.plot(c0, d0, "--", lw=1.5, color=color, label=f"{label}")
         plt.plot(c1, d1, "-", lw=1.8, color=color)
     if include_observables:
-        f3_b21 = obs_overlay["fig3_b21"]
-        f3_rbc = obs_overlay["fig3_rbc"]
+        f3_b21 = obs_overlay["fig3_B21"]
+        f3_rbc = obs_overlay["fig3_RBCver5"]
         plt.errorbar(
             f3_b21["r_kpc"],
-            f3_b21["sigma"],
+            f3_b21["Sigma"],
             xerr=f3_b21["xerr"],
             yerr=f3_b21["yerr"],
             fmt="o",
@@ -1511,7 +1816,7 @@ def build_reproduction(
         )
         plt.errorbar(
             f3_rbc["r_kpc"],
-            f3_rbc["sigma"],
+            f3_rbc["Sigma"],
             xerr=f3_rbc["xerr"],
             yerr=f3_rbc["yerr"],
             fmt="o",
@@ -1528,7 +1833,7 @@ def build_reproduction(
     plt.xlim(0.1, 200.0)
     plt.ylim(1.0e-4, 2.0e2)
     plt.yticks([1.0e-4, 1.0e-2, 1.0, 100.0])
-    plt.legend(fontsize=10, frameon=False)
+    plt.legend(frameon=False)
     save(7, "number_density_by_z_h")
 
     # Figure 8: MW-like in-situ final mass function.
@@ -1661,7 +1966,7 @@ def build_reproduction(
     if bh_means_fig10:
         ylo10 = min(ylo10, 10.0 ** np.floor(np.log10(max(min(bh_means_fig10), 1.0e-6))))
     ax.set_ylim(ylo10, 3.0e8)
-    ax.legend(fontsize=10, frameon=False, loc="lower right", ncol=2)
+    ax.legend(frameon=False, loc="lower right", ncol=2)
     _add_discrete_ns_colorbar(
         fig,
         ax,
@@ -1756,7 +2061,7 @@ def build_reproduction(
     ax.set_ylabel(r"$M_{\rm encl}~[M_\odot]$")
     ax.set_xlim(2.0, 1.0e4)
     ax.set_ylim(4.0e4, 2.0e9)
-    ax.legend(fontsize=9, frameon=False, loc="lower right", ncol=2)
+    ax.legend(frameon=False, loc="lower right", ncol=2)
     save(11, "cum_mass_by_zhm")
 
     # Figure 16: z_hm correlation panels for MW-like halos.
@@ -1897,6 +2202,15 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=7, help="Random seed for stochastic scatter.")
     parser.add_argument("--final-z", "--final-redshift", dest="final_z", type=float, default=None)
     parser.add_argument(
+        "--gao-fig2-dir",
+        type=Path,
+        default=None,
+        help=(
+            "Optional Gao+2023 merged-output directory containing haloSummary_ns*.csv "
+            "and all_<Ns>.txt for a Figure 2 comparison overlay."
+        ),
+    )
+    parser.add_argument(
         "--no-observables",
         action="store_true",
         help="Disable observational overlays.",
@@ -1912,6 +2226,7 @@ def main() -> None:
         seed=args.seed,
         include_observables=not args.no_observables,
         final_redshift=args.final_z,
+        gao_fig2_dir=args.gao_fig2_dir,
     )
     print(f"FIGURES_WRITTEN {len(manifest)}")
     print(manifest.to_string(index=False))

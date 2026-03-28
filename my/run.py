@@ -46,7 +46,8 @@ import smhm  # noqa: E402
 NS_VALUES_DEFAULT = (0.5, 1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0)
 
 FINAL_GC_HEADER = "\n".join([
-    "hid_z0 logMh_z0 subfind_form logMh_form logMstar_form logMgas_form logM_form zform feh r_galaxy_kpc",
+    ("hid_z0 logMh_z0 subfind_form logMh_form logMstar_form logMgas_form "
+     "logM_form zform feh r_galaxy_kpc gc_radius_pc sigma_h_msun_pc2 imbh_mass_msun"),
     "rows: one formed GC per row; this is the per-halo format evolution input table",])
 
 ALLCAT_HEADER = "\n".join([
@@ -83,12 +84,17 @@ HALO_SUMMARY_COLUMNS = [
     "logMh_z0",
     "n_gc_total",
     "n_alive",
+    "n_wanderer",
     "n_exhausted",
     "n_torn",
+    "n_sunk_gc",
+    "n_sunk_wanderer",
     "n_sunk",
     "m_gc_init_total_msun",
     "m_gc_final_total_msun",
     "m_imbh_seed_total_msun",
+    "m_smbh_gc_sunk_msun",
+    "m_smbh_wanderer_sunk_msun",
     "m_smbh_est_msun",
 ]
 
@@ -141,6 +147,30 @@ def _parse_ns_values(text: str) -> List[float]:
     if not out:
         raise ValueError("No valid N_s values were provided.")
     return out
+
+
+def _parse_halo_id_list(text: str) -> List[int]:
+    """Parse one comma-separated list of z=0 halo IDs."""
+
+    if text is None:
+        return []
+    values = set()
+    for raw_token in str(text).split(","):
+        token = raw_token.strip()
+        if not token:
+            continue
+        try:
+            halo_id = int(token)
+        except ValueError as exc:
+            raise ValueError(
+                f"invalid halo ID '{token}' in --exclude_halo; expected comma-separated integers"
+            ) from exc
+        if halo_id < 0:
+            raise ValueError(
+                f"invalid halo ID '{token}' in --exclude_halo; expected non-negative integers"
+            )
+        values.add(halo_id)
+    return sorted(values)
 
 
 def _clear_dir_contents(path: Path) -> None:
@@ -328,21 +358,28 @@ def _build_halo_summary_table(
         idx = hid == int(hid0)
         s = status[idx]
         imbh = imbh_mass[idx]
-        # `m_smbh_est_msun` is defined operationally as the sum of IMBH seeds
-        # for clusters that ended in the sunk-to-center state.
+        n_sunk_gc = int(np.sum(s == -3))
+        n_sunk_wanderer = int(np.sum(s == -5))
+        m_smbh_gc_sunk = float(np.sum(imbh[s == -3]))
+        m_smbh_wanderer_sunk = float(np.sum(imbh[s == -5]))
         rows.append(
             {
                 "hid_z0": int(hid0),
                 "logMh_z0": float(logmh_z0[idx][0]),
                 "n_gc_total": int(np.sum(idx)),
                 "n_alive": int(np.sum(s == 1)),
+                "n_wanderer": int(np.sum(s == -4)),
                 "n_exhausted": int(np.sum(s == -1)),
                 "n_torn": int(np.sum(s == -2)),
-                "n_sunk": int(np.sum(s == -3)),
+                "n_sunk_gc": n_sunk_gc,
+                "n_sunk_wanderer": n_sunk_wanderer,
+                "n_sunk": n_sunk_gc + n_sunk_wanderer,
                 "m_gc_init_total_msun": float(np.sum(m_init[idx])),
                 "m_gc_final_total_msun": float(np.sum(m_final[idx])),
                 "m_imbh_seed_total_msun": float(np.sum(imbh)),
-                "m_smbh_est_msun": float(np.sum(imbh[s == -3])),
+                "m_smbh_gc_sunk_msun": m_smbh_gc_sunk,
+                "m_smbh_wanderer_sunk_msun": m_smbh_wanderer_sunk,
+                "m_smbh_est_msun": m_smbh_gc_sunk + m_smbh_wanderer_sunk,
             }
         )
 
@@ -531,6 +568,7 @@ def _run_main_spatial_for_ns(
     log_mh_min: float,
     log_mh_max: float,
     n_halos: int,
+    exclude_halo: Sequence[int],
     imbh: int,
     final_redshift: float,
     quiet: bool,
@@ -563,11 +601,18 @@ def _run_main_spatial_for_ns(
         f"{float(log_mh_max):g}",
         "--n-halos",
         str(int(n_halos)),
+    ]
+    if exclude_halo:
+        cmd.extend([
+            "--exclude_halo",
+            ",".join(str(int(hid)) for hid in exclude_halo),
+        ])
+    cmd.extend([
         "--IMBH",
         str(int(imbh)),
         "--final-z",
         f"{float(final_redshift):g}",
-    ]
+    ])
     with log_path.open("w") as logf:
         subprocess.run(cmd, cwd=gao_root, check=True, stdout=logf, stderr=subprocess.STDOUT)
     if not quiet:
@@ -673,7 +718,9 @@ def _evolve_one_halo_task(
     bgsw: int,
     ts_m: float,
     ts_r: float,
+    analy: int,
     final_redshift: float,
+    fortran_bug: bool,
     verbose: bool,
 ) -> tuple[int, np.ndarray, np.ndarray, np.ndarray]:
     """Worker for one halo evolution.
@@ -687,9 +734,9 @@ def _evolve_one_halo_task(
     tree_halo_p = Path(tree_halo)
 
     gcini_halo = tmp_work_dir_p / f"gcini_halo{hz0}_ns{ns_tag}.txt"
-    # The fast evolution code still expects the historical 10-column Hui table,
-    # so each halo gets a temporary view of just its own rows in that format.
-    np.savetxt(gcini_halo, halo_rows[:, :10], fmt="%.10e", header=FINAL_GC_HEADER)
+    # The fast evolution code now reads the modern per-GC formation rows,
+    # including the fixed IMBH seed mass used by the wanderer branch.
+    np.savetxt(gcini_halo, halo_rows, fmt="%.10e", header=FINAL_GC_HEADER)
 
     depos_halo = _tmp_depos_halo_path(tmp_work_dir_p, hz0, ns_tag)
     gcfin_halo = _tmp_final_gcs_halo_path(tmp_work_dir_p, hz0, ns_tag)
@@ -697,13 +744,15 @@ def _evolve_one_halo_task(
         bgsw=bgsw,
         ts_m=ts_m,
         ts_r=ts_r,
+        analy=analy,
         gcini_path=gcini_halo,
         depos_path=depos_halo,
         gcfin_path=gcfin_halo,
         haloevo_path=tree_halo_p,
         verbose=verbose,
         sersic_n=float(ns),
-        final_redshift=final_redshift,)
+        final_redshift=final_redshift,
+        fortran_bug=fortran_bug,)
 
     return (
         int(hz0),
@@ -730,11 +779,14 @@ def _run_single_ns_pipeline(
     log_mh_min: float,
     log_mh_max: float,
     n_halos: int,
+    exclude_halo: Sequence[int],
     imbh: int,
     bgsw: int,
     ts_m: float,
     ts_r: float,
+    analy: int,
     final_redshift: float,
+    fortran_bug: bool,
     jobs: int,
     quiet: bool,
 ) -> tuple[float, np.ndarray, pd.DataFrame, pd.DataFrame]:
@@ -770,6 +822,7 @@ def _run_single_ns_pipeline(
         log_mh_min=log_mh_min,
         log_mh_max=log_mh_max,
         n_halos=n_halos,
+        exclude_halo=exclude_halo,
         imbh=imbh,
         final_redshift=final_redshift,
         quiet=quiet,
@@ -803,7 +856,7 @@ def _run_single_ns_pipeline(
                 print(f"N_s={ns_tag}: evolving halo {hz0} ({len(idx)} GCs)")
             hz0_ret, status_h, m_final_h, r_final_h = _evolve_one_halo_task(
                 hz0=int(hz0),
-                halo_rows=np.array(all_rows[idx, :10], dtype=float, copy=True),
+                halo_rows=np.array(all_rows[idx, :], dtype=float, copy=True),
                 ns=float(ns),
                 ns_tag=ns_tag,
                 tmp_work_dir=str(tmp_gcini_dir),
@@ -811,7 +864,9 @@ def _run_single_ns_pipeline(
                 bgsw=bgsw,
                 ts_m=ts_m,
                 ts_r=ts_r,
+                analy=analy,
                 final_redshift=final_redshift,
+                fortran_bug=fortran_bug,
                 verbose=not quiet,
             )
             status[idx] = status_h
@@ -827,7 +882,7 @@ def _run_single_ns_pipeline(
                 fut = ex.submit(
                     _evolve_one_halo_task,
                     hz0=int(hz0),
-                    halo_rows=np.array(all_rows[idx, :10], dtype=float, copy=True),
+                    halo_rows=np.array(all_rows[idx, :], dtype=float, copy=True),
                     ns=float(ns),
                     ns_tag=ns_tag,
                     tmp_work_dir=str(tmp_gcini_dir),
@@ -835,7 +890,9 @@ def _run_single_ns_pipeline(
                     bgsw=bgsw,
                     ts_m=ts_m,
                     ts_r=ts_r,
+                    analy=analy,
                     final_redshift=final_redshift,
+                    fortran_bug=fortran_bug,
                     verbose=False,
                 )
                 futures[fut] = int(hz0)
@@ -901,7 +958,9 @@ def main() -> None:
     parser.add_argument("--bgsw", type=int, default=1, help="background model: 1 evolving host, 0 fixed Sersic MW-like, -1 fixed bulge+disk+DM MW-like")
     parser.add_argument("--ts-m", type=float, default=0.5, help="adaptive mass-loss timestep factor for evoGC_fast")
     parser.add_argument("--ts-r", type=float, default=0.5, help="adaptive orbital-decay timestep factor for evoGC_fast")
+    parser.add_argument("--analy", type=int, choices=[0, 1], default=0, help="if 1, use analytic background-density evaluation in evoGC_fast instead of the lookup-table mode")
     parser.add_argument("--final-z", "--final-redshift", dest="final_z", type=float, default=0.0, help="final redshift where the run stops; 0 means the present day")
+    parser.add_argument("--Fortran", dest="fortran_mode", action="store_true", help="make evoGC_fast emulate the archived Fortran HaloBG first-character reader bug")
 
     # Formation-model parameters passed directly to main_spatial.py.
     parser.add_argument("--p2", type=float, default=6.75, help="GC formation-efficiency normalization in M_GC = 3e-5 * p2 * M_gas / f_b")
@@ -912,6 +971,7 @@ def main() -> None:
     parser.add_argument("--log-mh-min", type=float, default=11.5, help="minimum retained host-halo log mass at the chosen final redshift")
     parser.add_argument("--log-mh-max", type=float, default=12.5, help="maximum retained host-halo log mass at the chosen final redshift")
     parser.add_argument("--n-halos", type=int, default=10, help="maximum number of halos to run when --run-all=0")
+    parser.add_argument("--exclude_halo", type=str, default="", help="comma-separated z=0 halo IDs to exclude before halo selection and counting")
     parser.add_argument("--IMBH", type=int, choices=[0, 1], default=1, help="enable the IMBH seeding module in main_spatial if 1, otherwise write zero IMBH-related columns")
     parser.add_argument("--jobs", type=int, default=1, help="Parallel halo-evolution workers per N_s run.")
     parser.add_argument("--ns-jobs", type=int, default=1, help="Concurrent N_s pipelines.")
@@ -937,6 +997,7 @@ def main() -> None:
         output_dir.mkdir(parents=True, exist_ok=True)
 
     ns_values = _parse_ns_values(args.ns_values)
+    exclude_halo = _parse_halo_id_list(args.exclude_halo)
     z_snap = _build_snap_map(data_dir / "snaps2redshifts.txt")
 
     # These directories are only transient working areas for the formation
@@ -977,11 +1038,14 @@ def main() -> None:
                     log_mh_min=args.log_mh_min,
                     log_mh_max=args.log_mh_max,
                     n_halos=args.n_halos,
+                    exclude_halo=exclude_halo,
                     imbh=args.IMBH,
                     bgsw=args.bgsw,
                     ts_m=args.ts_m,
                     ts_r=args.ts_r,
+                    analy=args.analy,
                     final_redshift=args.final_z,
+                    fortran_bug=args.fortran_mode,
                     jobs=args.jobs,
                     quiet=args.quiet,
                 )
@@ -1015,11 +1079,14 @@ def main() -> None:
                         log_mh_min=args.log_mh_min,
                         log_mh_max=args.log_mh_max,
                         n_halos=args.n_halos,
+                        exclude_halo=exclude_halo,
                         imbh=args.IMBH,
                         bgsw=args.bgsw,
                         ts_m=args.ts_m,
                         ts_r=args.ts_r,
+                        analy=args.analy,
                         final_redshift=args.final_z,
+                        fortran_bug=args.fortran_mode,
                         jobs=args.jobs,
                         quiet=args.quiet,
                     )
@@ -1075,6 +1142,8 @@ def main() -> None:
                     "bgsw": int(args.bgsw),
                     "ts_m": float(args.ts_m),
                     "ts_r": float(args.ts_r),
+                    "analy": int(args.analy),
+                    "fortran_mode": bool(args.fortran_mode),
                     "p2": float(args.p2),
                     "p3": float(args.p3),
                     "mc": float(args.mc),
@@ -1084,6 +1153,7 @@ def main() -> None:
                     "log_mh_min": float(args.log_mh_min),
                     "log_mh_max": float(args.log_mh_max),
                     "n_halos": int(args.n_halos),
+                    "exclude_halo": [int(v) for v in exclude_halo],
                     "ns_values": [float(v) for v in ns_values],
                 },
                 f,

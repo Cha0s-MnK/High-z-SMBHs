@@ -1,4 +1,4 @@
-# Gao+2023
+# High-z SMBHs
 
 Python-only workflow for the Gao et al. (2023) globular-cluster model in this
 repository. The active workflow uses only raw files under `data/` as simulation inputs.
@@ -20,27 +20,58 @@ repository. The active workflow uses only raw files under `data/` as simulation 
 This command rebuilds the outputs from scratch for the full `N_s` list:
 
 ```bash
-nohup python3 /home/subonan/Gao+2023/my/run.py \
-  --gao-root /home/subonan/Gao+2023 \
-  --output /lingshan/disk3/subonan/_outputs/Gao+2023_new --clear-output \
+nohup python3 /home/subonan/High-z-SMBHs/my/run.py \
+  --gao-root /home/subonan/High-z-SMBHs \
+  --output /lingshan/disk3/subonan/_outputs/High-z-SMBHs_new --clear-output \
   --run-all 1 \
   --final-z 0.0 --ns-values 0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0 \
   --jobs 8 --ns-jobs 8 \
-  --plot > /home/subonan/Gao+2023/my/run.log 2>&1 &
-python3 /home/subonan/Gao+2023/my/run.py \
-  --gao-root /home/subonan/Gao+2023 \
+  --plot > /home/subonan/High-z-SMBHs/my/run.log 2>&1 &
+python3 /home/subonan/High-z-SMBHs/my/run.py \
+  --gao-root /home/subonan/High-z-SMBHs \
+  --tree-dir /home/subonan/Gao+2023/GC_model/fixed_trees_large_spin \
+  --output /lingshan/disk3/subonan/_outputs/High-z-SMBHs_origMW64 --clear-output \
+  --run-all 0 --n-halos 64 --log-mh-min 11.8865 --log-mh-max 12.0969 \
+  --final-z 0.0 --IMBH 0 --ns-values 0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0 \
+  --jobs 4 --ns-jobs 8 \
+  --plot
+python3 /home/subonan/High-z-SMBHs/my/run.py \
+  --gao-root /home/subonan/High-z-SMBHs \
   --tree-dir /lingshan/disk3/subonan/Illustris-Dark/data/fixed_trees_large_spin_dark \
-  --output /lingshan/disk3/subonan/_outputs/Gao+2023_MW512 --clear-output \
-  --run-all 0 --n-halos 512 --log-mh-min 11.88 --log-mh-max 12.1 \
+  --output /lingshan/disk3/subonan/_outputs/High-z-SMBHs_MW64 --clear-output \
+  --run-all 0 --n-halos 64 --log-mh-min 11.8865 --log-mh-max 12.0969 \
   --final-z 0.0 --ns-values 0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0 \
   --jobs 4 --ns-jobs 8 \
   --plot
-python3 /home/subonan/Gao+2023/my/run.py \
-  --gao-root /home/subonan/Gao+2023 \
-  --output /lingshan/disk3/subonan/_outputs/Gao+2023_MW+M31 --clear-output \
-  --run-all 0 --n-halos 32 --log-mh-min 11.84 --log-mh-max 12.4 \
-  --final-z 7.5 --ns-values 0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0 \
-  --jobs 2 --ns-jobs 8
+python3 /home/subonan/High-z-SMBHs/my/run.py \
+  --gao-root /home/subonan/High-z-SMBHs \
+  --tree-dir /lingshan/disk3/subonan/Illustris-Dark/data/fixed_trees_large_spin_dark \
+  --output /lingshan/disk3/subonan/_outputs/High-z-SMBHs_MW+M31 --clear-output \
+  --run-all 0 --n-halos 512 --log-mh-min 11.84 --log-mh-max 12.4 \
+  --final-z 0.0 --IMBH 0 --ns-values 0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0 \
+  --jobs 4 --ns-jobs 8 \
+  --plot
+```
+
+To test:
+
+```bash
+python3 /home/subonan/High-z-SMBHs/my/run.py \
+  --gao-root /home/subonan/High-z-SMBHs \
+  --tree-dir /home/subonan/Gao+2023/GC_model/fixed_trees_large_spin \
+  --output /lingshan/disk3/subonan/_outputs/High-z-SMBHs_origMW64_wrong --clear-output \
+  --run-all 0 --n-halos 64 --log-mh-min 11.8865 --log-mh-max 12.0969 \
+  --analy 1 --final-z 0.0 --Fortran --IMBH 0 --ns-values 0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0 \
+  --jobs 4 --ns-jobs 8 \
+  --plot
+python3 /home/subonan/High-z-SMBHs/my/run.py \
+  --gao-root /home/subonan/High-z-SMBHs \
+  --tree-dir /lingshan/disk3/subonan/Illustris-Dark/data/fixed_trees_large_spin_dark \
+  --output /lingshan/disk3/subonan/_outputs/High-z-SMBHs_MW64_analy --clear-output \
+  --run-all 0 --n-halos 64 --log-mh-min 11.8865 --log-mh-max 12.0969 \
+  --analy 1 --final-z 0.0 --IMBH 0 --ns-values 0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0 \
+  --jobs 4 --ns-jobs 8 \
+  --plot
 ```
 
 Notes:
@@ -49,6 +80,8 @@ Notes:
 - `--jobs` controls parallel halo evolution per `N_s` run. Adjust it to your
   machine.
 - `--ns-jobs` controls how many `N_s` values are processed concurrently.
+- `--exclude_halo 55,65,86` removes specific `z=0` host halo IDs before the
+  mass-window filter and `--n-halos` cap are counted.
 - `--plot` runs `my/plot.py` automatically after the model finishes and writes
   figures to `<output>/_plots/`.
 - Temporary staging directories are created under the system temp area and
@@ -60,8 +93,8 @@ Notes:
   `finalGCs_all.dat` and `depos_all.dat`.
 - `finalGCs_ns*.dat` now subsumes the old `logm` and `rgal` outputs.
 - `haloSummary_ns*.csv` and `haloSummary_all.csv` now store halo-level status counts
-  and the SMBH estimate from sunk GC IMBH seeds.
-- Outputs are written to `/lingshan/disk3/subonan/_outputs/Gao+2023`.
+  and the SMBH estimate from both sunk GC IMBH seeds and sunk IMBH wanderers.
+- Outputs are written to `/lingshan/disk3/subonan/_outputs/High-z-SMBHs`.
 
 ## Run Parameters
 
@@ -83,6 +116,8 @@ The active workflow no longer uses the legacy `input.txt` file. The old
 - `--log-mh-max`: upper bound on the retained host-halo log mass used for halo
   selection when `--run-all 0`.
 - `--n-halos`: maximum number of halos to keep when `--run-all 0`.
+- `--exclude_halo`: comma-separated list of `z=0` halo IDs, taken from the
+  numeric fixed-tree filenames, to skip before halo counting and selection.
 - `--final-z`: redshift where both the formation-stage survivor cut and the
   orbit-evolution stage stop. `0.0` means the present day.
 
@@ -139,11 +174,12 @@ the deposited-mass bookkeeping inside the orbit solver:
 After the simulation finishes, run:
 
 ```bash
-python /home/subonan/Gao+2023/my/plot.py \
-  --allcat /lingshan/disk3/subonan/_outputs/Gao+2023_MW/allcat_s-0_p2-6.75_p3-0.5.txt \
-  --mpb /lingshan/disk3/subonan/_outputs/Gao+2023_MW/mpb_from_fixed_trees.csv \
+python /home/subonan/High-z-SMBHs/my/plot.py \
+  --allcat /lingshan/disk3/subonan/_outputs/High-z-SMBHs_origMW64_wrong/allcat_s-0_p2-6.75_p3-0.5.txt \
+  --mpb /lingshan/disk3/subonan/_outputs/High-z-SMBHs_origMW64_wrong/mpb_from_fixed_trees.csv \
   --ns-values 0.5,1.0,1.5,2.0,2.5,3.0,3.5,4.0 \
-  --output /lingshan/disk3/subonan/_outputs/Gao+2023_MW/_plots
+  --output /lingshan/disk3/subonan/_outputs/High-z-SMBHs_origMW64_wrong/_plots \
+  --gao-fig2-dir /lingshan/disk3/subonan/_outputs/Gao+2023Mod_origMW64
 ```
 
 The script writes the current 10-figure subset plus
@@ -224,6 +260,8 @@ Status codes:
 - `-1`: exhausted to zero mass
 - `-2`: tidally torn apart
 - `-3`: sunk into the galaxy center
+- `-4`: surviving IMBH wanderer at the final redshift
+- `-5`: IMBH wanderer sunk into the galaxy center
 
 #### `finalGCs_all.dat`
 
@@ -284,12 +322,17 @@ Columns:
 - `logMh_z0`
 - `n_gc_total`
 - `n_alive`
+- `n_wanderer`
 - `n_exhausted`
 - `n_torn`
+- `n_sunk_gc`
+- `n_sunk_wanderer`
 - `n_sunk`
 - `m_gc_init_total_msun`
 - `m_gc_final_total_msun`
 - `m_imbh_seed_total_msun`
+- `m_smbh_gc_sunk_msun`
+- `m_smbh_wanderer_sunk_msun`
 - `m_smbh_est_msun`
 - `ns`
 
@@ -396,12 +439,17 @@ Columns:
 - `logMh_z0`
 - `n_gc_total`
 - `n_alive`
+- `n_wanderer`
 - `n_exhausted`
 - `n_torn`
+- `n_sunk_gc`
+- `n_sunk_wanderer`
 - `n_sunk`
 - `m_gc_init_total_msun`
 - `m_gc_final_total_msun`
 - `m_imbh_seed_total_msun`
+- `m_smbh_gc_sunk_msun`
+- `m_smbh_wanderer_sunk_msun`
 - `m_smbh_est_msun`
 
 ### Temporary directories
