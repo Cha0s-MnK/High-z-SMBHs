@@ -1,0 +1,617 @@
+%% Beginning of file 'sample701.tex'
+%%
+%% Version 7.0.1. Created May 2025.
+%% Version 7. Created January 2025.  
+%%
+%% AASTeX v7+ calls the following external packages:
+%% times, hyperref, ifthen, hyphens, longtable, xcolor, 
+%% bookmarks, array, rotating, ulem, and lineno 
+%%
+%% RevTeX is no longer used in AASTeX v7+.
+%%
+\documentclass[trackchanges, twocolappendix, twocolumn]{aastex701}
+%%
+%% This initial command takes arguments that can be used to easily modify 
+%% the output of the compiled manuscript. Any combination of arguments can be 
+%% invoked like this:
+%%
+%% \documentclass[argument1,argument2,argument3,...]{aastex701}
+%%
+%% Six of the arguments are typestting options. They are:
+%%
+%%  twocolumn   : two text columns, 10 point font, single spaced article.
+%%                This is the most compact and represent the final published
+%%                derived PDF copy of the accepted manuscript from the publisher
+%%  default     : one text column, 10 point font, single spaced (default).
+%%  manuscript  : one text column, 12 point font, double spaced article.
+%%  preprint    : one text column, 12 point font, single spaced article.  
+%%  preprint2   : two text columns, 12 point font, single spaced article.
+%%  modern      : a stylish, single text column, 12 point font, article with
+%% 		  wider left and right margins. This uses the Daniel
+%% 		  Foreman-Mackey and David Hogg design.
+%%
+%% Note that you can submit to the AAS Journals in any of these 6 styles.
+%%
+%% There are other optional arguments one can invoke to allow other stylistic
+%% actions. The available options are:
+%%
+%%   astrosymb    : Loads Astrosymb font and define \astrocommands. 
+%%   tighten      : Makes baselineskip slightly smaller, only works with 
+%%                  the twocolumn substyle.
+%%   times        : uses times font instead of the default.
+%%   linenumbers  : turn on linenumbering. Note this is mandatory for AAS
+%%                  Journal submissions and revisions.
+%%   trackchanges : Shows added text in bold.
+%%   longauthor   : Do not use the more compressed footnote style (default) for 
+%%                  the author/collaboration/affiliations. Instead print all
+%%                  affiliation information after each name. Creates a much 
+%%                  longer author list but may be desirable for short 
+%%                  author papers.
+%% twocolappendix : make 2 column appendix.
+%%   anonymous    : Do not show the authors, affiliations, acknowledgments,
+%%                  and author contributions for dual anonymous review.
+%%  resetfootnote : Reset footnotes to 1 in the body of the manuscript.
+%%                  Useful when there are a lot of authors and affiliations
+%%		    in the front matter.
+%%   longbib      : Print article titles in the references. This option
+%% 		    is mandatory for PSJ manuscripts.
+%%
+%% Since v6, AASTeX has included \hyperref support. While we have built in 
+%% specific %% defaults into the classfile you can manually override them 
+%% with the \hypersetup command. For example,
+%%
+%% \hypersetup{linkcolor=red,citecolor=green,filecolor=cyan,urlcolor=magenta}
+%%
+%% will change the color of the internal links to red, the links to the
+%% bibliography to green, the file links to cyan, and the external links to
+%% magenta. Additional information on \hyperref options can be found here:
+%% https://www.tug.org/applications/hyperref/manual.html#x1-40003
+%%
+%% The "bookmarks" has been changed to "true" in hyperref
+%% to improve the accessibility of the compiled pdf file.
+%%
+%% If you want to create your own macros, you can do so
+%% using \newcommand. Your macros should appear before
+%% the \begin{document} command.
+%%
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{booktabs} % professional table rules: \toprule, \midrule, and \bottomrule
+\usepackage{CJK}
+\usepackage{comment}
+\usepackage{txfonts} % replaces text and math fonts with Times-style fonts
+\newcommand{\vdag}{(v)^\dagger}
+\newcommand\aastex{AAS\TeX}
+\newcommand\latex{La\TeX}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% The following section outlines numerous optional output that
+%% can be displayed in the front matter or as running meta-data.
+%%
+%% Running header information. A short title on odd pages and 
+%% short author list on even pages. Note that this
+%% information may be modified in production.
+\shorttitle{\textsc{Arepo-CD}}
+\shortauthors{C. Kong et al.}
+%%
+%% Include dates for submitted, revised, and accepted.
+\received{\today}
+\revised{\today}
+\accepted{\today}
+%%
+%% Indicate AAS Journal the manuscript was submitted to.
+\submitjournal{APJ}
+%% Note that this command adds "Submitted to " the argument.
+%%
+%% You can add a light gray and diagonal water-mark to the first page 
+%% with this command:
+%% \watermark{text}
+%% where "text", e.g. DRAFT, is the text to appear.  If the text is 
+%% long you can control the water-mark size with:
+%% \setwatermarkfontsize{dimension}
+%% where dimension is any recognized LaTeX dimension, e.g. pt, in, etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%% Use this command to indicate a subdirectory where figures are located.
+%%\graphicspath{{./}{figures/}}
+%% This is the end of the preamble.  Indicate the beginning of the
+%% manuscript itself with \begin{document}.
+
+\begin{document}
+\begin{CJK*}{UTF8}{gbsn}
+
+\title{Connecting intermediate-mass black holes formed in globular clusters to high redshift supermassive black holes}
+
+%% A significant change from AASTeX v6+ is in the author blocks. Now an email
+%% address is required for each author. This means that each author requires
+%% at least one of the following:
+%%
+%% \author
+%% \affiliation
+%% \email
+%%
+%% If these three commands are not available for each author, the latex
+%% compiler will issue an error and if you force the latex compiler to continue,
+%% it will generate an incomplete pdf.
+%%
+%% Multiple \affiliation commands are allowed and authors can also include
+%% an optional \altaffiliation to indicate a status, i.e. Hubble Fellow. 
+%% while affiliations are indexed as footnotes, altaffiliations are noted with
+%% with a non-numeric footnote that is set away from the numeric \affiliation 
+%% footnotes. NOTE that if an \altaffiliation command is used it must 
+%% come BEFORE the \affiliation call, right after the \author command, in 
+%% order to place the footnotes in the proper location. Because non-numeric
+%% symbols are used, \altaffiliation should be used sparingly.
+%%
+%% In v7+ the \author command takes an optional argument which provides 
+%% additional metadata about the author. Authors can provide the 16 digit 
+%% ORCID, the surname (family or last) name, the given (first or fore-) name, 
+%% and a name suffix, e.g. "Jr.". The syntax is:
+%%
+%% \author[orcid=0000-0002-9072-1121,gname=Gregory,sname=Schwarz]{Greg Schwarz}
+%%
+%% This name metadata in not shown, it is only for parsing by the peer review
+%% system so authors can be more easily identified. This name information will
+%% also be sent to the publisher so they can include it in the CROSSREF 
+%% metadata. Including an orcid will hyperlink the author name to the 
+%% author's ORCID page. Note that  during compilation, LaTeX will do some 
+%% limited checking of the format of the ID to make sure it is valid. If 
+%% the "orcid-ID.png" image file is  present or in the LaTeX pathway, the 
+%% ORCID icon will appear next to the authors name.
+%%
+%% Even though emails are now required for each author, the \email does not
+%% produce output in the compiled manuscript unless the optional "show" command
+%% is used. For example,
+%%
+%% \email[show]{greg.schwarz@aas.org}
+%%
+%% All "shown" emails are show in the bottom left of the first page. Due to
+%% space constraints, only a few emails should be shown. 
+%%
+%% To identify a corresponding author, use the \correspondingauthor command.
+%% The command appends "Corresponding Author: " to the argument it appears at
+%% the bottom left of the first page like the output from \email. 
+
+\author[0009-0003-9099-5805,gname=Chuizheng,sname=Kong]{Chuizheng Kong (孔垂政)}
+\affiliation{Department of Astronomy, Tsinghua Univeristy, Beijing, 100084, People's Republic of China}
+\email{kcz24@mails.tsinghua.edu.cn}
+
+\author[0000-0002-1253-2763,gname=Hui,sname=Li]{Hui Li (李辉)}
+\affiliation{Department of Astronomy, Tsinghua Univeristy, Beijing, 100084, People's Republic of China}
+\email[show]{hliastro@tsinghua.edu.cn}
+
+%% Use the \collaboration command to identify collaborations. This command
+%% takes an optional argument that is either a number or the word "all"
+%% which tells the compiler how many of the authors above the command to
+%% show. For example "\collaboration[all]{(DELVE Collaboration)}" wil include
+%% all the authors above this command.
+%%
+%% Mark off the abstract in the ``abstract'' environment. 
+\begin{abstract}
+
+This example manuscript is intended to serve as a tutorial and template for
+authors to use when writing their own AAS Journal articles. The manuscript
+includes a history of \aastex\ and documents the new features in the
+previous versions as well as the new features in version 7. This
+manuscript includes many figure and table examples to illustrate these new
+features.  Information on features not explicitly mentioned in the article
+can be viewed in the manuscript comments or more extensive online
+documentation. Authors are welcome replace the text, tables, figures, and
+bibliography with their own and submit the resulting manuscript to the AAS
+Journals peer review system.  The first lesson in the tutorial is to remind
+authors that the AAS Journals, the Astrophysical Journal (ApJ), the
+Astrophysical Journal Letters (ApJL), the Astronomical Journal (AJ), and 
+the Planetary Science Journal (PSJ) all have a 250 word limit for the 
+abstract. The limit is 150 for RNAAS manuscripts. If you exceed this length 
+the Editorial office will ask you to shorten it. This abstract has 189 words.
+
+\end{abstract}
+
+%% Keywords should appear after the \end{abstract} command. 
+%% The AAS Journals now uses Unified Astronomy Thesaurus (UAT) concepts:
+%% https://astrothesaurus.org
+%% You will be asked to selected these concepts during the submission process
+%% but this old "keyword" functionality is maintained in case authors want
+%% to include these concepts in their preprints.
+%%
+%% You can use the \uat command to link your UAT concepts back its source.
+\keywords{\uat{Galaxies}{573} --- \uat{Cosmology}{343} --- \uat{High Energy astrophysics}{739} --- \uat{Interstellar medium}{847} --- \uat{Stellar astronomy}{1583} --- \uat{Solar physics}{1476}}
+
+%% From the front matter, we move on to the body of the paper.
+%% Sections are demarcated by \section and \subsection, respectively.
+%% Observe the use of the LaTeX \label
+%% command after the \subsection to give a symbolic KEY to the
+%% subsection for cross-referencing in a \ref command.
+%% You can use LaTeX's \ref and \label commands to keep track of
+%% cross-references to sections, equations, tables, and figures.
+%% That way, if you change the order of any elements, LaTeX will
+%% automatically renumber them.
+
+\section{Methods} \label{sect:methods}
+
+\subsection{Modelling the formation and evolution of GCs} \label{subsect:model}
+
+We apply a GC formation model on the simulation outputs to study GC systems. We describe GC formation and evolution via 3 steps: (1) GC formation, (2) GC sampling, and (3) GC evolution. In this subsection, we recap the GC model.
+
+\subsubsection{GC formation} \label{subsubsect:form}
+
+We trigger a GC formation event when the specific mass accretion rate of the host galaxy exceeds a threshold value, $p_3$. The specific mass accretion rate, $r_{\rm m}$, is defined as the fractional change of galaxy mass between 2 adjacent simulation snapshots
+\begin{align}
+r_{\rm m} = \dfrac{M_{\rm curr} - M_{\rm prev}}{M_{\rm prev}} \dfrac{1}{t_{\rm curr} - t_{\rm prev}}
+\end{align}
+Since the mass of drak matter (DM) particles in zoom-in regions is around $2 \times 10^5~M_\odot$ we only take into account halos with $M_{\rm h} > 10^8~M_\odot$ to ensure that each halo contains at least 500 particles. Halos smaller than that may be numerically under-resolved, but they are very unlikely to host any massive star clusters.
+
+We analytically calculate the stellar mass of a galaxy from its halo mass using the stellar mass-halo mass (SMHM) relation \citep{Behroozi+2013SMHM}, with a redshift-dependent scatter
+\begin{align}
+\xi (z) = 0.218 + 0.0203 \dfrac{z}{1 + z}
+\label{eq:z_scatter}
+\end{align}
+First, we assign an initial stellar mass to the first progenitor along each branch, $M_{\star, \rm curr}$, sampled from a Gaussian distribution, $\mathcal{N} \left( \overline{M_{\star, \rm curr}}, \xi (z_0) \right)$. Next, we evolve the stellar mass as
+\begin{align}
+M_{\star, \rm curr} = M_{\star, \rm prev}+ \left(\overline{M_{\star, \rm curr}} - \overline{M_{\star, \rm prev}} \right) 10^{\mathcal{N} (0, \xi (z_{\rm curr}))}
+\end{align}
+
+We calculate the cold gas mass via the gas mass–stellar mass (GMSM) relation
+\begin{align}
+\eta (M_\star, z) & = \dfrac{M_{\rm gas}}{M_\star} \notag \\
+& = \begin{cases}
+6.8 \left( \dfrac{M_\star}{10^{9}~M_\odot} \right)^{- n_M (M_\star)} \left( \dfrac{1 + z}{3} \right)^{n_z (z)}, \quad z \leqslant 3 \\
+10.2 \left( \dfrac{M_\star}{10^{9}~M_\odot} \right)^{- n_M (M_\star)}, \quad z > 3
+\end{cases} \\
+n_M (M_\star) & = \begin{cases}
+0.33, \quad M_\star \geqslant 10^9~M_\odot \\
+0.19, \quad M_\star < 10^9~M_\odot
+\end{cases} \\
+n_z (z) & = \begin{cases}
+1.4, \quad z \geqslant 2 \\
+2.7, \quad z < 2
+\end{cases}
+\end{align}
+An intrinsic scatter of 0.3 dex is also added to this relation.
+
+Sum of the gas fraction $f_{\rm gas} = M_{\rm gas} / M_{\rm halo}$ and the stellar fraction $f_\star = M_\star / M_{\rm halo}$ cannot exceed the total accreted baryon fraction $f_{\rm baryon}$
+\begin{align}
+f_{\rm baryon} = \dfrac{\Omega_{\rm b}}{\Omega_{\rm m}} \left[ 1+ \left( 2^{M_{\rm c} (z) / 3 M_{\rm halo}} - 1 \right) \right]^{-3/2}
+\end{align}
+where $M_{\rm c} (z)$ is the characteristic mass scale at which $f_{\rm baryon} = \Omega_{\rm b} / 2 \Omega_{\rm m}$
+\begin{align}
+M_{\rm c} (z) = 1.69 \times 10^{10}~M_\odot \dfrac{e^{-0.63 z}}{1 + e^{(z / 5.5)^{15}}}
+\end{align}
+If $f_{\rm gas} + f_\star > f_{\rm baryon}$, we set $f_{\rm gas} = f_{\rm baryon} - f_\star$.
+
+The linear GC mass-gas mass (GCMGM) relation is employed to calculate the total mass of a newly formed GC population
+\begin{align}
+M_{\rm tot} = 1.8 \times 10^{-4} p_2 M_{\rm gas} 
+\end{align}
+
+The metallicity of the newly formed cluster population is directly drawn from the metallicity of the interstellar medium (ISM) of the host galaxy
+\begin{align}
+[\mathrm{Fe/H}] = \log \left[ \left( \dfrac{M_\star}{10^{10.5}~M_\odot} \right)^{0.35} (1 + z)^{-0.9} \right]
+\end{align}
+In addition, we apply a 0.3 dex intrinsic scatter to [Fe/H].
+
+\subsubsection{GC sampling} \label{subsubsect:sample}
+
+We sample the masses of individual GCs from a Schechter initial cluster mass function
+\begin{align}
+\dfrac{\mathrm{d} N}{\mathrm{d} M} \propto M^{-2} e^{- M / 10^7M_\odot}
+\label{eq:Schechter}
+\end{align}
+We first calculate the cumulative distribution function (CDF)
+\begin{align}
+F (M) = \dfrac{N (< M)}{N (< M_{\rm max})} = \dfrac{\displaystyle \int_{M_{\rm min}}^{M} \dfrac{\mathrm{d} N}{\mathrm{d} M} \mathrm{d} M}{\displaystyle \int_{M_{\rm min}}^{M_{\rm max}} \dfrac{\mathrm{d} N}{\mathrm{d} M} \mathrm{d} M}
+\label{eq:CDF}
+\end{align}
+where $M_{\rm min/max}$ are the minimum/maximum GC mass. Then, we draw a random number $x \in [0,1)$ and convert $x$ to a GC mass via $M = F^{-1} (x)$. We repeat the process until the total mass of newly formed clusters, $M_{\rm GC}$, just exceeds $M_{\rm tot}$. We drop the last cluster (with mass $M$) with a probability $P = (M_{\rm GC} - M_{\rm tot}) / M$.
+
+In a rare case of $M_{\rm tot}<M_{\rm min}$, we still randomly draw a cluster from the initial GC mass function with the above method. We keep this cluster with a probability $P = M_{\rm tot} / M$.
+
+We set $M_{\rm min} = 10^4M_\odot$. GCs with $M < 10^4~M_\odot$ will be disrupted relatively quickly by the tidal field: the estimated lifetime of $10^4~M_\odot$ cluster at 3 kpc from the galactic centre of a MW-mass galaxy is less than 1 Gyr.
+
+$M_{\rm max}$ is set to match the deterministic constraint
+\begin{align}
+1 = \int_{M_{\rm max}}^{+ \infty} \dfrac{\mathrm{d} N}{\mathrm{d} M} \mathrm{d} M
+\label{eq:M_max}
+\end{align}
+In other words, there is only 1 cluster with $M = M_{\rm max}$ in each GC formation event. Such cluster is drawn first in the list of newly formed GCs. An alternative method is to set $M_{\rm max}\rightarrow + \infty$ and allow more massive clusters to form with a small but non-zero probability. For galaxies with $M_{\rm halo}\sim 10^9~M_\odot$, the former method prevents the formation of massive clusters ($M \sim 10^5~M_\odot$) as $M_{\rm max}$ is too small, whereas the latter method can still form massive clusters with nonzero probability.
+
+\subsubsection{GC evolution} \label{subsubsect:evol}
+
+We take into account 2 main processes of mass evolution: tidal disruption and stellar evolution.
+
+Using equation~(\ref{eq:disrupt}) we calculate the current mass of a GC at time $t$ after formation due to tidal disruption as $M'(t)$. Assuming the timescale of stellar evolution is much shorter than $t_{\rm tid}$, the final mass of the GC is given by
+\begin{align}
+	M(t) = M'(t)\left[1-\int_0^t\nu_{\rm se}(t')\ dt'\right],
+	\label{eq:stellaR_{\rm e}volution}
+\end{align}
+where $\nu_{\rm se}$ is the mass loss rate due to stellar evolution by \citet{prieto_dynamical_2008}.
+
+\subsection{Selecting model parameters} \label{subsect:param}
+
+The model has three adjustable parameters (p2, p3, κ) controlling the formation rate, formation timing, and disruption rate of GCs.
+
+\section{GCs contribute to the NSCs and galaxy centre $\gamma$-ray excess, moderated by galaxy assembly history}
+
+\subsection{Formation of GCs in cosmological simulations} \label{subsect:GC}
+
+GC formation is painted on to the halo merger trees of the Illustris simulation, which captures the evolution of halo properties from $z = 47$ to 0.
+
+For GCs formed inside the galaxy (\textit{in situ}), we adopt the continuous spherical S{\'e}rsic density distribution, based on which GCs are assigned to specific galactocentric radii. On the other hand, for GCs formed inside satellite galaxies and were brought in via galactic mergers (\textit{ex situ}), we place these \textit{ex situ} GCs at half the virial radius of the descendant halo.
+
+The S{\'e}rsic spatial density distribution was proposed to match the well-established S{\'e}rsic surface brightness profile. The spherical density distribution is given by:
+\begin{align}\label{eq:sersic}
+\rho (r) = \rho_0 \left( \dfrac{r}{R_{\rm e}} \right)^{-p} e^{-b (r / R_{\rm e})^{1 / N_{\rm S}}}
+\end{align}
+here $\rho_0$ is a normalization, $R_{\rm e}$ is the effective radius of the galactic disk, $N_{\rm S}$ is the concentration index. The term $b$ can be well approximated analytically by $b = 2 N_{\rm S} - 1 / 3 + 0.009876 / N_{\rm S}$ for $0.5 < N_{\rm S} < 10$ \citep{1997A&A...321..111P}. The form of $p$ is adopted as $p = 1.0 - 0.6097 / N_{\rm S} + 0.05563 / N_{\rm S}^2$ for $0.6 < N_{\rm S} < 10$ and $10^2 \leqslant r / R_{\rm e} \leqslant 10^3$.
+
+The effective radius $R_{\rm e}$ is related to the virial radius of the halo, $R_{\rm v}$, and halo spin parameter, $\lambda$, by assuming a classical galactic disk formation model (e.g. \cite{1998MNRAS.295..319M}):
+\begin{align}
+R_{\rm e} = \lambda R_{\rm v} / \sqrt{2}
+\end{align}
+We instead use an alternative definition $\lambda_{\rm B} = j_{\rm sp} / \sqrt{2} R_{\rm v} V_{\rm v}$ that only requires the specific angular momentum and virial velocity $V_{\rm v}$ (e.g. \cite{2001ApJ...555..240B}).
+
+In our subsequent studies, we investigate the influence of different $N_{\rm S}$ values on our results within the range of $0.5$ to $4$, with increments of $0.5$. As a fiducial model, we select $N_{\rm S} = 2$.
+
+To study the GC system in the MW and M31, we select Illustris haloes with similar masses at z = 0. For the MW, we adopt the findings by Deason et al. (2021), who estimated a virial mass of 1.01 ± 0.24 × 1012 M . Among the Illustris haloes, 1099 fall within this range. For M31, there are significant uncertainties, therefore we adopt a wider range of 0.7–2.5 × 1012 M based on the review by Kafle et al.(2018). Accordingly, 2029 haloes were selected, including those selected for the MW.
+
+\subsection{Dynamical evolution of GCs} \label{subsect:DF}
+
+We directly adopt the analytical prescriptions in modelling: 1) orbital migration, 2) tidal stripping, and 3) direct tidal disruption.
+
+The first improvement is an updated prescription of the mass loss due to stellar evolution, which is obtained from the stellar population synthesis model \textsc{fsps}.
+
+The second improvement is modelling the time-varying gravitational potential by extracting the time-evolution of the DM halos from the Illustris simulation. For any cosmic time, we linearly interpolate the halo mass and spin between adjacent Illustris snapshots, and calculate galactic structural parameters accordingly. The overall gravitational potential comprises three components: the dark halo, the stellar component, and modeled GCs. The dark halo is described using the NFW distribution. The mass of modeled GCs is also included in calculating the overall potential. We adopt a flat $\Lambda$CDM model with $h = 0.704$ and $\Omega_{\rm m, 0} = 0.2726$.
+
+We divide the entire time span into 100 sections, each characterized by a constant background potential. To evolve individual GCs, we first calculate their evolution timestep $\Delta t_i$ being the smaller of the tidal and orbital evolution timescales multiplied by a fraction, $\eta_{\rm tide}$ and $\eta_{\rm orbit}$, respectively. Then, a GC with the smallest value of $t_i + \Delta t_i$ means that it evolves the fastest, and exerts the strongest influence on other GCs. Thus, we find and evolve such GC at each step, until all GCs cross the current time span.
+
+We introduce a maximum cutoff timestep $\Delta t_{\rm max}$ on top of the $\eta$ factors. We find that $\Delta t_{\rm max} = 0.01~\rm Gyr$ and $\eta_{\rm tide} = \eta_{\rm orbit} = 0.2$ strike a balance between efficiency and accuracy.
+
+We employ the $4^{\rm th}$ Runge-Kutta method.
+
+\section{The Star Clusters That Make BHBs across Cosmic Time}
+
+\subsection{Determination of GC Properties}
+
+To relate [Fe/H] to a total metallicity, we apply the conversion $\lg Z/Z_\odot \approx \rm [Fe/H] + 0.2$.
+
+galaxy's half-mass radius, $R_{\rm h}$. We assume that GCs form with galactocentric radii distributed uniformly in the range (0.5-2)$R_{\rm h}$. We correlate $R_{\rm h}$ to the scale radius $R_{\rm d}$ of an exponential disk that has the same specific angular momentum as the DM halo. This results in a value of $R_{\rm d} \approx 2^{-1/2} \lambda R_{\rm v}$, where $R_{\rm v}$ is the virial radius and $\lambda$ is the dimensionless spin parameter of the host halo at formation. The scale length relates to the half-mass radius as $R_{\rm d} = 0.58 R_{\rm h}$. We draw $\lambda$ from a log-normal distribution centred on $\lambda = 0.04$ with scatter $\sigma_{\lambda} = 0.25$ dex. 
+
+We turn to observations of ``young massive clusters'' in the local universe, which have masses and sizes consistent with objects that could evolve into GC-like systems after a few Gyr of dynamical and stellar evolution. These clusters show an approximately log-normal distribution in both their half-light radii $r_{\rm h}$ (which we take as a proxy for the half-mass radius) and their core radii $r_{\rm c}$, with peaks at $r_{\rm h} \approx 2.8$ pc and $r_{\rm c} \approx 1$ pc. We draw values of $r_{\rm c}$ and $r_{\rm h}$ from log-normal distributions centered on these values with standard deviations of 0.3 dex. Based on the observed correlation between $r_{\rm h}$ and $r_{\rm c}$ of young clusters, we also impose the requirement that $r_{\rm h} \geqslant 2r_{\rm c}$; if this condition is not met, we simply redraw $r_{\rm h}$ until it is.
+
+We adopt the density and velocity profiles of \cite{stone_ostriker_2015} for all clusters. The profiles were designed to resemble single-mass King models, while also being analytically simple. They are fully described by three parameters: the half-mass radius $r_{\rm h}$, the core radius $r_{\rm c}$, and cluster mass $M$. The density of stars near the center of the cluster for this profile is then given by $r_{\rm h}ostarc = M(r_{\rm c} + r_{\rm h})/(2\pi^2r_{\rm c}^2r_{\rm h}^2)$.
+
+Two other relevant quantities are the average mass of a BH in the cluster, $m_\bullet$, and the fraction of the total cluster mass locked in BHs, $M_\bullet/M$. We calculate both quantities for a \cite{kroupa_2001} stellar initial mass function (IMF)
+\begin{align} 
+\frac{dN}{dm_i}  \propto \begin{cases} m^{-1.3}_i, & \quad 0.08 M_\odot \leqslant m_i \leqslant 0.5 M_\odot \\ 
+m_i^{-2.3}, & \quad 0.5 M_\odot < m_i \leqslant 150 M_\odot \\
+\end{cases}
+\end{align}
+We have verified that our results are not sensitive to the particular choice of IMF. The IMF must be convolved with the relation between the mass of the progenitor star and compact remnant, $m_{\rm rem}(m_i, Z)$, which depends on metallicity due to line-driven winds in the final stages of stellar evolution. For this, we adopt the results from the \textsc{sevn} code, which also accounts for the gap in the BH mass distribution in low metallicity environments due to pair instability supernovae (PISN). We can then calculate $M_\bullet$ and $m_\bullet$ as:
+\begin{align}
+M_\bullet = \int_{m_{i, \rm min, \bullet}}^{m_{\rm max}} m_{\rm rem}(m_i, Z) \frac{dN}{dm_i} dm_i \nonumber \\
+m_\bullet = \frac{M_\bullet}{\int_{m_{i, \rm min, \bullet}}^{m_{\rm max}} \frac{dN}{dm_i} dm_i }.
+\end{align}
+The bounds of both integrals are taken from the minimum initial stellar mass that will ultimately form a BH  (set by the initial-final mass relation) to the upper mass cutoff of the IMF. In the following, for each cluster in the model $m_\bullet$ and $M_\bullet$ are calculated based on its metallicity.
+
+\subsection{Formation and Coalescence of BHBs}
+
+We calculate typical quantities for the BHBs in each cluster. 
+
+All of our clusters are Spitzer-unstable.
+
+\subsection{Timescales for cluster disruption}
+
+We adopt the prescription for mass loss in the presence of a strong external tidal field. For simplicity, we ignore evaporation in the weak tidal field limit, which is almost always subdominant.
+\begin{align}
+\dfrac{\mathrm{d} M(t)}{\mathrm{d} t} & = - \dfrac{M (t)}{t_{\rm tide} (M, R)} \\
+t_{\rm tide} (M, R) & = 10^{10} \mathrm{yr} \left( \dfrac{M (t)}{2 \times 10^5 M_\odot}\right)^{2/3} P (R) \\
+P (R) & = 41.4 \left( \dfrac{R}{\rm kpc} \right) \left( \dfrac{v_{\rm circ}}{\rm km/s} \right)^{-1}
+\label{eqn:disruption1}
+\end{align}
+where $R$ is the galactocentric radius of the GC and $v_{\mathrm{circ}}$ is the circular velocity in the galactic potential. We assume a flat rotation curve, with $V_{\mathrm{circ}} = \sqrt{0.5GM_{\mathrm{bar}}/R_{{\rm h}}}$,  and $M_{\mathrm{bar}} = \Mstar + M_{\mathrm{gas}}$ is the total mass in baryons of the galaxy. Integrating Eq.~\ref{eqn:disruption1} from the initial mass of the cluster, $M$, to $M=0$, gives the time to complete evaporation of the cluster:
+\begin{align}
+\tdis = 1.5 \times 10^{10}\left(\frac{M}{2 \times 10^5 M_\odot}\right)^{2/3}P(R)\,\mathrm{yr}.
+\label{eqn:tdis}
+\end{align}
+
+We use an approximate dynamical friction timescale
+\begin{align}
+t_{\rm DF} \approx 2.3 \times 10^{10} \left( \dfrac{M}{2 \times 10^5 M_\odot}\right)^{-1} \left( \dfrac{R}{\rm kpc} \right)^2 \left( \dfrac{v_{\rm circ}}{100~\rm km/s} \right) \rm yr
+\label{eq:t_DF}
+\end{align}
+After a time $t_{\rm DF}$ elapses we assume the cluster is tidally disrupted by, and subsequently merges with, the NSC. Finally, we define the timescale for the disruption of the cluster, $\tdes = \mathrm{min(\tdis, t_{\rm DF})}$.
+
+\section{FROST-CLUSTERS - III. Metallicity-dependent IMBH formation by runaway collisions in dense star clusters}
+
+We construct idealised, isolated, spherically symmetric star cluster models following the Plummer \citep{Plummer1911} density profile. We parametrize the initial mass-size relation of the star clusters as
+\begin{align}
+\dfrac{r_{\rm h}}{\rm pc} = \dfrac{f_{\rm h} R_4}{1.3} \left( \dfrac{M_\star}{10^4~M_\odot} \right)^\beta
+\label{eq:mass-radius}
+\end{align}
+in which $r_{\rm h}$ is the 3D half mass radius. We set $\beta = 0.180 \pm 0.028$ and $R_4 = 2.365 \pm 0.106$ following \cite{Brown&Gnedin2021StarCluster}. In \cite{Rantala2024b} and \cite{Rantala2025b}, we used the normalisation parameter $f_{\rm h} = 0.125$ to capture the small observed birth radii of embedded clusters (e.g. \citealt{Marks2012}). For young local clusters \citep{Brown2021} $f_{\rm h} = 1.0$, and for $z\sim10$ \textit{JWST} clusters \citep{Adamo2024} $f_{\rm h} \sim 0.15$--$0.20$, however, we note that these most likely differ from the birth radii of the clusters.
+
+\subsection{The combined effect of cluster mass, metallicity and surface density on the IMBH masses}
+
+Dense but low mass ($M \lesssim 10^4~M_\odot$) clusters rarely produce an IMBH. It seems that only 2 parameters, $Z$ and $\Sigma_{\rm h}$, are required to determine the maximum $M_\mathrm{\bullet}$ in isolated setups. This is not unexpected as for our models $\Sigma_{\rm h}$ and $M_\mathrm{cl}$ are not completely independent but related through the shallow fixed power-law slope initial mass-radius relation of Eq.~\ref{eq:mass-radius} of the clusters.
+
+\subsubsection{A LOESS smoothed model for $M_\bullet$ as a function of host cluster properties}
+
+We proceed to build a model for the formed IMBH masses as a function of their host cluster surface density and metallicity, i.e. $M_\bullet = M_\bullet (\Sigma_{\rm h}, Z)$. We produce a 2D smoothed map $M_\bullet (\Sigma_{\rm h}, Z)$ employing the publicly available Locally Weighted Regression (LOESS) software package.
+
+Two separate regions are apparent in the smoothed map $M_\bullet (\Sigma_{\rm h}, Z)$: stellar BHs at low densities and high metallicities, and IMBHs at high densities and low metallicities. At low surface densities the most massive BHs are always in the stellar mass regime with $M_\bullet \lesssim 100~M_\odot$. Above a critical metallicity, IMBHs can only form in sufficiently dense systems separated from the stellar BH regime by the surface density dependent critical metallicity.
+
+\subsection{A parametrised fit model for estimating star cluster IMBH masses}
+
+It should be possible to construct a parametrized model for the IMBH masses $M_\bullet (\Sigma_{\rm h}, Z)$ that follows a relatively simple functional form.
+
+The stellar BH masses at low cluster surface densities and high metallicities can be obtained with any suitable fast stellar population synthesis model instead.
+
+Our aim is to find a relatively simple parametrized functional form for $M_\bullet (\Sigma_{\rm h}, Z)$. We provide 2 different parametrized functional forms: a simple formula that behaves well at high extrapolated cluster surface densities, and a somewhat more complex formula for the $(\Sigma_{\rm h}, Z)$ parameter space of our simulations. We arrive at
+\begin{align}
+\dfrac{M_\bullet}{M_\odot} = &~ \theta_{\rm H} \left[ \Sigma_{\rm h} - \Sigma_{\rm crit}(Z) \right] \left[ A(Z) \lg \left( \dfrac{\Sigma_{\rm h}}{M_\odot / {\rm pc}^2} \right) \right. \notag \label{eq:fit1} \\
+&~ \left. + B(Z) \lg^2 \left( \dfrac{\Sigma_{\rm h}}{M_\odot / {\rm pc}^2} \right) + C(Z) \right] \\
+A (Z) = &~ A_1 \lg \left( \dfrac{Z}{Z_\odot} \right) + A_2 \label{eq:A_Z} \\
+B (Z) = &~ B_1 \lg \left( \dfrac{Z}{Z_\odot} \right) + B_2 \label{eq:B_Z} \\
+C (Z) = &~ C_1 \lg \left( \dfrac{Z}{Z_\odot} \right) + C_2 \label{eq:C_Z} \\
+\Sigma (Z) = &~ \Sigma_1 \lg \left( \dfrac{Z}{Z_\odot} \right) + \Sigma_2 \label{eq:Sigma_Z}
+\end{align}
+in which $\Sigma_{\rm crit} \approx 2.79 \times 10^4~M_\odot / {\rm pc}^2$, and $\theta_{\rm H} (x)$ is the Heaviside step function.
+
+\begin{table} \centering \begin{tabular}{cccc} \toprule
+Coef. & $Z/\zsol{}<0.126$ & $0.126 \leq Z/\zsol{} < 0.398$  & $Z/\zsol{} > 0.398$\\
+\hline
+$A_\mathrm{1}$ & -1790.07 & +9707.84 & +1147.68 \\ 
+$A_\mathrm{2}$ & -7392.65 & +2627.71 & -721.18 \\ 
+$B_\mathrm{1}$ & +162.46 & -1015.72 & -166.92 \\ 
+$B_\mathrm{2}$ & +829.42 & -211.38 & +126.15 \\ 
+$C_\mathrm{1}$ & +4734.11 & -23585.20 & -2002.25 \\ 
+$C_\mathrm{2}$ & +16556.82 & -7814.04 & +471.59 \\ 
+$\Sigma_\mathrm{1}$ & +0.0386 & +0.91 & +0.91 \\ 
+$\Sigma_\mathrm{2}$ & +4.53 & +5.22 & +5.22 \\ 
+         \hline
+    \end{tabular}
+\caption{The parametrized coefficients for constructing $A(Z)$, $B(Z)$, $C(Z)$ and $\Sigma(Z)$ in Eq.~\ref{eq:fit1}.}
+\label{tab:coef1}
+\end{table}
+
+An alternative fit parametrization for high star cluster surface densities above $\lg (\Sigma_{\rm max} / M_\odot~{\rm pc}^{-2}) = 5.22$ is
+\begin{align}
+\dfrac{M_\bullet}{M_\odot} & = \theta_{\rm H} \left( \Sigma_{\rm h} - \Sigma_{\rm max} \right) \left[ D (Z) \lg \left( \dfrac{\Sigma_{\rm h}}{M_\odot/{\rm pc}^2} \right) + E (Z) \right] \label{eq:fit2} \\
+D (Z) & = D_1 \lg \left( \dfrac{Z}{Z_\odot} \right) + D_2 \label{eq:D_Z} \\
+E (Z) & = E_1 \lg \left( \dfrac{Z}{Z_\odot} \right) + E_2 \label{eq:E_Z}
+\end{align}
+This second parametrized model for $M_\bullet$ remains well behaved also at high star cluster surface densities.
+
+\begin{table} \centering \begin{tabular}{cccc}
+        \hline
+         Coeff. & $Z/\zsol{}<0.079$ & $0.079 \leq Z/\zsol{} < 0.316$  & $Z/\zsol{} > 0.316$\\
+         \hline
+$D_\mathrm{1}$ & -37.37 & -922.15 & -611.27 \\ 
+$D_\mathrm{2}$ & +1452.33 & +466.71 & +628.40 \\ 
+$E_\mathrm{1}$ & +81.66 & +4242.58 & +2620.25 \\ 
+$E_\mathrm{2}$ & -6892.57 & -2280.02 & -3137.93 \\
+         \hline
+\end{tabular}
+\caption{The parametrized coefficients for constructing $D(Z)$ and $E(Z)$ in Eq.~\ref{eq:fit2}.}
+\label{tab:coef2}
+\end{table}
+
+The 3D half mass density $\rho_{\rm h}$ may be required instead of the projected $\Sigma_{\rm h}$. For the Plummer model the 2D and 3D half mass densities are related as
+\begin{align}
+\dfrac{\Sigma_{\rm h} (\rho_{\rm h})}{6.99\times10^4~M_\odot/{\rm pc}^2} = \left( \dfrac{M}{10^5~M_\odot} \right)^{1/3} \left( \dfrac{\rho_{\rm h}}{10^5~M_\odot/{\rm pc}^3} \right)^\mathrm{2/3}
+\label{eq:Sigma_h}
+\end{align}
+For simulation models that can track star cluster masses but not their densities, one should assume the normalization of the cluster birth mass size relation $f_{\rm h}$ from Eq.~\ref{eq:mass-radius} to use the IMBH mass fitting formulas.
+
+%% Please use the acknowledgment and contribution environments. This will 
+%% be anonomyized when the "anonymous" style option is used. 
+\begin{acknowledgments}
+We thank all the people that have made this AASTeX what it is today.  This
+includes but not limited to Bob Hanisch, Chris Biemesderfer, Lee Brotzman,
+Pierre Landau, Arthur Ogawa, Maxim Markevitch, Alexey Vikhlinin and Amy
+Hendrickson. Also special thanks to David Hogg and Daniel Foreman-Mackey
+for the new {\tt\string modern} style design. Considerable help was provided via bug
+reports and hacks from numerous people including Patricio Cubillos, Alex
+Drlica-Wagner, Sean Lake, Michele Bannister, Peter Williams, Jonathan
+Gagne, Arthur Adams, Nicholas Wogan, Aaron Pearlman, Jeff Mangum, Mark Durre, Joel Ong, and Stephen Thorp.
+\end{acknowledgments}
+
+\begin{contribution}
+%%This section gives authors the space to recognize author contributions. The text inside this environment is NOT counted towards the total word quanta. At a minimum, manuscripts are expected to include this text:
+
+All authors contributed equally to the Terra Mater collaboration.
+
+%% But authors are expected to provide more specific details, e.g. 
+%%
+%%SC was responsible for writing and submitting the manuscript.
+%%WWM came up with the initial research concept and edited the manuscript.
+%%OTS obtained the funding and edited the manuscript.
+%%EBF provided the formal analysis and validation. He also edited the manuscript.
+%%GEH Supervised the undergraduates, wrote the software and administers the project github and Zenodo repositories.
+%%
+%% Authors can use the Contributor Role Taxonomy (CRediT) at
+%% https://credit.niso.org
+%% for ideas on how write a good statement tailored to their needs.
+
+\end{contribution}
+
+%% To help institutions obtain information on the effectiveness of their 
+%% telescopes the AAS Journals has created a group of keywords for telescope 
+%% facilities.
+%
+%% Following the acknowledgments section, use the following syntax and the
+%% \facility{} or \facilities{} macros to list the keywords of facilities used 
+%% in the research for the paper.  Each keyword is check against the master 
+%% list during copy editing.  Individual instruments can be provided in 
+%% parentheses, after the keyword, but they are not verified.
+\facilities{HST(STIS), Swift(XRT and UVOT), AAVSO, CTIO:1.3m, CTIO:1.5m, CXO}
+
+%% Similar to \facility{}, there is the optional \software command to allow 
+%% authors a place to specify which programs were used during the creation of 
+%% the manuscript. Authors should list each code and include either a
+%% citation or url to the code inside ()s when available.
+\software{astropy \citep{2013A&A...558A..33A,2018AJ....156..123A,2022ApJ...935..167A},  
+          Cloudy \citep{2013RMxAA..49..137F}, 
+          Source Extractor \citep{1996A&AS..117..393B}
+          }
+
+%% Appendix material should be preceded with a single \appendix command.
+%% There should be a \section command for each appendix. Mark appendix
+%% subsections with the same markup you use in the main body of the paper.
+%%
+%% Each Appendix (indicated with \section) will be lettered A, B, C, etc.
+%% The equation counter will reset when it encounters the \appendix
+%% command and will number appendix equations (A1), (A2), etc. The
+%% Figure and Table counter will not reset.
+
+\appendix
+
+\section{Determining halo parameters}
+\label{sec apdx}
+The NFW profile is described in \citet{NFW} as:
+\begin{align}
+\rho_{\rm NFW} (r) = \rho_0 \left( \dfrac{r}{R_{\rm s}} \right)^{-1} \left( 1 + \dfrac{r}{R_{\rm s}} \right)^{-2} 
+\end{align}
+The corresponding potential is given by:
+\begin{align}
+\Phi_{\rm NFW} (r) = - \dfrac{4 \pi \rho_0 R_{\rm s}^3 G}{r} \ln \left( 1 + \dfrac{r}{R_{\rm s}} \right)
+\end{align}
+Here $\rho_0$ is normalized by the virial mass $M_{\rm v} = 4 \pi \rho_0 R_{\rm s}^3 [\ln (1 + c) - c/(1 + c)]$, where the halo concentration $c = R_{\rm v} / R_{\rm s}$ is taken from \citet{2008MNRAS.391.1940M} with the analytic form: 
+\begin{align}
+c = 9.354 \left( \dfrac{M_{\rm v} h}{10^{12}~M_{\odot}} \right)^{-0.094}
+\end{align}
+The virial radius $R_{\rm vir}$ is mapped from $M_{\rm vir}$ and $z$ via:
+\begin{align}
+\dfrac{R_{\rm v}}{\rm kpc} = \dfrac{163}{(1 + z) h} \left( \dfrac{M_{\rm v} h}{10^{12}~M_{\odot}} \right)^{1 / 3} \left( \dfrac{\Delta_{\rm v}}{200} \right)^{- 1 / 3} \Omega_{\rm m, 0}^{- 1 / 3}
+\end{align}
+here $\Delta_{\rm v}$ is the average halo over-density at $R_{\rm v}$, which we take from the spherical collapse model as:
+\begin{align}
+\Delta_{\rm v} & = \dfrac{18 \pi^2 + 82 x - 39 x^2}{x + 1} \\
+x = \Omega_{\rm m}(z) & - 1 = - \dfrac{\Omega_{\Lambda, 0}}{\Omega_{\Lambda, 0} + \Omega_{\rm m, 0} (1 + z)^3}
+\end{align}
+
+%% For this sample we use BibTeX plus aasjournalv7.bst to generate the
+%% the bibliography. The sample7.bib file was populated from ADS. To
+%% get the citations to show in the compiled file do the following:
+%%
+%% pdflatex sample7.tex
+%% bibtext sample7
+%% pdflatex sample7.tex
+%% pdflatex sample7.tex
+
+\bibliography{ref}{}
+\bibliographystyle{aasjournalv7}
+
+%% This command is needed to show the entire author+affiliation list when
+%% the collaboration and author truncation commands are used.  It has to
+%% go at the end of the manuscript.
+%\allauthors
+
+%% Include this line if you are using the \added, \replaced, \deleted
+%% commands to see a summary list of all changes at the end of the article.
+%\listofchanges
+
+\end{CJK*}
+\end{document}
+
+% End of file `sample7.tex'.

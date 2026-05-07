@@ -19,6 +19,8 @@ flow is:
 """
 
 import argparse
+import csv
+from dataclasses import dataclass
 import numpy as np
 from scipy import interpolate
 import time
@@ -48,30 +50,14 @@ tdep = 0.3 #scaling of the gas depletion time with redshift, tdep \propto (1+z)^
 mmr_evolution = .9 #redshift slope of the galaxy mass-metallicity relation
 pr = 0.5 #normalized period of rotation; t_tid \propto P
 miso = (pr/1.7)**3 #mass where tiso < ttid
+TREE_LOOKUP_BASENAME = "id_lookup_large_dark.csv"
+METAL_CHOKSI2018 = "Choksi+2018"
+METAL_CHEN_GNEDIN2024 = "Chen&Gnedin2024"
+METAL_CHOICES = (METAL_CHOKSI2018, METAL_CHEN_GNEDIN2024)
+ACCRETED_BARYON_MURATOV_GNEDIN2010 = "Muratov&Gnedin2010"
+ACCRETED_BARYON_CHEN_GNEDIN2023 = "Chen&Gnedin2023"
+ACCRETED_BARYON_CHOICES = (ACCRETED_BARYON_MURATOV_GNEDIN2010, ACCRETED_BARYON_CHEN_GNEDIN2023)
 
-
-def _parse_exclude_halo_arg(text: str) -> tuple[int, ...]:
-    """Parse one comma-separated list of z=0 halo IDs."""
-
-    if text is None:
-        return tuple()
-    values = set()
-    for raw_token in str(text).split(","):
-        token = raw_token.strip()
-        if not token:
-            continue
-        try:
-            halo_id = int(token)
-        except ValueError as exc:
-            raise argparse.ArgumentTypeError(
-                f"invalid halo ID '{token}' in --exclude_halo; expected comma-separated integers"
-            ) from exc
-        if halo_id < 0:
-            raise argparse.ArgumentTypeError(
-                f"invalid halo ID '{token}' in --exclude_halo; expected non-negative integers"
-            )
-        values.add(halo_id)
-    return tuple(sorted(values))
 
 def _build_arg_parser():
     parser = argparse.ArgumentParser(description="Legacy Gao+2023 GC formation stage.")
@@ -97,19 +83,15 @@ def _build_arg_parser():
     parser.add_argument("--p2", type=float, default=6.75, help="GC formation-efficiency normalization")
     parser.add_argument("--p3", type=float, default=0.5, help="halo growth-rate threshold for triggering GC formation")
     parser.add_argument("--mpb-only", type=int, default=0, help="restrict the tree walk to the main progenitor branch only")
-    parser.add_argument("--mc", type=float, default=12.0, help="log10 Schechter cutoff mass Mc in Msun")
+    parser.add_argument("--lg_cut-off_mass", dest="lg_cut_off_mass", type=float, default=12.0, help="log10 Schechter cutoff mass Mc in Msun")
+    parser.add_argument("--metal", choices=METAL_CHOICES, default=METAL_CHOKSI2018, help="stellar mass-metallicity relation")
+    parser.add_argument("--accreted_baryon", choices=ACCRETED_BARYON_CHOICES, default=ACCRETED_BARYON_MURATOV_GNEDIN2010, help="accreted-baryon fraction limiter")
     parser.add_argument("--run-all", type=int, default=1, help="run all halos if 1, otherwise use the halo count and mass window below")
-    parser.add_argument("--log-mh-min", type=float, default=11.5, help="minimum retained host halo log mass for selection")
-    parser.add_argument("--log-mh-max", type=float, default=12.5, help="maximum retained host halo log mass for selection")
+    parser.add_argument("--log-mh-min", type=float, default=11.5, help="minimum descendant z=0 host halo log mass for selection")
+    parser.add_argument("--log-mh-max", type=float, default=12.5, help="maximum descendant z=0 host halo log mass for selection")
     parser.add_argument("--n-halos", type=int, default=10, help="number of halos to keep when --run-all=0")
-    parser.add_argument(
-        "--exclude_halo",
-        type=_parse_exclude_halo_arg,
-        default=tuple(),
-        help="comma-separated z=0 halo IDs to exclude before halo selection and counting",
-    )
     parser.add_argument("--IMBH", type=int, choices=[0, 1], default=1, help="enable the IMBH seeding module if 1, otherwise keep IMBH-related columns at zero")
-    parser.add_argument("--final-z", "--final-redshift", dest="final_redshift", type=float, default=0.0, help="final redshift where the formation/survival stage stops")
+    parser.add_argument("--final-z", "--final-redshift", dest="final_redshift", type=float, default=0.0, help="final redshift where the formation/survival stage stops; halo selection remains tied to the descendant z=0 host")
     return parser
 
 
@@ -147,22 +129,24 @@ allcat = open(output_dir / ('all_'+nsStr+'.txt'), 'w') #full catalog of all GCs
 p2 = float(args.p2)
 p3 = float(args.p3)
 mpb_only = bool(args.mpb_only)
-mc = float(args.mc)
+lg_cut_off_mass = float(args.lg_cut_off_mass)
+metal_model = args.metal
+accreted_baryon_model = args.accreted_baryon
 run_all = bool(args.run_all)
 log_mh_min = float(args.log_mh_min)
 log_mh_max = float(args.log_mh_max)
 N = int(args.n_halos)
-exclude_halo = set(int(hid) for hid in args.exclude_halo)
 final_redshift = float(args.final_redshift)
 final_epoch_label = "z=0" if(abs(final_redshift) < 1.0e-12) else ("z=" + str(np.round(final_redshift, 5)))
+host_epoch_label = "z=0"
 
-cat.write('#model parameters: p2, p3, mpb_only, Mc, z_final = ' +  str(p2) + " " +  str(p3) +  " " + str(mpb_only) + " " +  str(mc) + " " + str(final_redshift)  + "\n")
+cat.write('#model parameters: p2, p3, mpb_only, lg_cut_off_mass, metal, accreted_baryon, z_final = ' +  str(p2) + " " +  str(p3) +  " " + str(mpb_only) + " " +  str(lg_cut_off_mass) + " " + str(metal_model) + " " + str(accreted_baryon_model) + " " + str(final_redshift)  + "\n")
 cat.write(
     str("#haloID")
     + " | "
-    + str('logMh(' + final_epoch_label + ')')
+    + str('logMh(' + host_epoch_label + ')')
     + " | "
-    + str("logM*(" + final_epoch_label + ")")
+    + str("logM*(" + host_epoch_label + ")")
     + " | "
     + str('logMh(zform)')
     + " | "
@@ -190,16 +174,16 @@ cat.write(
     + "\n"
 )
 
-allcat.write('#model parameters: p2, p3, mpb_only, Mc, z_final = ' +  str(p2) + " " +  str(p3) +  " " + str(mpb_only) + " " +  str(mc) + " " + str(final_redshift)  + "\n")
+allcat.write('#model parameters: p2, p3, mpb_only, lg_cut_off_mass, metal, accreted_baryon, z_final = ' +  str(p2) + " " +  str(p3) +  " " + str(mpb_only) + " " +  str(lg_cut_off_mass) + " " + str(metal_model) + " " + str(accreted_baryon_model) + " " + str(final_redshift)  + "\n")
 allcat.write(
-    "#haloID | logMh(" + final_epoch_label + ") | haloID @ form | logMh(tform) | logM*(tform) | "
+    "#haloID | logMh(" + host_epoch_label + ") | haloID @ form | logMh(tform) | logM*(tform) | "
     "logMgas(tform) | logMcl(tform) | zform | [Fe/H] | rGalaxy (kpc) | "
     "GC radius (pc) | Sigma_h (Msun/pc^2) | IMBH mass (Msun)\n"
 )
 
 #initialize all the interpolation tables for use with Schechter function
-schechter_interp.init(10**mc)
-mgc_to_mmax = schechter_interp.generate(10**mc)
+schechter_interp.init(10**lg_cut_off_mass)
+mgc_to_mmax = schechter_interp.generate(10**lg_cut_off_mass)
 alpha = -2.0
 ug52 = schechter_interp.upper_gamma2(5.0)
 
@@ -246,6 +230,34 @@ def seed_imbh_properties(cluster_mass, metallicity):
 
     return gc_radius_pc, sigma_h_msun_pc2, imbh_mass_msun
 
+def soft_step(x, y):
+    return (1.0 + (2.0**(y/3.0) - 1.0) * x**y)**(-3.0/y)
+
+
+def muratov_gnedin2010_fin_norm(Mh, z):
+    mchar_baryon = 3.6e9*np.exp(-.6*(1+z))/h100
+    mchar_baryon_min = 1.5e10*(180**(-.5))/(smhm.E(z)*h100)
+    if(mchar_baryon < mchar_baryon_min):
+        mchar_baryon = mchar_baryon_min
+    return 1/((1+(mchar_baryon/Mh))**3)
+
+
+def chen_gnedin2023_fin_norm(Mh, z):
+    z_rei = 6.0
+    gamma = 15.0
+    beta = z_rei*(np.log(1.82e3*np.exp(-0.63*z_rei)) - 1.0)**(-1.0/gamma)
+    mchar_baryon = 1.69e10*np.exp(-0.63*z - np.logaddexp(0.0, (z/beta)**gamma))
+    return soft_step(mchar_baryon/Mh, 2.0)
+
+
+def accreted_baryon_fin_norm(Mh, z):
+    if(accreted_baryon_model == ACCRETED_BARYON_MURATOV_GNEDIN2010):
+        return muratov_gnedin2010_fin_norm(Mh, z)
+    if(accreted_baryon_model == ACCRETED_BARYON_CHEN_GNEDIN2023):
+        return chen_gnedin2023_fin_norm(Mh, z)
+    raise ValueError("Unknown accreted_baryon model: " + str(accreted_baryon_model))
+
+
 # Calculate gas mass given stellar mass, halo mass, redshift using scaling relations. Double power law for SM-Mg relation, then scale with redshift. Revise if gas fraction exceeds accreted baryon fraction. As described in Choksi, Gnedin, and Li (2018).
 def gasMass(SM, Mh, z) :
     slope = 0.33
@@ -264,26 +276,40 @@ def gasMass(SM, Mh, z) :
     Mg = SM*ratio
     fstar = SM/(fb*Mh)
     fgas = Mg/(fb*Mh)
-
-    Mc = 3.6e9*np.exp(-.6*(1+z))/h100 #cutoff mass
-    Mc_min = 1.5e10*(180**(-.5))/(smhm.E(z)*h100)
-    if(Mc < Mc_min) :
-        Mc = Mc_min
-    fin = 1/((1+(Mc/Mh))**3)
+    fin = accreted_baryon_fin_norm(Mh, z)
 
     if(fstar+fgas > fin):
         fgas = fin-fstar
         Mg = fgas*fb*Mh
     return Mg
-# Galaxy stellar mass-metallicity relation, with additional redshift evolution, as described in Choksi, Gnedin, and Li (2018).
-def MMR(SM, z) :
-    local = mmr_slope*(np.log10(SM) - mmr_turnover)
-    evolution = mmr_evolution*np.log10(1+z)
-    fe_h = local - evolution
-    #metallicity saturates at slightly supersolar values
+
+
+def cap_metallicity(fe_h):
+    # The project uses a slightly supersolar saturation for both supported MZRs.
     if(fe_h > max_feh):
         fe_h = max_feh
     return fe_h
+
+
+# Galaxy stellar mass-metallicity relation, with additional redshift evolution, as described in Choksi, Gnedin, and Li (2018).
+def MMR_choksi2018(SM, z):
+    local = mmr_slope*(np.log10(SM) - mmr_turnover)
+    evolution = mmr_evolution*np.log10(1+z)
+    fe_h = local - evolution
+    return cap_metallicity(fe_h)
+
+
+def MMR_chen_gnedin2024(SM, z):
+    fe_h = 0.3*np.log10(SM/1.0e9) - 1.0*np.log10(1+z) - 0.5
+    return cap_metallicity(fe_h)
+
+
+def MMR(SM, z):
+    if(metal_model == METAL_CHOKSI2018):
+        return MMR_choksi2018(SM, z)
+    if(metal_model == METAL_CHEN_GNEDIN2024):
+        return MMR_chen_gnedin2024(SM, z)
+    raise ValueError("Unknown metal model: " + str(metal_model))
 
 
 import scipy.special as special
@@ -314,6 +340,7 @@ def gc_sersic_sampling(gc_list, mass_sum, halomass, redshift, jsp, ns):
     Hz = smhm.H0*smhm.E(redshift) # in Myr^-1
 
     fallback_outer_kpc = 0.5*rVir/1e3
+    #fallback_outer_kpc = 0.1*rVir/1e3
     if((not np.isfinite(fallback_outer_kpc)) or (fallback_outer_kpc <= 0.0)):
         print(
             "[gc_sersic_sampling] invalid fallback outer radius "
@@ -501,19 +528,54 @@ def disruption(M0, fe_h, origin_redshift, tnow, use_weak = False): #if use_weak 
         return mtid_z0*2e5*(1-f_lost)
 
 
-def _iter_tree_files(tree_dir):
-    tree_files = []
+@dataclass(frozen = True)
+class TreeEntry:
+    halo_id_z0: int
+    path: Path
+
+
+def _legacy_tree_entries(tree_dir):
+    tree_entries = []
     for path in sorted(tree_dir.iterdir()):
         if(not path.is_file()):
             continue
         if(path.suffix.lower() not in (".txt", ".dat")):
             continue
         try:
-            int(path.stem)
+            hid = int(path.stem)
         except ValueError:
             continue
-        tree_files.append(path)
-    return tree_files
+        tree_entries.append(TreeEntry(halo_id_z0 = hid, path = path))
+    return tree_entries
+
+
+def _iter_tree_files(tree_dir):
+    lookup_path = tree_dir / TREE_LOOKUP_BASENAME
+    if(lookup_path.is_file()):
+        tree_entries = []
+        seen_halo_ids = set()
+        with lookup_path.open("r", encoding = "utf-8", newline = "") as handle:
+            for row in csv.DictReader(handle):
+                try:
+                    hid = int(row["halo_id_z0"])
+                    basename = row["fixed_tree_basename"].strip()
+                except (KeyError, ValueError) as exc:
+                    raise RuntimeError("Malformed tree lookup row in " + str(lookup_path) + ": " + str(row)) from exc
+                tree_path = tree_dir / basename
+                if(not tree_path.is_file()):
+                    raise FileNotFoundError("Tree lookup references missing fixed tree: " + str(tree_path))
+                if(hid in seen_halo_ids):
+                    raise RuntimeError("Duplicate halo_id_z0 " + str(hid) + " in tree lookup " + str(lookup_path))
+                seen_halo_ids.add(hid)
+                tree_entries.append(TreeEntry(halo_id_z0 = hid, path = tree_path))
+        if(len(tree_entries) == 0):
+            raise RuntimeError("Tree lookup exists but contains no usable rows: " + str(lookup_path))
+        return tree_entries
+
+    tree_entries = _legacy_tree_entries(tree_dir)
+    if(len(tree_entries) == 0):
+        raise RuntimeError("No usable fixed-tree files were found under " + str(tree_dir))
+    return tree_entries
 
 
 def loadTree(tree_path):
@@ -527,27 +589,27 @@ def loadTree(tree_path):
             cols = line.split()
             m.append(float(cols[0])); fp.append(int(cols[1])); subid.append(int(cols[2])); mpi.append(int(cols[3])); redshifts.append(float(cols[5]));
             jsp.append(np.sqrt(float(cols[6])*float(cols[6])+float(cols[7])*float(cols[7])+float(cols[8])*float(cols[8])))
+    if(len(m) == 0):
+        return np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), 0.0, -1
     m  = np.array(m); fp  = np.array(fp); subid = np.array(subid); mpi = np.array(mpi); redshifts = np.array(redshifts); jsp = np.array(jsp)
     mpbi = mpi[m == np.amax(m)][0]
+    main_mask_full = mpi == mpbi
+    if(np.any(main_mask_full)):
+        msub_z0 = 10**np.amax(m[main_mask_full])
+    else:
+        msub_z0 = 10**np.amax(m)
     keep = redshifts >= final_redshift
     m = m[keep]; fp = fp[keep]; subid = subid[keep]; redshifts = redshifts[keep]; jsp = jsp[keep]; mpi = mpi[keep]
     if(len(m) == 0):
-        return np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), 0.0, mpbi
+        return np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), msub_z0, mpbi
     if(mpb_only):
         # `mpb_only` reduces the event search to the main branch only. The
         # fixed tree files contain all retained branches by default.
         m = m[mpi == mpbi]; fp = fp[mpi == mpbi]; subid = subid[mpi == mpbi]; redshifts = redshifts[mpi == mpbi]; jsp = jsp[mpi == mpbi]; mpi = mpi[mpi == mpbi]
     if(len(m) == 0):
-        return np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), 0.0, mpbi
+        return np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), np.array([]), msub_z0, mpbi
     m = 10**m
-    main_mask = mpi == mpbi
-    if(np.any(main_mask)):
-        # After trimming to `final_redshift`, the latest retained main-branch
-        # point serves as the host mass proxy at the chosen final epoch.
-        msub = np.amax(m[main_mask])
-    else:
-        msub = np.amax(m)
-    return m, fp, subid, redshifts, jsp, mpi, msub, mpbi
+    return m, fp, subid, redshifts, jsp, mpi, msub_z0, mpbi
 
 
 t0 = smhm.cosmicTime(final_redshift, units = 'yr')
@@ -556,13 +618,10 @@ t0 = smhm.cosmicTime(final_redshift, units = 'yr')
 
 num = -1
 num_run = 0
-excluded_seen = set()
-for tree_path in _iter_tree_files(treedir):
-    hid_num = int(tree_path.stem)
-    if hid_num in exclude_halo:
-        excluded_seen.add(hid_num)
-        continue
-    m, fp, subid, redshifts, jsp, mpi, msub, mpbi = loadTree(tree_path)
+for tree_entry in _iter_tree_files(treedir):
+    hid_num = int(tree_entry.halo_id_z0)
+    tree_path = tree_entry.path
+    m, fp, subid, redshifts, jsp, mpi, msub_z0, mpbi = loadTree(tree_path)
     if(len(m) == 0):
         continue
     # if(run_all == False and msub  < 10**log_mh_min or msub > 10**log_mh_max or num_run >= N):
@@ -571,9 +630,9 @@ for tree_path in _iter_tree_files(treedir):
     if (run_all == False):
         if (num_run >= N):
             continue
-        # The selection cut is applied to `msub`, i.e. the maximum retained mass
-        # in this fixed tree after any optional MPB filtering.
-        if (msub  < 10**log_mh_min) or (msub > 10**log_mh_max):
+        # The selection cut is always applied to the descendant z=0 host mass,
+        # while `final_redshift` only truncates the subsequent formation history.
+        if (msub_z0  < 10**log_mh_min) or (msub_z0 > 10**log_mh_max):
             continue
 
     num_run += 1
@@ -660,13 +719,13 @@ for tree_path in _iter_tree_files(treedir):
     GC_imbh_mass2 = np.array([cluster.imbh_mass_msun for cluster in evolved_clusters])
 
 
-    logmsub = np.log10(msub);
+    logmsub = np.log10(msub_z0);
     log_GC_mhost =  np.empty(len(GC_masses2))
     log_GC_mhost.fill(logmsub)
-    logms = np.log10(smhm.SMHM(10**logmsub, final_redshift, scatter = False))
+    logms = np.log10(smhm.SMHM(msub_z0, 0.0, scatter = False))
 
-    # The historical output schema labels this as the z=0 halo mass; for
-    # nonzero `final_redshift` it is the corresponding end-of-run halo mass proxy.
+    # The historical host columns always refer to the descendant z=0 halo,
+    # while GC survival and orbital evolution stop at `final_redshift`.
     # write to output files
     for i in range(len(GC_masses)): #all clusters
         allcat.write(
@@ -736,16 +795,6 @@ for tree_path in _iter_tree_files(treedir):
         )
 cat.close()
 allcat.close()
-if(len(exclude_halo) > 0):
-    excluded_requested = sorted(exclude_halo)
-    excluded_missing = sorted(exclude_halo - excluded_seen)
-    print("excluded halo IDs:", ", ".join(str(hid) for hid in excluded_requested))
-    print("excluded halo count applied:", len(excluded_seen))
-    if(len(excluded_missing) > 0):
-        print(
-            "warning: requested excluded halo IDs not found in tree directory:",
-            ", ".join(str(hid) for hid in excluded_missing),
-        )
 if(num_run < N and run_all == False):
     print("requested", N, "halos, but there were only", num_run, "halos stored in the mass range you requested. Model was run on all available halos.\n")
 print("all done!")

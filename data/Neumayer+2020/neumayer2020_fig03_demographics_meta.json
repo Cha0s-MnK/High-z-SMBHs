@@ -1,0 +1,31 @@
+{
+  "divider_intercept": -0.32,
+  "divider_slope": 0.12,
+  "n_blue_cloud": 262,
+  "n_non_nucleated": 649,
+  "n_nucleated": 432,
+  "n_red_sequence": 819,
+  "n_total_rows": 1081,
+  "occupation_bins": [
+    5.5,
+    6.2,
+    6.9,
+    7.6000000000000005,
+    8.3,
+    9.0,
+    9.700000000000001,
+    10.400000000000002,
+    11.100000000000001,
+    11.8
+  ],
+  "source_files": {
+    "eigenthaler18_tab1.fits": "/home/subonan/High-z SMBHs/data/Neumayer+2020/raw/eigenthaler18_tab1.fits",
+    "ferrarese06_tab12.fits": "/home/subonan/High-z SMBHs/data/Neumayer+2020/original_nsc_review/ferrarese06_tab12.fits",
+    "ferrarese06_tab34.fits": "/home/subonan/High-z SMBHs/data/Neumayer+2020/original_nsc_review/ferrarese06_tab34.fits",
+    "georgiev09_galaxies.dat": "/home/subonan/High-z SMBHs/data/Neumayer+2020/original_nsc_review/georgiev09_galaxies.dat",
+    "georgiev14_tab1plus.fits": "/home/subonan/High-z SMBHs/data/Neumayer+2020/raw/georgiev14_tab1plus.fits",
+    "georgiev14_tab2.fits": "/home/subonan/High-z SMBHs/data/Neumayer+2020/raw/georgiev14_tab2.fits",
+    "lauer05_alltab.fits": "/home/subonan/High-z SMBHs/data/Neumayer+2020/raw/lauer05_alltab.fits",
+    "sanchez-janssen19_tab4.tex": "/home/subonan/High-z SMBHs/data/Neumayer+2020/raw/sanchez-janssen19_tab4.tex"
+  }
+}

@@ -1,0 +1,1359 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Basic setup. Most papers should leave these options alone.
+\documentclass[fleqn,usenatbib]{mnras}
+
+% MNRAS is set in Times font. If you don't have this installed (most LaTeX
+% installations will be fine) or prefer the old Computer Modern fonts, comment
+% out the following line
+\usepackage{newtxtext,newtxmath}
+% Depending on your LaTeX fonts installation, you might get better results with one of these:
+%\usepackage{mathptmx}
+%\usepackage{txfonts}
+
+% Use vector fonts, so it zooms properly in on-screen viewing software
+% Don't change these lines unless you know what you are doing
+\usepackage[T1]{fontenc}
+\usepackage{anyfontsize}
+
+% Allow "Thomas van Noord" and "Simon de Laguarde" and alike to be sorted by "N" and "L" etc. in the bibliography.
+% Write the name in the bibliography as "\VAN{Noord}{Van}{van} Noord, Thomas"
+\DeclareRobustCommand{\VAN}[3]{#2}
+\let\VANthebibliography\thebibliography
+\def\thebibliography{\DeclareRobustCommand{\VAN}[3]{##3}\VANthebibliography}
+
+
+%%%%% AUTHORS - PLACE YOUR OWN PACKAGES HERE %%%%%
+
+\usepackage{amsmath}	% Advanced maths commands
+\usepackage{float}
+\usepackage{dsfont}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{xparse}
+\usepackage{listings}
+\newcommand*\dif{\mathop{}\!\mathrm{d}}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{tabularray}
+\usepackage[labelfont=bf]{caption}
+\usepackage{gensymb}
+\usepackage{setspace}
+\usepackage{multirow}
+\hypersetup{
+  colorlinks=true,
+    linkcolor=RoyalBlue,
+    citecolor=RoyalBlue,
+    filecolor=RoyalPurple,
+    urlcolor=RoyalPurple
+}
+\usepackage[dvipsnames,svgnames,x11names]{xcolor}
+\usepackage{comment}
+\usepackage{textgreek}
+\usepackage{xspace}
+\usepackage{xargs}
+\usepackage{multirow}
+
+
+\newcommand{\fde}[1]{\textcolor{ForestGreen}{#1}\xspace}
+\newcommand{\lri}[1]{\textcolor{VioletRed}{#1}\xspace}
+\newcommand{\mstar}{\ensuremath{M_\star}\xspace}
+\newcommand{\Msun}{\ensuremath{\mathrm{M}_\odot}\xspace}
+\newcommand{\jwst}{\textit{JWST}\xspace}
+\newcommand{\hda}{\ensuremath{\mathrm{H\text{\textdelta}_A}}\xspace}
+\newcommand{\hga}{\ensuremath{\mathrm{H\mathrm{\textgamma}_A}}\xspace}
+\newcommand{\Halpha}{\text{H\textalpha}\xspace}
+\newcommand{\Hbeta}{\text{H\textbeta}\xspace}
+\newcommand{\Hgamma}{\text{H\textgamma}\xspace}
+\newcommand{\Hdelta}{\text{H\textdelta}\xspace}
+\newcommandx{\permittedEL}[6][1=O,2=III,3=,4=,5=,6=]{\text{{#1}\,{\sc {#2}}{#3}{#4}{#5}{#6}}\xspace}
+\newcommandx{\semiforbiddenEL}[6][1=O,2=III,3=,4=,5=,6=]{\text{{#1}\,{\sc {#2}}]{#3}{#4}{#5}{#6}}\xspace}
+\newcommandx{\forbiddenEL}[6][1=O,2=III,3=,4=,5=,6=]{\text{[{#1}\,{\sc{#2}}]{#3}{#4}{#5}{#6}}\xspace}
+\newcommand{\kms}{\ensuremath{\text{km s}^{-1}}\xspace}
+% He lines
+\newcommand{\HeIL}[1][1=5875]{\permittedEL[He][i][\textlambda][#1]}
+\newcommand{\HeIIL}{\permittedEL[He][ii]}
+\newcommand{\HeI}{\permittedEL[He][i]}
+% OII lines
+\newcommand{\OII}{\forbiddenEL[O][ii]}
+\newcommandx{\OIIL}[1][1=3728]{\forbiddenEL[O][ii][\textlambda][#1]}
+\newcommand{\OIIall}{\forbiddenEL[O][ii][\textlambda][\textlambda][3727,][3729]}
+\newcommand{\SIIall}{\forbiddenEL[S][ii][\textlambda][\textlambda][6716,][6731]}
+% OIII lines
+\newcommand{\OIII}{\forbiddenEL[O][iii]}
+\newcommand{\FeII}{\forbiddenEL[Fe][ii]}
+\newcommandx{\OIIIL}[1][1=5007]{\forbiddenEL[O][iii][\textlambda][#1]}
+\newcommand{\OIIIall}{\forbiddenEL[O][iii][\textlambda][\textlambda][4959,][5007]}
+% NII lines
+\newcommand{\NII}{\forbiddenEL[N][ii]}
+\newcommandx{\NIIL}[1][1=6582]{\forbiddenEL[N][ii][\textlambda][#1]}
+\newcommand{\NIIall}{\forbiddenEL[N][ii][\textlambda][\textlambda][6548,][6583]}
+% NeIII lines
+\newcommand{\NeIII}{\forbiddenEL[Ne][iii]}
+\newcommandx{\NeIIIL}[1][1=3869]{\forbiddenEL[Ne][iii][\textlambda][#1]}
+\newcommand{\NeIIIall}{\forbiddenEL[Ne][iii][\textlambda][\textlambda][3869,][3968]}
+% UV lines
+\newcommand{\CIIIall}{\semiforbiddenEL[C][iii][\textlambda][\textlambda][1907,][1909]}
+\newcommand{\CIV}{\permittedEL[C][iv]}
+\newcommand{\OIIIUvall}{\semiforbiddenEL[C][iii][\textlambda][\textlambda][1661,][1666]}
+% ALMA lines
+\newcommand{\CII}{\forbiddenEL[C][ii][\textlambda][158$\mu$m]}
+\newcommand{\OIIIalm}{\forbiddenEL[O][iii][\textlambda][88$\mu$m]}
+
+\newcommand{\NeIV}{\forbiddenEL[Ne][iv]}
+\newcommand{\NeV}{\forbiddenEL[Ne][v]}
+
+%Else
+\newcommand{\Te}{\ensuremath{T_\mathrm{e}}\xspace}
+\newcommand{\Tiii}{\ensuremath{t_3}\xspace}
+\newcommand{\Tii}{\ensuremath{t_2}\xspace}
+
+\newcommand{\ergscm}{erg s$^{-1}$ cm$^{-2}$\xspace}
+
+\newcommand{\cliff}{\textit{The Cliff}\xspace}
+\newcommand{\neigh}{ID~24647\xspace}
+
+\newcommand{\orcid}[2]{%
+  \href{http://orcid.org/#2}{\textcolor{black}{#1}}%
+}
+
+\newcommand{\orcidsymb}[2]{%
+  \href{http://orcid.org/#2}{\textcolor{black}{#1}{\includegraphics[height=10pt]{Figures/orcidd.pdf}}}%
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%% AUTHORS - PLACE YOUR OWN COMMANDS HERE %%%%%
+
+% Please keep new commands to a minimum, and use \newcommand not \def to avoid
+% overwriting existing commands. Example:
+%\newcommand{\pcm}{\,cm$^{-2}$}	% per cm-squared
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%% TITLE PAGE %%%%%%%%%%%%%%%%%%%
+
+% Title of the paper, and the short title which is used in the headers.
+% Keep the title short and informative.
+\title[The Cliff: A metal-poor LRD]{The Cliff: A Metal-Poor Little Red Dot Hosting an Overmassive Black Hole at $z = 3.55$}
+% I'd rather write about the necessary deviation from at least one scaling relation MZR or MBHM*
+
+% The list of authors, and the short list which is used in the headers.
+% If you need two or more lines of authors, add an extra line using \newauthor
+\author[L. R. Ivey et al.]{\parbox[h]{\textwidth}{
+\orcidsymb{L. R. Ivey,}{0009-0002-5105-1222}$^{1, 2}$\thanks{E-mail: li247@cam.ac.uk}
+% core
+\orcidsymb{F. D'Eugenio,}{0000-0003-2388-8172}$^{1, 2}$
+\orcidsymb{R. Maiolino,}{0000-0002-4985-3819}$^{1, 2, 3}$
+\orcidsymb{Y. Isobe,}{0000-0001-7730-8634}$^{1, 2, 4}$,
+\orcidsymb{I. Juodžbalis,}{0009-0003-7423-8660}$^{1, 2}$
+\orcidsymb{S. Koudmani,}{0000-0002-1528-5091}$^{1, 5}$
+\orcidsymb{M. Perna,}{0000-0002-0362-5941}$^{6}$
+\orcidsymb{S. Zhang,}{0000-0003-1541-177X}$^{7, 8}$
+% additional
+\orcidsymb{V. Bromm,}{0000-0003-0212-2979}$^{7, 9}$
+\orcidsymb{A. J. Bunker,}{0000-0002-8651-9879}$^{10}$
+\orcidsymb{S. Carniani,}{0000-0002-6719-380X}$^{11}$
+\orcidsymb{A. C. Fabian,}{0000-0002-9378-4072}$^{12}$
+\orcidsymb{K. Inayoshi,}{0000-0001-9840-4959}$^{13}$
+\orcidsymb{X. Ji,}{0000-0002-1660-9502}$^{1, 2}$ 
+\orcidsymb{G. C. Jones,}{0000-0002-0267-9024}$^{1, 2}$
+\orcidsymb{B. Liu,}{0000-0002-4966-7450}$^{14}$
+\orcidsymb{R. Pascalau,}{0000-0001-9820-5773}$^{1, 2}$
+\orcidsymb{P. Rinaldi,}{0000-0002-5104-8245}$^{15, 16}$
+\orcidsymb{B. Robertson,}{0000-0002-4271-0364}$^{17}$
+\orcidsymb{J. Scholtz,}{0000-0001-6010-6809}$^{1, 2}$
+\orcidsymb{S. Tacchella}{0000-0002-8224-4505}$^{1, 2}$
+% everything below to be sorted out later
+}\vspace{0.4cm}
+\\
+% List of institutions
+$^{1}$Kavli Institute for Cosmology, University of Cambridge, Madingley Road, Cambridge, 
+CB3 0HA, UK\\
+$^{2}$Cavendish Laboratory, University of Cambridge, 19 JJ Thomson Avenue, Cambridge CB3 0HE, UK\\
+$^{3}$Department of Physics and Astronomy, University College London, Gower Street, London WC1E 6BT, UK\\
+$^{4}$Waseda Research Institute for Science and Engineering, Faculty of Science and Engineering, Waseda University, 3-4-1, Okubo, Shinjuku, Tokyo 169-8555, Japan \\
+$^{5}$Centre for Astrophysics Research, Department of Physics, Astronomy and Mathematics, University of Hertfordshire, College Lane, Hatfield, AL10 9AB, UK \\
+$^{6}$ Centro de Astrobiología (CAB), CSIC–INTA, Cra. de Ajalvir Km. 4, 28850 – Torrejón de Ardoz, Madrid, Spain
+\\
+$^{7}$Weinberg Institute for Theoretical Physics, Texas Center for Cosmology and Astroparticle Physics,
+University of Texas at Austin, Austin, TX 78712, USA
+\\
+$^{8}$Department of Physics, University of Texas at Austin, Austin, TX 78712, USA
+\\
+$^{9}$Department of Astronomy, University of Texas at Austin, Austin, TX 78712, USA
+\\
+$^{10}$Department of Physics, University of Oxford, Denys Wilkinson
+Building, Keble Road, Oxford OX1 3RH, UK
+\\
+$^{11}$Scuola Normale Superiore, Piazza dei Cavalieri 7, I-56126 Pisa, Italy
+\\
+$^{12}$Institute of Astronomy, University of Cambridge, Madingley Road, Cambridge CB3 0HA, UK
+\\
+$^{13}$Kavli Institute for Astronomy and Astrophysics, Peking University, Beijing 100871, China
+\\
+$^{14}$Institut f\"ur Theoretische Astrophysik, Zentrum f\"ur Astronomie, Universit\"at Heidelberg, Albert Ueberle Str. 2, D-69120 Heidelberg, Germany
+\\
+$^{15}$Space Telescope Science Institute, 3700 San Martin Drive, Baltimore, Maryland 21218, USA
+\\
+$^{16}$Steward Observatory, University of Arizona, 933 North Cherry Avenue, Tucson, AZ 85721, USA
+\\
+$^{17}$Department of Astronomy and Astrophysics, University of California, Santa Cruz, 1156 High Street, Santa Cruz, CA 95064, USA
+}
+
+% These dates will be filled out by the publisher
+\date{Accepted XXX. Received YYY; in original form ZZZ}
+
+% Prints the current year, for the copyright statements etc. To achieve a fixed year, replace the expression with a number. 
+\pubyear{\the\year{}}
+
+% Don't change these lines
+\begin{document}
+\label{firstpage}
+\pagerange{\pageref{firstpage}--\pageref{lastpage}}
+\maketitle
+
+% Abstract of the paper
+\begin{abstract}
+\jwst has revealed a large population of massive black holes (BHs) in the early Universe with unusual properties which mark them as distinct from low-redshift active galactic nuclei. Such findings have prompted the development of new models of BH formation and growth, and of their co-evolution with host galaxies. Linking the gas-phase metallicity of BH environments to seed masses is key to understanding which evolutionary pathways could explain the population of \jwst-discovered BHs. We present new high-resolution \jwst NIRSpec/IFU observations covering the rest-frame optical emission lines of a Little Red Dot (LRD) at $z=3.55$, known as \cliff, from the `Red Unknowns: Bright Infrared Extragalactic Survey' (RUBIES). We find evidence for low metallicity ($Z=0.017\pm0.004 \ Z_\odot$) based on the low narrow-line \OIIIL[5007]/\Hbeta ratio, supported by the non-detection of low-ionisation emission lines such as \OIIall and \NIIall. We find that the observed properties of \cliff, including its overmassive BH, can be reproduced by some simulations of black hole growth and evolution down to $z\sim3.5$. However, these simulation runs require high seed masses ($10^4 - 10^5\ M_\odot$) and appear as rarely in the simulation volume as in the RUBIES survey volume over redshifts $3<z<4$, highlighting the unusual nature of \cliff. Future simulations and numerical models will help to uncover how such a metal poor system managed to develop a massive black hole and persist to such low redshift.
+\end{abstract}
+
+% Select between one and six entries from the list of approved keywords.
+% Don't make up new ones.
+\begin{keywords}
+galaxies: high-redshift - galaxies: active - galaxies: nuclei - galaxies: abundances - galaxies: evolution
+\end{keywords}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% BODY OF PAPER %%%%%%%%%%%%%%%%%%
+
+\section{Introduction}
+
+% Overview of JWST & contribution to AGN science thus far
+The James Webb Space Telescope (\jwst) has opened a new observational frontier for studying the formation and evolution of early black holes. 
+The sensitivity and wavelength coverage of \jwst have enabled the detection of active galactic nuclei (AGN) at high redshift ($z>4$) with luminosities $L_{\mathrm{bol}}\sim 10^{42} - 10^{46} \ \mathrm{erg\,s^{-1}}$, rendering it possible to study low-luminosity AGN at higher redshifts than ever before \citep[e.g.,][]{Kocevski2023, Ubler2023, Harikane2023, Matthee2024, Maiolino2024_JADES, Maiolino2024_Nature, Kokorev2023, Greene2024, Taylor2025, Taylor2025_CAPERS, Juodzbalis2024_Nature, Juodzbalis2026_JADEScensus, Mazzolari2025, Chisholm2024, Scholtz2025, Adamo2025}.
+The AGN most readily detected by \jwst are broad line AGN (BLAGN; i.e. Type 1 AGN), identified through the broad component of their permitted lines (usually \Halpha or \Hbeta). The absence of a corresponding broad component in the forbidden lines (e.g. \OIIIL) confirms an AGN Broad Line Region (BLR) as the origin for the broad emission, distinguishing it from potential outflows.
+%\jwst AGN also often show high-excitation lines such as \HeIIL which are typical of the hard radiation field of AGN \citep[see e.g.][]{Feltre2016, Scholtz2025, Mazzolari2025}.
+The low luminosities of \jwst-discovered AGN are likely due in part to lower black hole (BH) masses and/or lower accretion rates compared to the luminous high-redshift quasars previously identified by ground-based surveys \citep{Maiolino2024_JADES, Juodzbalis2024_Nature, Juodzbalis2026_JADEScensus}.
+
+% Peculiarities of high-z AGN
+However, the \jwst-discovered low-luminosity AGN population has been found to exhibit a number of peculiarities. 
+Crucially, these AGN are not simply the `high-redshift version' of local ($z<1$) AGN, nor are they `scaled-down versions' of high-redshift quasars, meaning \jwst AGN are likely a distinct population. 
+Firstly, they show characteristic X-ray weakness \citep{Ananna2024, Yue2024_Stack, Maiolino2025_Chandra} and radio weakness \citep{Mazzolari2024, Mazzolari2025}, while both weak optical variability \citep[e.g.][]{Ji2025, Furtak2025, Naidu2025, Zhang2025_LRDvariability, Lin2026_variability} and non-variability \citep[e.g.][]{KokuboHarikane2025, Zhang2025} have been observed. 
+The chemical enrichment associated with \jwst AGN is also poorly understood. Many \jwst AGN exhibit a lack of strong high-ionisation lines \citep[e.g.][]{Lambrides2024, Zucchi2026} or classical broad-line iron emission bumps \citep[e.g.][]{Trefoloni2025}. However, many \jwst AGN also exhibit significant nitrogen enhancement \citep{Ji2024, Isobe2025}, suggesting unexpectedly rapid chemical enrichment, potentially driven by extreme star formation or exotic stellar populations.
+
+Many \jwst AGN also appear overmassive compared to the local black hole to stellar mass relation \citep[$M_\mathrm{BH}$--$M_\ast$; e.g.,][]{Maiolino2024_JADES, Furtak2024, Juodzbalis2024_Nature, Juodzbalis2026_JADEScensus, Chen2025, JonesKocevski2025, Ubler2023}. 
+The presence of relatively massive BHs in early low-mass galaxies is remarkable \citep{Mezcua2024}, and raises fundamental questions about the co-evolution of black holes and their host galaxies \citep[e.g.][]{Smith_rev2019,Inayoshi_rev2020}. 
+To a certain extent, the overmassive nature of \jwst AGN may be ascribed to selection effects \citep{Juodzbalis2026_JADEScensus, Li2025, Geris2026, Habouzit2025} or could point to $M_\mathrm{BH}-M_\mathrm{dyn}$ as a more fundamental relation between BHs and their host galaxies \citep{McClymont2026_BH, Danhaive2026_GEKO, Maiolino2024_JADES}. 
+While selection effects alone cannot fully explain the observed shift in $M_\mathrm{BH}/M_\ast$ \citep{PacucciLoeb2024, JonesKocevski2025}, recent work by \cite{Ziparo2026} suggests that this evolution might not be a systematic shift in the mean $M_\mathrm{BH}-M_\ast$ relation (which remains consistent with local values at $z>4$), but rather a significant increase in its intrinsic scatter at higher redshifts.
+
+
+
+% Discussion of LRDs
+Assuming certain colour selection criteria, approximately 10-30\% \citep{Hainline2025} of \jwst-discovered BLAGN at $z\sim5$ have been categorised as `Little Red Dots' \citep[LRDs;][]{Matthee2024, Hviding2025}.
+LRDs exhibit a number of characteristic features, including rest-frame optical compactness, extreme redness and a V-shaped continuum \citep[e.g.][]{Matthee2024, Kocevski2025, Setton2025}. 
+Other features commonly observed in LRDs \citep[though not exclusive to the LRD population, see e.g.][]{Brazzini2026} include exponential broad-line wings \citep[e.g.][]{Rusakov2026}, deep Balmer line absorption \citep[][]{Juodzbalis2024_Rosetta, Lin2026_COSMOS, DEugenio2025, DEugenio2026}, prominent Balmer breaks \citep[e.g.][]{Labbe2024, Baggen2024, Setton2025, deGraaff2025}, and X-ray weakness (e.g. \citealt{Yue2024_Stack,Maiolino2025_Chandra}, but see \citealt{Hviding2026} for an exception).
+% and the mid-IR \citetext{e.g., \citealp{Akins2025}; but see\citealp{Juodzbalis2024_Rosetta} and \citealp{Brazzini2026} for exceptions from weakness in the mid-IR}.
+
+The Balmer absorption commonly seen in LRDs indicates high gas column densities along the line of sight \citep[][]{Juodzbalis2024_Rosetta, InayoshiMaiolino2025, Chang2026}, a feature which may also be related to their observed X-ray weakness \citep{Maiolino2025_Chandra}. 
+% Furthermore, while the Balmer breaks seen in LRDs were initially interpreted as arising from evolved stellar populations, they have more recently been shown to be connected to the Balmer absorption features and therefore also to absorption by dense gas \citep{InayoshiMaiolino2025, Ji2025, DEugenio2025, Naidu2025, deGraaff2025, Akins2026}. 
+The number density of LRDs has been found to decline sharply at $z<4$ \citep{Kocevski2025, Inayoshi2025_LRD}, though there are some luminous instances at lower redshifts \citep[e.g. $z\sim2-3$;][]{Juodzbalis2024_Rosetta, Loiacono2025, Wang2025, EuclidCollaboration2025, Ma2025_CountingLRD, Rinaldi2025} and a few local analogues \citep[e.g. $z\sim0.1$;][]{Lin2026, Ji2026}. This rapid evolution in LRD number density suggests that the obscuration and extreme gas column densities characteristic of LRDs may represent a transient phase of rapid black hole growth prevalent primarily in the early Universe.
+
+A wide range of models have now been proposed for interpreting the peculiar observed properties of \jwst AGN, with fundamental differences in their initial seeding mechanisms. These can be broadly divided into two categories: (i) light seeds ($10^2-10^3 \ M_\odot$), possibly originating from Pop III stellar remnants \citep[e.g.][]{Nandal2025, Cammelli2025, Sanati2025, Prole2025}, and (ii) intermediate/heavy seeds ($10^4-10^6 \ M_\odot$) originating from the runaway merging of nuclear star clusters  \citep[e.g.][possibly resulting from the `feedback-free starbursts' proposed by \citealt{Dekel2025_LRD, Dekel2025}]{Partmann2025, Rantala2025}, or from the direct collapse of massive gas clouds \citep[e.g.][]{Natarajan2024, Jeon_DCBH2025, Pacucci2026}, or even primordial black holes \citep[e.g.][]{Zhang_PBH2025,DayalMaiolino2026}. Crucially, black hole seeding mechanisms are influenced by the gas-phase metallicity of the host galaxy. Pristine, low-metallicity environments are often cited as a prerequisite for heavy seed formation \citep[e.g.][]{Begelman2006, Ferrara2014, Latif2016, Maiolino2025_QSO1}, as such environments suppress gas fragmentation which would otherwise lead to normal star formation \citep{Inayoshi_rev2020}. By initiating growth from an already massive seed, a BH could outpace stellar assembly in its host galaxy even at early cosmic times \citep[$z\gtrsim4$; e.g.][]{Natarajan2024, Pacucci2023}. %At the same time, the resulting metal-poor environments may provide an explanation for the unique spectral features of \jwst AGN, including their characteristic dust-reddening and nitrogen-richness \citep{Cameron2023_NO, Ferrara2023}.
+Conversely, higher metallicities could hinder heavy seed formation \citep{Latif2016} but may facilitate rapid growth via stellar mergers or super-Eddington accretion \citep{Inayoshi_rev2020}.
+
+If LRD BH masses are verified as overmassive relative to their host galaxies \citep[see][for example]{Juodzbalis2025_QSO1}, they could be explained by invoking heavy seed models or even Primordial Black Holes \citep[PBHs; see e.g.][]{Dayal2024, DayalMaiolino2026, Zhang2025_hydrosim,Ziparo2025}. Alternatively, LRDs could represent an entirely new class of rapidly-accreting, low-mass BHs termed `black hole stars' \citep[][]{Naidu2025, Begelman2026} with cool gas envelopes \citep{Liu2025, Kido2025}. 
+% , a scenario which implies high envelope to black hole mass ratios and has therefore been connected to lower-mass black hole seeding mechanisms. 
+It has even been proposed that LRDs could simply be super-Eddington accreting black holes, which otherwise have the same structure as normal AGN \citep[][]{MadauMaiolino2026,Madau2026b}. Distinguishing between these pathways is essential to understanding the formation and early growth of BHs \citep[e.g.,][]{Jeon_LRDs2026}; in this regard, environmental metallicity may prove to be a valuable diagnostic for evaluating the plausibility of different seeding models.
+
+
+% Modelling/interpreting JWST AGN ------- DISREGARD THIS
+% A wide range of models have now been proposed which have different priorities in terms of explaining the range of observed properties.
+% These include, but are by no means limited to, scenarios such as: super-Eddington accretion \citep{MadauHaardt2024, PacucciNarayan2024, King2025, Inayoshi2025}, heavy obscuration by a dust-poor medium \citep{Maiolino2025_Chandra, Ji2025, Ji2026}, primordial black holes , black holes embedded in dense ionised gas \citep{Kido2025,Rusakov2026, Sneppen2026}, quasi-stars \citep{Begelman2026, Naidu2025}, or even globular cluster formation \citep{Chisholm2026}. 
+
+
+% INtroduce the Cliff
+A luminous, unlensed LRD at $z_\mathrm{spec} = 3.548$, also known as \cliff, was recently identified by the \textit{Red Unknowns: Bright Infrared Extragalactic Survey} \citep[RUBIES;][]{RUBIES2025, deGraaff2025}. 
+The survey obtained \jwst Near Infrared Spectrograph (NIRSpec) microshutter assembly \citep[MSA;][]{Jakobsen2022,Ferruit2022} observations of \cliff with both the low-resolution PRISM/Clear ($0.6 - 5.3 \ \mu$m) and medium-resolution G395M/F290LP ($2.9 - 5.2 ~\mu$m) disperser/filter combinations. 
+These observations revealed broad \Hbeta and \Halpha emission, typical of Type 1 AGN, along with the V-shaped continuum characteristic of LRDs. 
+\cliff also shows an exceptionally strong Balmer break, for which \cite{deGraaff2025} exclude a stellar origin. 
+\cite{deGraaff2025} also found \cliff hosts an AGN with mass of $\log(M_\mathrm{BH}/M_\odot) = 7.18^{+0.07}_{-0.06}$. 
+Even with these medium-resolution observations they identify a significant absorption component in \Halpha, indicative of absorption by dense gas.
+
+
+
+% Point out key feature...
+Another key and interesting feature of the original PRISM and G395M observations is the non-detection of the \OIIIL line. 
+This could indicate a weak Narrow Line Region (NLR), which has previously been found for powerful high-redshift quasars \citep{Netzer2004}. 
+In this paper, we revisit \cliff, now with recent high-resolution \jwst/NIRSpec Integral Field Unit (IFU) observations (G235H/F170LP; PID 9433), which finally reveal constraints on the narrow line kinematics and metallicity from \OIIIL. 
+The high resolution spectrum shows a clear narrow component for both \Hbeta and \OIIIL, revealing the presence of either a NLR or ISM ionised by star-formation. 
+In this work we analyse the high-resolution spectral data to assess the \OIIIL weakness more comprehensively and argue it is tracing low-metallicity gas within which the BH is embedded. 
+We additionally discuss the implications of such a low-metallicity, high-$M_\mathrm{BH}$ system existing at $z\sim3.5$ in the context of chemical enrichment and black hole seeding.
+
+% Brief outline of rest of paper
+The paper is organised as follows. 
+In Section~\ref{sec:data} we describe the spectroscopic data and data reduction used in this work. 
+We present our analysis of the data in Section~\ref{sec:Methods}, the results of which are then described in Section~\ref{sec:Results}.
+In Section~\ref{sec:Discussion}, we discuss and interpret our findings in the wider context of other observations and simulations. 
+Finally, our key observations and findings are summarised in Section~\ref{sec:Conclusions}. 
+Throughout this work, unless stated otherwise, we assume a flat $\Lambda$CDM cosmology with $H_0 = 67.4 \mathrm{km} \ \mathrm{s}^{-1} \ \mathrm{Mpc}^{-1}$ and $\Omega_\mathrm{m} = 0.315$ \citep{Planck2020}. 
+At $z = 3.548$, this means an on-sky separation of $1''$ corresponds to 7.453 kpc.
+We additionally take solar metallicity to be defined by $[12+\log(\mathrm{O/H})]_\odot = 8.69$ \citep{Asplund2009}.
+
+
+\section{Data}\label{sec:data}
+
+In this work, we utilise NIRSpec-IFS observations from the Cycle 4 \jwst DDT programme 9433 (PIs R. Maiolino and F. D'Eugenio). 
+The observations were taken with the high-resolution disperser/filter combination G235H/F170LP. We adopted a medium-cycling pattern with 10 dithers, 18 groups per integration and one integration per exposure, along with the NRSIRS2 readout mode \citep{Rauscher2017}. This yields a total on-source time of 3.7 h.
+
+The data reduction uses the \jwst Science calibration pipeline v1.20.2 with CRDS jwst\_1464.pmap. To improve the quality of the datacube, we perform a number of further data processing steps, in addition to the default pipeline. The customised procedures used for flagging of residual cosmic ray snowballs, subtraction of pink noise (1/f noise), and removal of failed open MSA shutters signal are described in detail in \cite{Perna2023, Perna2025}. Stage~2 was executed using the bad-pixel self-calibration implemented in the standard pipeline, in which all exposures on a given detector are used to identify and flag bad pixels that may have been missed by the reference bad-pixel mask. For the final stage of the pipeline, the outlier rejection was performed using the standard \jwst pipeline implementation. Before combination, the cube was resampled to a scale of $0.05''$ per spaxel; the final cubes were combined using the `drizzle’ method.
+
+We note that the NIRSpec field of view (FoV) of \cliff includes both a foreground galaxy at $z_\mathrm{spec}=3.05086\pm0.00002$ \citep[CANDELS~\neigh;][]{Grogin2011,Koekemoer2011},
+and a star \citetext{see \citealp{deGraaff2025} and Fig.~\ref{fig:fov}}.
+To perform background subtraction, we created a mask of source-free regions in the FoV, carefully excluding \cliff, the foreground galaxy and star. 
+The background level is estimated independently for each spectral channel, performing $\sigma$-clipping with a threshold of $\sigma = 5$ from the median, with the local sky level then defined as the median of the resulting distribution. 
+The final estimated background cube is smoothed with a median filter to avoid introducing additional noise, and is then subtracted from the flux data cube.
+
+As noted by earlier studies \citep[e.g.][]{Ubler2023, RodriguezDelPino2024}, the \textsc{err} extension of the NIRSpec-IFS cubes is underestimated.
+Hence, to obtain realistic uncertainties on our aperture-integrated spectra while retaining crucial information about outliers and the correlated noise between channels, we adopt the same procedure as previous works: rescaling \textsc{err} to match the $\sigma$-clipped r.m.s. noise of the integrated spectrum in regions free of line emission.
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/TheCliff_RGB.pdf}
+\caption{False-colour RGB image of \cliff, illustrating the NIRSpec/IFS FoV. We label a foreground galaxy (\neigh, at $z_\mathrm{spec}=3.05$) to the east and a star to the north west. We use publicly available imaging from PRIMER (PID~1837) and MINERVA~\citep[PID~7814;][]{Muzzin2025}.}\label{fig:fov}
+\end{figure}
+
+\section{Data Analysis}\label{sec:Methods}
+
+\subsection{PSF and aperture determination}\label{sec:Size}
+
+% Details of aperture & PSF
+The optimal aperture from which an integrated spectrum of \cliff is extracted is not perfectly circular, as it is necessary to account for the shape of the IFU observations' point spread function (PSF). 
+The PSF of IFU observations is non-trivial to determine, for two key reasons: (i) the observational PSF does not exactly follow the theoretical \jwst PSF, and
+(ii) the PSF tends to be slightly elongated in the direction along the IFU slices. 
+In the case of \cliff, we leverage the star present in the IFU FoV as a reference point-source to obtain a direct measurement of the PSF for our observations (see Appendix~\ref{sec:IFSPSF}).
+
+To measure the PSF shape and full-width at half maximum (FWHM), we utilise the morphology modelling tool \textsc{pysersic} \citep{PashaMiller2023}. 
+We generate a set of square narrow-band image cutouts centred on the star by median-stacking all wavelength slices within spectral windows spaced by 0.1~\textmu m in the NRS1 detector (where the star is brightest), and by 0.2~\textmu m in the NRS2 detector (which samples longer wavelengths). 
+We model these synthetic images using a 2D Gaussian, implemented as a S\'ersic profile with fixed index $n=0.5$, along with a linear sky background. 
+We adopt generous flat priors on all parameters, except for position angle (P.A.), which has a narrow flat prior within $\pm 5$\textdegree\ from the NIRSpec position angle.
+We find that in NRS1 no constraints on the position angle are necessary, and we find a position angle that is fully consistent with the NIRSpec position angle, i.e. $\mathrm{P.A.} = 198\degree$. 
+However, in NRS2 the position angle is loosely constrained, likely due to the combination of a mildly rounder shape and lower SNR.
+For consistency, therefore, we adopt the same P.A. for all wavelengths.
+As \textsc{pysersic} also requires an input PSF for the fit, we use a Gaussian with FWHM = 0.1~spaxels, a very small width representing a delta distribution; using a much smaller FWHM would incur artefacts in the fitting procedure. 
+The PSF parameters are estimated with a simple maximum-likelihood estimator. 
+We find that for our main spectral region of interest, the \Hbeta-\OIIIL complex, the corresponding PSF is well-described by an ellipse with axis ratio $q = 0.86$ and position angle $\mathrm{P.A.} = 198\degree$; the direction of elongation of the PSF is along the IFU slices.
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/surface_brightness_profiles.pdf}
+\caption{Radial surface brightness profiles (normalised to the peak) of the narrow \Hbeta and \OIIIL (the solid orange and pink lines, respectively) and broad \Hbeta (dot-dashed green line) emission lines. 
+The PSF model of \cliff (see Section~\ref{sec:Size} and Appendix \ref{sec:IFSPSF}) is shown by the black dashed line.
+The shaded areas correspond to $1\sigma$ uncertainties on the mean for each profile. 
+The emission lines have compact Gaussian cores, and do not show any significant extension beyond the scope of the PSF. While there are hints of extension out to a radius of $0.2''$ in \OIIIL[5007], beyond the scale of the PSF, it should be noted that the wings of the PSF are not well-constrained and therefore this cannot be interpreted as conclusive evidence for spatial extension of \cliff. 
+Overall, these profiles suggest \cliff is spatially unresolved in NIRSpec/IFS.}
+\label{fig:surfacebrightnessprofiles}
+\end{figure}
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/aperture_illustration.pdf}
+\caption{Map of narrow \Hbeta emission, obtained by collapsing the three central channels of the continuum- and background-subtracted line (see Section~\ref{sec:fitting_Hb_OIII} for the line shapes). 
+This is overlaid with a white dashed ellipse illustrating the central aperture used for extracting the spectra shown in Figs.~\ref{fig:full_spectra}, \ref{fig:spectra} and \ref{fig:Halphafit}. 
+While this map may include some contribution from the broad \Hbeta component, this has no impact on our results as it is not used for any quantitative measurements.}
+\label{fig:aperture}
+\end{figure}
+
+\begin{figure*}
+        \centering
+	\includegraphics[width=\linewidth]{Figures/full_spectrum.pdf}
+    \caption{Full, background-subtracted NIRSpec-IFU G235H/F170LP integrated spectrum of \cliff, extracted from the aperture shown in Fig.~\ref{fig:aperture}. 
+    The locations of key emission lines are labelled with coloured vertical lines (except \NIIall, to avoid overcrowding near \Halpha). 
+    This spectrum has not been corrected for aperture losses.}
+    \label{fig:full_spectra}
+\end{figure*}
+
+To determine the size of the optimal integrated spectrum extraction aperture, it is important to first investigate whether \cliff shows any evidence for spatially-extended emission. 
+In Fig.~\ref{fig:surfacebrightnessprofiles}, we present the radial surface brightness profiles of the \Hbeta and \OIIIL emission lines, compared to the profile of our best-fit PSF model (dashed black line; also refer to Appendix~\ref{sec:IFSPSF}).  
+The profile of narrow \Hbeta (henceforth denoted $\Hbeta_\mathrm{N}$, solid orange line) is obtained by simply collapsing the three spectral channels around the peak of $\Hbeta_\mathrm{N}$ (a range of $\pm 75~\kms$); similarly, the profile of \OIIIL (solid pink line) is also obtained by collapsing the narrow line over the three spectral channels around its peak. 
+The profile of broad \Hbeta (henceforth denoted $\Hbeta_\mathrm{B}$; dot-dashed teal line) is extracted from the spectral regions $2.204-2.210\ \mu$m and $2.214-2.221 \ \mu$m (i.e. including emission from both the blue and red wings). 
+The comparison of the profiles demonstrates that the bulk of \Hbeta and \OIIIL emission comes from a very compact, unresolved region. 
+Unlike in Abell2744-QSO1 \citep[hereafter QSO1;][]{Maiolino2025_QSO1}, there is no conclusive evidence for an extended component of \Hbeta or \OIIIL emission in \cliff, indicating that \cliff is ultimately compact and spatially unresolved at our resolution. Further evidence for this conclusion arises from morphological fitting of the star in the IFU FoV: \cliff appears to show the same spatial profile as the star, i.e. any apparent extension arises due to the PSF.
+
+We determine the optimal spectral extraction aperture for \cliff, using a curve of growth analysis, which allows us to maximise the  signal-to-noise ratio (SNR) of the resulting integrated spectrum while accurately accounting for aperture losses. 
+As \Halpha is detected with the greatest SNR, we utilise the curve of growth of the broad \Halpha emission to derive overall aperture corrections. 
+To account for wavelength-dependent aperture losses, the \Halpha correction is then scaled to determine the relevant aperture loss correction (ALC) factors for shorter-wavelength lines such as \Hbeta and \OIIIL (see Appendix~\ref{sec:ALC}). 
+The final extraction aperture is an ellipse defined by the same axis ratio and P.A. as the PSF, with major radius of $0.1''$, and centred on the continuum centroid of \cliff.
+The final integrated spectrum extraction aperture used for \cliff in this work is shown by the white dashed ellipse in Fig.~\ref{fig:aperture}, overlaid onto a map of $\Hbeta_\mathrm{N}$ emission.
+The full integrated spectrum of \cliff extracted from this $r_\mathrm{maj}=0.1''$ aperture is presented in Fig.~\ref{fig:full_spectra}. For this aperture, the ALC factor for \Halpha is found to be $1.88\pm0.05$.
+% We find that applying these corrections ultimately yields fluxes consistent with those measured by \cite{deGraaff2025} from the MSA PRISM spectrum (see Sections~\ref{sec:fitting_Hb_OIII} and \ref{sec:Fitting_Ha}).
+
+
+
+\subsection{Spectral analysis}\label{sec:line_measure_methods}
+To analyse the emission lines, we adopt a Bayesian approach, using different models for different regions of the spectrum as discussed across the following subsections. 
+To integrate the posterior distribution of each fit, we use the Markov Chain Monte Carlo (MCMC) method with the software \textsc{emcee} \citep{emcee2013}. 
+We run 15000 steps for each chain, with 50 percent burn-in steps.
+To initialise the chains, we first identify the minimum-$\chi^2$ solution using the relevant model and ordinary least-squares minimisation. 
+For the MCMC fit, we adopt Gaussian priors informed by the minimum-$\chi^2$  fit, with strong boundaries only set when physically motivated (e.g. to ensure non-negative emission line fluxes). 
+All chains are visually inspected for convergence. 
+The final best-fit parameters and their uncertainties are calculated as the median value and 68 percent confidence interval of the posterior distribution. 
+To account for any uncorrelated uncertainties, all quantities derived from the spectral fitting are calculated from the posterior distribution. 
+The key spectral properties determined from the model fits described in this section, together with their uncertainties, are summarised later in Table~\ref{table:fit_properties}.
+
+
+
+
+
+\subsubsection{The \texorpdfstring{\Hbeta-\OIIIL}{HbO3} complex}\label{sec:fitting_Hb_OIII}
+
+Fig.~\ref{fig:spectra} shows the integrated spectrum of \cliff, now highlighting the \Hbeta and \OIIIall emission lines. 
+This integrated spectrum reveals the narrow and broad components of \Hbeta emission, together with a broad and slightly-redshifted absorption component; the absorption in \Hbeta was not visible in the earlier PRISM observations presented by \cite{deGraaff2025}. 
+We also note the detection of the weak and narrow \OIIIall lines in our observations, which were not significantly detected by \cite{deGraaff2025} in the low resolution spectrum. 
+In this work, the narrow \OIIIL emission provides valuable constraints for the kinematics of the narrow \Hbeta line in our spectral fits of the G235H spectrum, meaning it is possible to spectrally disentangle the $\Hbeta_\mathrm{B}$ and absorption components from the $\Hbeta_\mathrm{N}$ component. 
+
+To fit the \Hbeta-\OIIIL complex, we adopt an approach similar to that outlined by \cite{Ji2025} or \cite{Maiolino2025_QSO1}.
+We fit a single Gaussian profile to describe the narrow components of each emission line, tying their redshift centroids and intrinsic FWHMs ($z_N$ and $\mathrm{FWHM}_\mathrm{N}$, respectively) to common values to reduce the number of free parameters. 
+We allow the amplitude of each Gaussian profile to vary freely, but the \OIIIL/\OIIIL[4959] flux ratio is fixed to 2.99 \citep{Dimitrijevic2007}. 
+The broad line component is modelled as a Gaussian profile with its own independent redshift and intrinsic FWHM ($z_B$ and $\mathrm{FWHM}_\mathrm{B}$, respectively).
+In order to retrieve intrinsic line FWHMs from the spectral data, we must account for the wavelength-dependent line spread function (LSF) of \jwst/NIRSpec.
+The nominal, pre-launch resolution LSF \citep{Jakobsen2022} from the JDOCS\footnote{Available at the \hyperlink{https://jwst-docs.stsci.edu/jwst-near-infrared-spectrograph/nirspec-instrumentation/nirspec-dispersers-and-filters}{jwst-docs website}.} is too conservative because \jwst provides a lower than expected wavefront error.
+Hence, for our deconvolution, we assume the nominal LSF improved by a factor of 0.7 \citep[roughly in agreement with e.g.][]{Shajib2025}. 
+The intrinsic FWHM of any individual emission line is therefore given by:
+\begin{equation}
+\mathrm{FWHM_{int}} = \sqrt{\mathrm{FWHM_{obs}^2}- (0.7\times\mathrm{FWHM_{pre-launch \ LSF}})^2}.
+\label{eq:fwhm}
+\end{equation}
+The continuum is modelled with a power-law, with the amplitude and exponent of the power law as additional free parameters.
+
+Finally, we add a \Hbeta absorption component, associated with the broad-line region.
+The absorption component is described by 4 parameters: velocity offset $v_\mathrm{abs}$ relative to the narrow line, central optical depth $\tau_0$, covering fraction $C_f$ and velocity dispersion $\sigma_\mathrm{abs}$. 
+The residual intensity at wavelength $\lambda$ is given by
+\begin{equation}\label{eq:abs}
+\begin{aligned}
+    I(\lambda)/I_0(\lambda) &= 1 - C_f + C_f\exp(-\tau(k; \lambda)), {\rm with} \\
+    \tau(k; \lambda) &= \tau_0(k)f[v(\lambda)], 
+\end{aligned}
+\end{equation}
+where $I_0(\lambda)$ is the spectral flux density before absorption (consisting of both the continuum and $\Hbeta_\mathrm{B}$ emission), $\tau_0(k)$ is the optical depth at the centre of the line ($k = \Hbeta$ here), and $f[v(\lambda)]$ is the velocity distribution of the absorbing atoms, assumed to be a Gaussian probability distribution \cite[see e.g.][]{DEugenio2025} and parameterised by $v_\mathrm{abs}$ and $\sigma_\mathrm{abs}$.
+
+The middle panel of Fig.~\ref{fig:spectra} shows the integrated spectrum, now with the broad \Hbeta, continuum and absorption components subtracted.  
+% \Hbeta does not appear to show any significant residuals after subtracting the broad component, meaning there is no evidence for an outflow in \cliff. 
+The BLR-subtracted spectrum highlights the prominence of $\Hbeta_\mathrm{N}$ and the relative weakness of \OIIIL. 
+The inferred ratio between \OIIIL and $\Hbeta_\mathrm{N}$ is low, $F(\OIIIL)/F(\Hbeta_\mathrm{N}) = 1.59^{+0.26}_{-0.24}$, as reported in Table~\ref{table:flux_ratios}. 
+While this ratio is not as low as in the case of QSO1 \citep[$F(\OIIIL)/F(\Hbeta_\mathrm{N}) \sim 0.55$;][]{Maiolino2025_QSO1} for example, we will discuss the \OIIIL weakness and its implications for metallicity in Section~\ref{sec:Evidence_for_low_metal}. 
+
+Due to the relatively low signal to noise of the \Hbeta-\OIIIL complex, we note as a caveat that we cannot meaningfully perform statistical tests of different models for the broad \Hbeta line profile (e.g. exponential wings, double Gaussian BLR, Lorentzian). 
+ 
+
+\begin{figure*}
+        \centering
+	\includegraphics[width=\linewidth]{Figures/Cliff_spectrum.pdf}
+    \caption{The integrated spectrum of \cliff presented in Fig.~\ref{fig:full_spectra}, highlighting the \Hbeta-\OIIIL spectral region. 
+    \textbf{Top panel}: The integrated spectrum (blue solid line), with the fitted broad component of \Hbeta (orange dashed line), and the continuum and \Hbeta absorption (green dashed line). 
+    The pink dashed line shows the total fit to the BLR and continuum emission. 
+    \textbf{Middle panel}: The same spectrum, where the broad \Hbeta, continuum and absorption components have now been subtracted to highlight the narrow components of \Hbeta and \OIIIall. Note that the feature observed between \Hbeta and \OIIIL[4959] was not found to correspond to any known emission line (e.g. \HeI or \FeII) and is therefore deemed to be a noise feature.
+    \textbf{Bottom panel}: Residuals from the fit, in units of $\sigma$.}
+    \label{fig:spectra}
+\end{figure*} 
+
+
+\subsubsection{The \texorpdfstring{\Halpha}{Ha}profile}\label{sec:Fitting_Ha}
+
+\begin{figure*}
+        \centering
+	\includegraphics[width=\linewidth]{Figures/Ha_electronscatter_improved_Jan.pdf}
+    \caption{Integrated spectrum of \cliff around \Halpha, fitted with two variations on the scattering model as described in Section~\ref{sec:Fitting_Ha}. 
+    \textbf{Top panel}: Our \textit{fiducial \Halpha model}, with the $\Halpha_\mathrm{N}/\Hbeta_\mathrm{N}$ flux ratio restricted to Case B as part of the fit, i.e. $F(\Halpha_\mathrm{N})/F(\Hbeta_\mathrm{N}) = 2.86$. 
+    Components shown are the integrated spectrum (blue solid line), the overall \Halpha model (solid black line), the total fit to the BLR and continuum emission (dot-dashed orange line), the narrow component of \Halpha (dashed red line) and the \NII doublet (solid green line). 
+    \textbf{Middle panel}: The same overall model, but now with the $\Halpha_\mathrm{N}/\Hbeta_\mathrm{N}$ flux ratio allowed to deviate from Case B (our \textit{secondary \Halpha model}).
+    Individual components are shown with the same line styles as in the top panel. 
+    \textbf{Bottom panel}: A comparison of the fit residuals for the \textit{fiducial \Halpha model} (black solid line) and \textit{secondary \Halpha model} (dotted pink line) in units of $\sigma$.}
+    \label{fig:Halphafit}
+\end{figure*}
+
+Fig.~\ref{fig:Halphafit} shows the integrated spectrum of \cliff around the \Halpha emission line. 
+The high-resolution IFU spectrum reveals the complexity of \cliff's \Halpha profile: deep absorption, no visibly distinct narrow component, and potentially asymmetric broad wings. 
+While a single- or double-Gaussian BLR model is often used to approximate the \Halpha line breadth (as was the case for our \Hbeta fit), such models result in a poor fit to the wings of the profile.
+In contrast, a `scattering model' \citep[see e.g.][]{Rusakov2026} can account for exponential wings in the line profile, which are often attributed to Doppler broadening due to electron or resonant scattering \citep[e.g.][]{Laor2006}.
+Even with the higher resolution of the G235H spectrum (compared to earlier PRISM or G235M observations), we still lack the spectral resolution required to decisively disentangle the individual \Halpha spectral components.
+As a result, we deem the exponential model to be a more appropriate parameterisation of the \Halpha profile for this work (compared to a double Gaussian model, for example). For simplicity, and for comparison with some previous studies, we model the exponential profile in the context of the scattering scenario. However, we note that while the exponential profile is often ascribed to electron scattering by a ionised medium, \citet{Scholtz2026_LRD} and \citet{Madau2026b} have recently shown that the same profile can be ascribed to normal BLR stratification, or to the overlap of multiple non-exponential components.
+A full exploration of the \Halpha emission line profile, and the nature of its absorber, is beyond the scope of this work but has been presented in \cite{Scholtz2026_LRD}.
+
+To model the \Halpha profile, we first define the narrow component of \Halpha (henceforth $\Halpha_\mathrm{N}$) and the \NIIall doublet as Gaussians with their kinematic parameters (i.e. $z_N$ and FWHM\textsubscript{N}) constrained to those from the \Hbeta-\OIIIL fit, with the \NIIL[6548]/\NIIL[6583] flux ratio fixed to 0.327 \citep[see][]{Dojcinovic2023}. In line with the `scattering scenario' parameterisation, we adopt a BLR profile comprised of an intrinsic Gaussian profile $G_\mathrm{BLR}(\lambda)$ described by its own independent redshift ($z_\mathrm{B}$) and FWHM ($\mathrm{FWHM}_\mathrm{B}$), convolved with an exponential kernel defined by
+\begin{equation}
+E(\lambda_0, W;\lambda) \propto \exp\left({-\frac{|\lambda-\lambda_0|}{W}}\right),
+\label{eq:E}
+\end{equation}
+where $\lambda_0$ is the central wavelength (assumed to be the same as that of the Gaussian BLR) and $W$ is the exponential width \citep{Laor2006}. The overall BLR emission is therefore given by:
+\begin{equation}
+    \mathrm{BLR} = f_\mathrm{scatt}E(\lambda)\ast G_\mathrm{BLR}(\lambda)+(1-f_\mathrm{scatt})G_\mathrm{BLR}(\lambda),
+    \label{eq:BLR}
+\end{equation}
+where $f_\mathrm{scatt}$ is the fraction of scattered light. $f_\mathrm{scatt}$ can be related to the optical depth of the scattering medium ($\tau_\mathrm{thom}$) by $1-e^{-\tau_\mathrm{thom}}$. The exponential width is related to both $\tau_\mathrm{thom}$ and the temperature of the scattering gas ($T$) by
+\begin{equation}
+    W = (428\times\tau_\mathrm{thom} + 370)\times(T/10^4 \ \mathrm{K})^{0.5};
+    \label{eq:W}
+\end{equation}
+see \cite{Laor2006} and \cite{Rusakov2026}. Note that within our analysis $T$ is treated as a nuisance parameter, and is not interpreted as a physical measurement of the system's temperature.
+Once again, we model the continuum with a power law.
+Finally, we include an absorption component with the same $C_f$ as that fitted to \Hbeta, but its other parameters ($v_\mathrm{abs, \Halpha}, \tau_0(\Halpha)$ and $\sigma_\mathrm{abs, \Halpha}$) allowed to vary independently.
+
+Supplying constraints and Gaussian priors for this model based on results from the \Hbeta-\OIIIL fit ensures the resulting \Halpha model is physically motivated.
+This is particularly important as the absorption component is only redshifted by approximately 2 spectral pixels, and there hence exists significant degeneracy between the narrow line and absorption components.
+
+We investigate this degeneracy and its impact further by fitting two variations on our overall \Halpha model.
+Firstly, in our \textit{fiducial \Halpha model} (top panel of Fig.~\ref{fig:Halphafit}), the $\Halpha_\mathrm{N}/\Hbeta_\mathrm{N}$ flux ratio is fixed to the typical Case B value of 2.86, appropriate for $T=10,000$~K and $n_e\sim10^2 - 10^3 \ \mathrm{cm}^{-3}$, and assuming no reddening \citep[][here accounting for relative ALCs between \Halpha and \Hbeta]{Osterbrock2006}\footnote{We note that the Balmer decrement is insensitive to density variation of $10^2-10^6 \ \mathrm{cm}^{-3}$; see e.g. \cite{StoreyHummer1995}.}.
+The second variation is our \textit{secondary \Halpha model} (middle panel of Fig.~\ref{fig:Halphafit}), in which the flux of $\Halpha_\mathrm{N}$ is allowed to freely vary. 
+We make a statistical comparison of the two models through the Bayesian Information Criterion \citep[BIC; see e.g.][]{Schwarz1978}, defined as
+\begin{equation}
+    \text{BIC} = \chi^2 + k \ln n,
+    \label{eq:BIC}
+\end{equation}
+where $\chi^2$ is the chi-squared fit statistic, $k$ is the number of free parameters, and $n$ is the number of data points. 
+One model is generally considered to be statistically preferred over another if the relative change in BIC ($\Delta\mathrm{BIC}$) is $<-10$.
+With the \textit{secondary \Halpha model}, we obtain a slightly better fit in terms of $\mathrm{BIC}$, and measure $F(\Halpha_\mathrm{N})/F(\Hbeta_\mathrm{N}) = 1.70\pm0.38$, much lower than the Case B ratio (though marginally consistent within $3\sigma$). 
+However, $\Delta\mathrm{BIC}$ between the \textit{fiducial} and \textit{secondary} \Halpha models is only $\sim -5$, which is not statistically significant enough to argue the \textit{fiducial} model should be ruled out. 
+Hence, the observed \Halpha profile could be regarded as consistent with a Case B Balmer decrement.
+
+According to our best fit, \NIIall is undetected ($\mathrm{SNR}<0.3$), and we therefore determine the $3\sigma$ upper limit on the \NIIall flux to be $F(\NII) < 0.18 \times 10^{-18} \ \mathrm{erg} \ \mathrm{s}^{-1} \ \mathrm{cm}^{-2}$ (see Table~\ref{table:flux_SNR}).
+We will utilise this constraint later in Section~\ref{sec:Evidence_for_low_metal}.
+
+In principle, \Halpha could have been included in a simultaneous fitting with the \Hbeta-\OIIIL complex. 
+However, the high flux and severe blending of \Halpha could have driven increased uncertainty in the \Hbeta-\OIIIL fit parameters and effectively reduced the SNR of these lines, introducing major caveats for our analysis. 
+Instead, with our approach we prioritise securing an understanding of the narrow-line kinematics, applying these measurements as a prior on $\Halpha_\mathrm{N}$ to better inform the deblending of the \Halpha profile while ensuring confidence in our analysis of $\Hbeta_\mathrm{N}$ and \OIIIL[5007].
+
+\subsubsection{Constraints on other emission lines}\label{sec:Fitting_other_lines}
+
+Some additional key lines for our study are the low-ionisation forbidden line doublets \OIIall and \SIIall (see Section~\ref{sec:Evidence_for_low_metal}), along with the temperature-sensitive auroral \OIIIL[4363] line. 
+Fig.~\ref{fig:undetectedlines} shows integrated spectrum zoom-ins for each of these emission lines, illustrating a lack of any significant detection (all have $\mathrm{SNR} \lesssim 1.5$; see Table~\ref{table:flux_SNR}). 
+The upper limits on the fluxes of these emission lines provides valuable constraints on the inter-stellar medium (ISM) properties of \cliff (see Section~\ref{sec:Evidence_for_low_metal} for further discussion). 
+
+Hence, we fit each of these emission lines with \textsc{lmfit} \citep{Newville2016_LMFIT} and simple single-Gaussian models to obtain upper limits on their integrated fluxes, again fixing the intrinsic FWHM\textsubscript{N} of each line to the value from the \Hbeta fit. 
+For the \OIIall and \SIIall doublets, the flux ratios are dependent on ISM conditions (e.g. the \OIIall flux ratio depends on density), and their flux ratios are therefore allowed to vary over the permitted range identified with \textsc{PyNeb} \citep{Luridiana2015_PyNeb}. 
+As we note a tentative detection of \Hgamma (see middle panel of Fig.~\ref{fig:undetectedlines}), we fit \Hgamma and \OIIIL[4363] together, obtaining an upper limit on \OIIIL[4363] and a tentative detection of \Hgamma ($\mathrm{SNR}\sim2.9$; see Section~\ref{sec:Dust_extinction} for further discussion of \Hgamma).
+
+{\renewcommand{\arraystretch}{1.6}
+\begin{table}
+\normalsize
+\centering
+ \begin{tabular}{c |c | c| c} 
+ \hline
+ \hline
+& Parameter &  \multicolumn{2}{c}{Value} \\ 
+ \hline
+\multirow{8}{*}{\Hbeta-\OIIIL} & $z_N$ &  \multicolumn{2}{c}{$3.54903\pm0.00004$} \\
+ & FWHM\textsubscript{N}  & $90\pm9$ & km s\textsuperscript{-1}\\
+ & $z_B$ &  \multicolumn{2}{c}{$3.546\pm0.001$} \\
+ & FWHM\textsubscript{B} 
+ & $2770\pm210$ & km s\textsuperscript{-1}\\
+ & $v_\mathrm{abs}$   & $46^{+15}_{-14}$ & km s\textsuperscript{-1}\\
+ & $\tau_0(\Hbeta)$ &  \multicolumn{2}{c}{$3.22^{+2.26}_{-1.36}$} \\
+ & $C_f$ &   \multicolumn{2}{c}{$0.67^{+0.17}_{-0.13}$}\\
+ & $\sigma_\mathrm{abs}$ & $47\pm21$  & km s\textsuperscript{-1} \\
+\hline 
+ \multirow{7}{*}{\Halpha} 
+ & $z_\mathrm{B, \Halpha}$ &  \multicolumn{2}{c}{$3.5486\pm0.0001$} \\
+ & FWHM\textsubscript{B, \Halpha}  & $480\pm50$ & km s\textsuperscript{-1} \\
+ & $T$  & \multicolumn{2}{c}{$0.35^{+0.07}_{-0.06} \times 10^4 \ \mathrm{K}$} \\
+ & $\tau_\mathrm{thom}$  &  \multicolumn{2}{c}{$2.22^{+0.19}_{-0.15}$} \\
+ & $v_\mathrm{abs, \Halpha}$   & $61\pm4$ & km s\textsuperscript{-1}\\
+ & $\tau_0(\Halpha)$ &   \multicolumn{2}{c}{$2.83^{+0.26}_{-0.24}$} \\
+ & $\sigma_\mathrm{abs, \Halpha}$  & $52\pm6$& km s\textsuperscript{-1}  \\
+ \hline
+ \hline
+ \end{tabular}
+ \caption{Summary of best-fit \Hbeta-\OIIIL and \Halpha model parameters of \cliff, reporting the median and 16\textsuperscript{th}-84\textsuperscript{th} percentile range of the posterior probability distributions.
+ The `N' and `B' subscripts denote values associated with narrow and broad components, respectively. 
+ The free parameters for the emission line amplitudes and power-law continuum are not listed here. 
+ \textbf{Top segment:} Results from the \Hbeta-\OIIIL fit described in Section~\ref{sec:fitting_Hb_OIII}. 
+ \textbf{Bottom segment:} Results from the \textit{Fiducial} \Halpha fit described in Section~\ref{sec:Fitting_Ha}. 
+ Parameters that were fixed to values from the \Hbeta-\OIIIL model as part of the \Halpha fit are not repeated in this segment.}
+ \label{table:fit_properties}
+\end{table}
+}
+
+
+
+\begin{figure}
+        \centering
+	\includegraphics[width=\linewidth]{Figures/non_detected_lines.pdf}
+    \caption{Portions of the integrated spectrum of \cliff, illustrating, from top to bottom, the non-detections of the following emission lines: \OIIall, \OIIIL[4363], and \SIIall, respectively.
+    The spectra presented here are continuum-subtracted to further emphasize the non detection of these lines.
+    We do however note a marginal detection of \Hgamma in the second panel ($\mathrm{SNR} = 2.9$).}
+    \label{fig:undetectedlines}
+\end{figure}
+
+The integrated fluxes of all emission lines measured in this work, including their SNRs, are presented in Table~\ref{table:flux_SNR}.
+A summary of all flux ratios used in this work, together with their abbreviations and measured values or limits, is presented in Table~\ref{table:flux_ratios}.
+
+{\renewcommand{\arraystretch}{1.4}
+\begin{table}
+\normalsize
+\centering
+ \begin{tabular}{c || c c} 
+ \hline
+ \hline
+ Emission Line & Integrated Flux & SNR \\ 
+  & $10^{-18} \ \mathrm{erg} \ \mathrm{s}^{-1} \ \mathrm{cm}^{-2}$ &  \\ 
+ \hline
+ $\Hbeta_\mathrm{N}$ & $0.65^{+0.09}_{-0.08}$ & 12.9\\
+ $\Hbeta_\mathrm{B}$ & $4.81^{+0.56}_{-0.45}$ & 18.8 \\
+ \OIIIL & $1.02\pm0.10$ & 16.3\\
+ $\Halpha_\mathrm{N}$ & $1.85\pm0.04$ & 17.8\\
+ $\Halpha_\mathrm{B}$ & $60.4^{+10.6}_{-9.3}$ & 133 \\
+ $\Hgamma^{*}$ & $0.21\pm0.06$ & 2.9 \\
+ \hline
+ \OIIall & $<0.45$  & $< 0.7$\\
+ \OIIIL[4363] & $<0.15$ & $<1.5$ \\
+ \NIIall & $<0.18$ & $<0.3$\\
+ \SIIall & $<0.36$ & $<0.3$ \\
+ \hline
+ \hline
+ \end{tabular}
+ \caption{Integrated fluxes and SNRs for the emission lines studied in this work. 
+ All fluxes have been corrected for aperture losses. \Halpha fluxes refer to those determined from our fiducial Case B model (see Section~\ref{sec:Fitting_Ha}); the low uncertainty arises because this flux is fixed based on the \Hbeta flux. 
+ \Hgamma is marked with an asterisk as this represents a tentative detection; see Section~\ref{sec:Dust_extinction} for further discussion. 
+ The lower portion of the table refers to undetected lines and therefore corresponds to upper limits on their fluxes, which are quoted at the $3\sigma$ upper limit.}
+ \label{table:flux_SNR}
+\end{table}
+}
+
+
+{\renewcommand{\arraystretch}{1.6}
+\begin{table}
+\normalsize
+\centering
+ \begin{tabular}{c c|| c} 
+ \hline
+ \hline
+ Flux Ratio & Abbreviation & Value \\ 
+  & [for $\log(\mathrm{Ratio})$]&  \\
+ \hline
+ $\frac{\OIIIL}{\Hbeta_\mathrm{N}}$ & R3 & $1.59^{+0.26}_{-0.24}$ \\
+ $\frac{\Halpha_\mathrm{N}}{\Hbeta_\mathrm{N}}$ & - &  $2.86^{+0.48}_{-0.36}$\\
+ $\frac{\Hgamma_\mathrm{N}}{\Hbeta_\mathrm{N}}$ & - &  $0.32^{+0.11}_{-0.10}$\\
+ $\frac{\OIIIL}{\OIIall}$ & O32 & $>2.3$ \\
+ $\frac{\OIIIL[4363]}{\OIIIL}$ & - & $<0.15$ \\
+ $\frac{\NIIall}{\Halpha_\mathrm{N}}$ & N2 & $<0.09$ \\
+ $\frac{\OIIIL/\Hbeta_\mathrm{N}}{\NIIall/\Halpha_\mathrm{N}}$ & O3N2 & $>18$ \\
+ $\frac{\SIIall}{\Halpha_\mathrm{N}}$ & S2 & $<0.19$ \\
+ $\frac{\OIIIL/\Hbeta_\mathrm{N}}{\SIIall/\Halpha_\mathrm{N}}$ & O3S2 & $>8.3$\\
+ \hline
+ \hline
+ \end{tabular}
+ \caption{Flux ratios and their abbreviations for the narrow emission lines. 
+ Flux ratios are calculated based on aperture loss-corrected flux values (see Table~\ref{table:flux_SNR}). 
+ Uncertainties are bootstrapped from uncertainties on the fluxes and are quoted at the 68 percent confidence level. 
+ Upper or lower limits on flux ratios are quoted at the $3\sigma$ level.
+ For further discussion of these calibrations, see e.g. \citealt{Curti2020}.}
+ \label{table:flux_ratios}
+\end{table}
+}
+
+\section{Results}\label{sec:Results}
+
+\subsection{Dust attenuation}\label{sec:Dust_extinction}
+\cliff exhibits a complex \Halpha profile, with strong degeneracy between the narrow component and absorber. 
+Consequently, it was not possible to determine a well-constrained $\Halpha_\mathrm{N}/\Hbeta_\mathrm{N}$ Balmer decrement; indeed, detailed exploration of the \Halpha and \Hbeta profiles is beyond the scope of this paper. 
+Consequently, within this work we adopt the Case B ratio of  $F(\Halpha)/F(\Hbeta) = 2.86^{+0.48}_{-0.21}$ derived from our fiducial \Halpha model, which assumes no dust.
+
+Furthermore, we investigate the $\Hgamma_\mathrm{N}/\Hbeta_\mathrm{N}$ Balmer decrement as a second check on the validity of Case B. 
+In the middle panel of Fig.~\ref{fig:undetectedlines}, we show a tentative detection ($\mathrm{SNR} \approx 2.9$) of \Hgamma emission. Like the other Balmer lines, \Hgamma emission should have its own broad component, which would show absorption comparable in depth to that seen in \Hbeta and deeper than that of \Halpha \citep[e.g.,][]{Naidu2025, DEugenio2026}. 
+However, due to the low SNR in this region of the spectrum, it is only possible to meaningfully fit the narrow component of \Hgamma (henceforth $\Hgamma_\mathrm{N}$). 
+As a consequence of the degeneracy between absorption and narrow components seen in the other Balmer lines, this suggests that our measurement of $\Hgamma_\mathrm{N}$ flux is likely an underestimate (unlike the other emission lines discussed in Section~\ref{sec:Fitting_other_lines}). 
+However, our measurement yields $F(\Hgamma)/F(\Hbeta) = 0.32^{+0.11}_{-0.10}$, consistent with the intrinsic Case B value of 0.466 \citep[for a typical electron temperature of $T_e \sim 10^4 \ \mathrm{K}$;][]{Osterbrock2006} within 1.3$\sigma$. 
+
+Consequently, we cannot make a compelling claim for Case B violation, and henceforth adopt the assumption of no significant dust attenuation in \cliff. 
+This conclusion is supported by the  previous studies which find no dust attenuation in the narrow lines of other LRDs \citep[e.g.][]{Lin2026, Ji2026, DEugenio2025_Irony, Nikopoulos2025}.
+
+We additionally note the $\Halpha_\mathrm{B}/\Hbeta_\mathrm{B}$ Balmer decrement is $\sim 13$ in this source. This high value may be associated with strong dust attenuation in the BLR \citep[$A_V=4$~mag assuming Case-B recombination and the SMC attenuation curve;][]{Gordon2003}, which can be achieved with relatively low amounts of dust concentrated on small spatial scales \citep{Pacucci2026,MadauMaiolino2026}. Alternatively, the high $\Halpha_\mathrm{B}/\Hbeta_\mathrm{B}$ flux ratio could arise from collisional excitation in high-density regions \citep[see e.g.][]{Zu2025}. Regardless, the peculiar conditions of the BLR cannot apply to the narrow-line emitting gas, on account of its narrow spectral profile ($\mathrm{FWHM}_\mathrm{N} < 100 \ \kms$) and significantly lower Balmer decrement, implying the narrow-line emitting gas is physically distinct from the BLR.
+
+\subsection{Metallicity}\label{sec:metallicity}
+
+\subsubsection{Evidence for low metallicity in \cliff}\label{sec:Evidence_for_low_metal}
+
+Following the standard approach for high-redshift sources within the literature, we infer the metallicity of \cliff using strong-line metallicity diagnostics calibrated based on high-$z$ star-forming galaxies (SFGs). 
+In this work, we adopt the calibrations of Isobe et al. (in prep), which are based on stacks of SFGs over $1<z<10$ ($z_\mathrm{median} \sim 3-5$), with linear extrapolations for metallicities $12 + \log(\mathrm{O/H}) < 7$. 
+
+The $\OIIIL/\Hbeta_\mathrm{N}$ flux ratio, denoted by R3, is often used to infer metallicity at high-$z$ where other emission lines are not available \citep[e.g.][]{Curti2020, Sanders2025}. 
+Crucially, the R3 metallicity diagnostic has two branches, and a given R3 value could therefore correspond to both low-metallicity and high-metallicity solutions. 
+Hence, to constrain the metallicity inferred from our measured R3 value, we must utilise the upper limits on the low-ionisation line fluxes determined earlier (see Section~\ref{sec:Fitting_other_lines}). 
+The O32, N2, S2, O3N2 and O3S2 flux ratios (defined in Table~\ref{table:flux_ratios}) all have monotonic dependences on metallicity, and our observational limits on these flux ratios therefore provide upper limits on the metallicity of \cliff. 
+Furthermore, Isobe et al. (in prep.) have provided revised calibrations for these diagnostics, updating them for higher redshifts. 
+We present these constraints from the low-ionisation line flux ratios in Fig.~\ref{fig:undetected_lines_constraint}. 
+Altogether, these diagnostics correspond to a metallicity upper limit of $Z\lesssim 0.25 \ Z_\odot$. 
+While this upper limit is not particularly constraining by itself, it is important for removing the potential degeneracy associated with the double-branched R3 diagnostic.
+
+
+Fig.~\ref{fig:R3metalconstraint} shows the location of \cliff on the R3 versus metallicity diagram (the filled magenta point), with the R3 calibration of Isobe et al. in prep shown by the solid blue line. 
+% For comparison, we show the metallicity measurement for QSO1 \citep[][filled turquoise point; from]{Maiolino2025_QSO1}. 
+The Isobe et al. (in prep.) R3 calibration provides a metallicity measurement of $0.017\pm0.004 \ Z_\odot$ for \cliff (see Table~\ref{table:galaxyproperties}). 
+The upper branch solution would imply a super-solar metallicity, which would be implausible at such high redshift and for such a low mass system, but which is anyway ruled out by the weakness of the low-ionisation lines (see Fig.~\ref{fig:undetected_lines_constraint}), as discussed above. The metallicity range excluded by the non-detection of the low ionisation lines is marked with a gray shaded region in Fig.~\ref{fig:R3metalconstraint}.
+
+% Given that established calibrations predict \OIIall fluxes comparable to those of \OIIIall or \Hbeta in high-metallicity systems \citep{Curti2017, Sanders2025}, the non-detection of \OIIall here fundamentally disfavours any high-metallicity solution for \cliff.
+
+We also note that the calibrations of Isobe et al. (in prep.) yield a higher metallicity for a given low-metal branch R3 value than other high-redshift strong-line metallicity calibrations \citep[e.g.][]{Cataldi2025, Sanders2024} by $\sim0.2-0.3$ dex, so our choice of calibration provides the most conservative low-metallicity measurement.
+% While \OIIall can be high in low-metallicity shocks, the narrow lines of \cliff are so narrow that there is no evidence for such shocks.
+
+The metallicity inferred from the R3 diagnostic is presented in Table~\ref{table:galaxyproperties}, along with other properties of \cliff measured later in this section. 
+We note as a caveat that in making this metallicity measurement we are adopting an extrapolation of the calibration to metallicities $12+\log(\mathrm{O/H}) < 7$, similar to other studies of high-redshift, low-luminosity systems \citep[e.g.][]{Maiolino2025_QSO1}. As an additional caveat, global measurements of metallicity at high redshift may be subject to systematic uncertainties driven by inhomogeneous ISM conditions \citep{Belfiore2017, Katz2022, Moreschini2026}. The measured emission line ratios can be skewed by localised high-excitation regions or dense clumps, potentially complicating the interpretation of galaxy-integrated scaling relations, and we cannot exclude the possibility this scenario applies to \cliff.
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/metal_constraints_diagram.pdf}
+\caption{Metallicity constraints on \cliff inferred from upper limits on the non-detected emission lines (\OIIall, \SIIall and \NIIall). The solid blue line in each panel illustrates the relevant diagnostic calibration from Isobe et al. (in prep.).
+The magenta symbols indicate the upper or lower limits obtained for flux ratios in \cliff (see Table~\ref{table:flux_ratios}), which altogether exclude super-solar metallicity as an explanation for the measured $\OIIIL[5007]/\Hbeta_\mathrm{N}$ flux ratio (see Fig.~\ref{fig:R3metalconstraint}). 
+The dashed vertical gray lines correspond to metallicities of $0.1\ Z_\odot$ and $Z_\odot$, further emphasizing that a super-solar metallicity for \cliff is inconsistent with our observations.}
+\label{fig:undetected_lines_constraint}
+\end{figure}
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/R3_metallicity_diagram.pdf}
+\caption{Metallicity of \cliff as inferred from the measured $\OIIIL/\Hbeta_\mathrm{N}$ flux ratio.
+The blue line illustrates the R3 calibration of Isobe et al. (in prep.), with the dashed segment of the line indicating the region for which the calibration is linearly extrapolated. 
+The filled magenta point shows our favoured low-metallicity solution for \cliff as derived from this calibration. 
+The gray shaded area illustrates the high-metallicity branch ruled out by the low ionisation lines (Fig.~\ref{fig:undetected_lines_constraint}). 
+The turquoise point shows central region values for QSO1 from \citet{Maiolino2025_QSO1}. 
+The orange and green lines show the high-redshift strong-line metallicity calibrations of \citet{Cataldi2025} and \citet{Sanders2025} respectively, with dashed segments indicating where these calibrations are extrapolated. 
+All error bars show uncertainties at the $1\sigma$ level.}
+\label{fig:R3metalconstraint}
+\end{figure}
+
+\subsubsection{Accounting for potential AGN excitation}\label{sec:Accounting_for_AGN}
+
+The extremely narrow line widths of $\Hbeta_\mathrm{N}$ and \OIIIL measured in \cliff ($\mathrm{FWHM_N} \sim 90$ \kms) hint that these narrow components are powered by weak star formation in the host galaxy \citep[see e.g.][]{DEugenio2025}.
+For the metallicity analysis above, we have therefore assumed that the narrow emission lines are entirely excited by star formation. 
+In this section, we will now discuss the possible scenario in which the narrow lines are actually excited by the AGN and are therefore part of the NLR.
+
+The calibrations obtained by Isobe et al. (in prep.) for high-$z$ SFGs are not expected to change significantly in the case of ionisation by AGN rather than star formation.
+On average, high-$z$ SFGs are characterised by high ionisation parameters ($\log U > -2.5$; see Section~\ref{sec:peculiar_ionisation} for further discussion of ionisation parameter), and tend to have harder ionising spectra than local galaxies \citep{Sanders2025, Cameron2023}, primarily because of their reduced metal content \citep{Cameron2024, Strom2017}.  
+High-$z$ AGN are characterised by softer ionising spectra than local AGN, as indicated by the weakness of the high-ionisation lines \citep{Lambrides2024,Zucchi2026}.
+Overall, we expect the ionisation properties of the ISM in high-$z$ SFGs and AGN NLRs to be similar \citep{Kocevski2023,Ubler2023,Juodzbalis2026_JADEScensus}, which is further evidenced by the significant overlap between high-$z$ AGN and SFG populations in traditional diagnostic diagrams \citep[e.g. the BPT diagrams;][]{Ubler2023, Maiolino2024_JADES, Juodzbalis2026_JADEScensus}.
+Hence, the low metallicity inferred from the Isobe et al. (in prep.) calibrations may hold even in the case of AGN photoionisation of the narrow lines.
+
+If anything, the harder-ionisation spectrum from an AGN would amplify the $\OIIIL/\Hbeta_\mathrm{N}$ flux ratio for a given metallicity and ionisation parameter relative to SFGs (an illustration of this effect may be found in Appendix B of \cite{Maiolino2025_QSO1}, for example). 
+For the low-metallicity R3 branch, in the case of AGN photoionisation, a given $\OIIIL/\Hbeta_\mathrm{N}$ flux ratio would yield an even lower metallicity than that inferred by assuming SF photoionisation (by $\sim 0.2-0.3$ dex). 
+Once again, the assumptions we have adopted in our analysis yield the most conservative metallicity estimate.
+
+\subsubsection{Accounting for density}\label{sec:Accounting_for_density}
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/Emission_grid.pdf}
+\caption{The \OIIIL[4363]/\OIIIL flux ratio as a function of temperature ($T$) and density ($n$). 
+The $3\sigma$ upper limit on the flux ratio, $F(\OIIIL[4363])/F(\OIIIL) < 0.15$ (orange dot-dashed line), rules out densities $n> 6\times10^6 \ \mathrm{cm}^{-3}$ for reasonable temperatures $T > 10^4 \ \mathrm{K}$, as indicated by the gray shaded region. 
+Note the values of $F(\OIIIL[4363])/F(\OIIIL)$ quoted on each curve are logarithmic.}
+\label{fig:density_constraint}
+\end{figure}
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/ionisation_constraint.pdf}
+\caption{Joint constraints on $Z$ and the ionisation parameter $U$ from the measured R3 ratio and lower limit on O32. The solid and dotted lines correspond to the results of AGN photoionisation models from \citealt{Isobe2025}, calculated for an assumed density of $n=10^4 \ \mathrm{cm}^{-3}$. The blue lines illustrate curves of constant $Z$, decreasing from $\log(Z/Z_\odot) = 0$ (at the top of the plot) to $\log(Z/Z_\odot) = -2$ (at the bottom). Similarly, the dotted gray lines illustrate curves of constant $U$, increasing from $\log(U) = -3.5$ to $\log(U) = -0.5$ from left to right across the plot. The position of \cliff is illustrated by the magenta circle, with the lower limit on O32 (see Table~\ref{table:flux_ratios}) providing a constraint on the minimum ionisation parameter.}
+\label{fig:photoion}
+\end{figure}
+
+A potential alternative interpretation for the weakness of \OIIIL relative to $\Hbeta_\mathrm{N}$ is that the gas density is so high that collisional de-excitation starts to affect the population of the \OIIIL levels. 
+
+The critical density of the \OIIIL line is about $5\times 10^5~\mathrm{cm}^{-3}$. As discussed in \citet{Martinez2025} and \citet{Maiolino2025_QSO1}, the emissivity of the \OIIIL line is only marginally affected at densities of $10^6~\mathrm{cm}^{-3}$ (a decrease by a factor of only $\sim$1.5), while it becomes prominent at densities of $10^7~\mathrm{cm}^{-3}$ (suppressed by a factor of $\sim 10$).
+Although the densities of the ionised ISM are found to increase on average in high-$z$ galaxies, they are still typically found to be $<10^5 \ \mathrm{cm}^{-3}$ \citep[][]{Isobe2023, Topping2025}.
+
+% To decisively rule out collisional saturation of \OIIIL as an explanation for the weakness of our observed $\OIIIL/\Hbeta_\mathrm{N}$ flux ratio, we investigate the density of ionised gas ($n$) responsible for producing the narrow line emission.
+
+The non-detection of the \OIIIL[4363] line (middle panel of Fig.~\ref{fig:undetectedlines}), which has a significantly higher critical density than \OIIIL, provides a key constraint on the density. 
+Fig.~\ref{fig:density_constraint} illustrates the variation of the \OIIIL[4363]/\OIIIL flux ratio as a function of temperature and density, as estimated with \textsc{PyNeb} \citep{Luridiana2015_PyNeb}. 
+For reasonable temperatures typical of photoionised gas emitting \Hbeta \citep[$T > 10^4 \ \mathrm{K}$, e.g.][]{Osterbrock2006}, the inferred upper limit of $F(\OIIIL[4363])/F(\OIIIL)<0.15$ yields a density upper limit of $n<7\times10^6 \ \mathrm{cm}^{-3}$. 
+This is actually a stricter upper limit on the density than that found for QSO1 \citep[$n<10^7 \ \mathrm{cm}^{-3}$;][]{Maiolino2025_QSO1}, and excludes extreme suppression of \OIIIL as a consequence of collisional excitation. The $10^4~\mathrm{K}$ limit is quite conservative, as most high-$z$ galaxies are characterised by higher temperatures \citep{Sanders2025,Cataldi2025}, hence the upper limit on the density is likely close to $10^6~\mathrm{cm}^{-3}$.
+
+
+% The physical origin of the \OIIIL emission also carries significant implications for the inferred density. If \OIIIL originates from the host galaxy, as assumed in several recent studies at high-$z$ \citep[e.g.][]{deGraaff2025}, then the typical gas density at this epoch is expected to be $n\sim10^2-10^3 \ \mathrm{cm^{-3}}$ \citep{Isobe2023}, which is insufficient to collisionally suppress the \OIIIL/\Hbeta flux ratio.
+
+% sections below were commented out by Roberto
+% While high-density components ($n \gtrsim 10^6~\mathrm{cm}^{-3}$) are occasionally found in normal galaxies \citep{Moreschini2026}, a galaxy dominated by such emission has not yet been conclusively identified \citep[however, see][for recent candidates]{Caputi2026,Trussler2026}. 
+% Given that both \cliff and such high-density dominated galaxies appear exceptionally rare, their coincidence would suggest that the two phenomena are physically linked to the AGN.
+% Therefore, if the \OIIIL emission is associated with this high-density regime, it likely originates from the AGN itself rather than the host galaxy. However, such an interpretation would necessitate `escape channels' for ionising radiation and may therefore conflict with proposed `black hole star' scenarios \citep[][]{Naidu2025}, as the AGN would be the primary driver of the \OIIIL ionisation.
+
+% I think I commented this out
+%\lri{The disparity between the extreme $\Halpha_\mathrm{B}/\Hbeta_\mathrm{B}$ decrement and Case-B $\Halpha_\mathrm{N}/\Hbeta_\mathrm{N}$ decrement ultimately suggests that high-density conditions are localised to the BLR and/or immediate absorbers, leaving the more extended, lower-density regions unaffected. However, without further observations we cannot conclusively distinguish the physical origin of \OIIIL emission in \cliff, particularly as we are reliant on galaxy-integrated density measurements and cannot evaluate the spatial variation of density. Hence, we do not discuss these scenarios further in this work.}
+
+Additional arguments against the high density scenario, following the methodology presented in \cite{Maiolino2025_QSO1}, are discussed in Appendix~\ref{sec:density2}.
+
+
+
+% paper, potentially from Xihan (for discussing importance of [OII] auroral
+% auroral line is always bluer than the strong line, but [OII] doesn't follow this expectation]
+% if we have [OII] and [NII]/[SII], we can rule out that dust is causing these ratios
+
+\subsubsection{Excluding peculiar ionisation scenarios}\label{sec:peculiar_ionisation}
+
+
+Another potential scenario to explain the weakness of \OIIIL relative to \Hbeta, without invoking low density and metallicity, is to ascribe the effect to a gas ionisation state so low that $O^{++}$ emission is suppressed. 
+Quantitatively, photoionisation models indicate that to suppress the \OIII/\Hbeta flux ratio to $\sim1$, the corresponding ionisation parameter would need to be $\log(U)\lesssim-2.5$ \citep[e.g.][]{Nagao2006, BaronNetzer2019, Cameron2023}.
+This is in significant tension with established findings that high-$z$ galaxies are typically characterised by high ionisation parameters \citep[$\log(U)\gtrsim -2.0$; e.g.][]{Cameron2023,Reddy2023, Tang2023}. 
+Of course, a single source could have lower than average $\log(U)$, but in this case the rarity of \cliff would suggest a link between the spectral properties of the AGN and host galaxy.
+%As a caveat, we note \cliff is a peculiar source, not necessarily comparable to high-redshift SFGs.
+Assuming densities below the critical density of \OIIall (i.e. $n = 10^4 \ \mathrm{cm}^{-3}$), we utilise our measurements of R3 and O32 and the AGN photoionisation models of \cite{Isobe2025} to lay a joint constraint on $U$ and $Z$, as illustrated in Fig.~\ref{fig:photoion}.
+The lower limit we have obtained for O32 provides a lower limit on the ionisation parameter $U$ as $\log(U) \gtrsim -3$. 
+Furthermore, \cliff sits just below the model of $\mathrm{\log(Z/Z_\odot)} = -1$ (i.e. $12+\log(\mathrm{O/H}) \lesssim 7.69$), providing a further conservative upper limit on the metallicity of \cliff, which notably still sits on the low-metallicity branch of the R3 diagnostic regardless of high-$z$ strong line calibration adopted (see Fig.~\ref{fig:R3metalconstraint}).
+% Removed the below line because it represents too much speculation...
+% We note that reproducing the observed $\OIIIL/\Hbeta_\mathrm{N}$ ratio, while maintaining $\log(U) > -2.75$, requires lowering the metallicity to $\mathrm{\log(Z/Z_\odot)} \sim -1.5$, consistent with the value inferred from the calibrations within $3\sigma$ ($\mathrm{\log(Z/Z_\odot)} = -1.75^{+0.07}_{-0.09}$).
+
+A similar scenario, without invoking low metallicity or low ionisation parameter, is a lack of photons energetic enough to even ionise $O^+$ \citep[$\sim35$ eV; see e.g.][]{Wenaker1990, Martin1993, Draine2011}. 
+However, this scenario would also not explain the absence of \OIIall from the spectrum, as oxygen and hydrogen have similar ionisation potentials \citep{Osterbrock2006}. 
+Similarly, \NIIall and \SIIall are typically expected to be strongly detected in such low-ionisation environments \citep{Rhea2025}.
+A potential caveat of this interpretation is that the abundance of nitrogen, and thus the strength of its associated emission lines, drops significantly faster than oxygen in low-metallicity regimes due to their different enrichment channels \citep[][]{Nicholls2017}.
+Nevertheless, as previously established (Sections~\ref{sec:Fitting_Ha} and \ref{sec:Fitting_other_lines}), neither of these doublets are significantly detected in the spectrum of \cliff, let alone comparable to \Hbeta or \OIIIL, further disfavouring a simple low-ionisation interpretation.
+
+Finally, we consider a scenario in which the ionisation parameter is so high that oxygen primarily exists as $O^{+++}$. Such a scenario has never been observed, not even in the most extreme AGN \citep{Dors2020}. 
+Such a high level of ionisation would also result in other high ionisation lines, such as \CIV and \HeIIL \citep{Wang2025_HeII}, appearing very strong; however, there is no evidence for these lines in the \cliff \citep{deGraaff2025}.
+
+By ruling out both extreme high- and low- ionisation parameter scenarios, we conclude that the low $\OIIIL/\Hbeta_\mathrm{N}$ flux ratio in \cliff most likely originates from a metal-poor ISM. 
+
+
+{\renewcommand{\arraystretch}{1.4}
+\begin{table}
+\normalsize
+\centering
+ \begin{tabular}{c || c c} 
+ \hline
+ \hline
+ Galaxy Property & & Value \\ 
+ \hline
+ \multirow{2}{*}{Metallicity} & $12 + \log(\mathrm{O/H})$  & $6.93^{+0.07}_{-0.09}$ \\
+  & $\log(Z/Z_\odot)$ & $-1.75^{+0.07}_{-0.09}$ \\
+  \hline
+ $\log(M_\mathrm{dyn}/M_\odot)$ & & $8.41\pm0.12$  \\
+ $\log(M_\mathrm{*}/M_\odot)$ & & $<8.41$ \\
+ \hline
+ \multirow{2}{*}{$\log(M_\mathrm{BH}/M_\odot)$} & Fiducial (from \Hbeta) & $7.35\pm0.24$\\
+  & Scattering Scenario & $6.32\pm0.22$ \\
+  \hline
+ \multirow{2}{*}{$\log(M_\mathrm{BH}/M_\ast)$} & Fiducial (from \Hbeta) & $>-1.06$\\
+ & Scattering Scenario & $>-2.07$\\
+ \hline
+ \hline
+ \end{tabular}
+ \caption{Summary of the properties of \cliff as derived in this work. 
+ The metallicity was calculated using the strong-line R3 calibration of Isobe et al. in prep. (see Section~\ref{sec:Evidence_for_low_metal}). 
+ The fiducial BH mass is determined from the average of three different single-epoch \Hbeta-based virial calibration BH mass estimates.
+ $M_\mathrm{dyn}$ is taken as a conservative upper limit on $M_\ast$.
+ Uncertainties are quoted at the 68 percent confidence level.}
+ \label{table:galaxyproperties}
+\end{table}
+}
+
+\subsection{Potential low metallicity satellite}\label{sec:satellites}
+
+\begin{figure*}
+\centering
+   \includegraphics[width=\linewidth]{Figures/satellites.pdf}
+\caption{Image and integrated spectrum of the potential southern satellite of \cliff. \textbf{Left panel:} The continuum-subtracted data cube collapsed over the $2.9888-2.9907\ \mu$m spectral channels, highlighting both \cliff and the potential southern \Halpha satellite (both labelled). \textbf{Right panel}: Comparison of continuum-subtracted integrated spectra ofThe  \cliff and the satellite. The dashed vertical line indicates the wavelength of the $\Halpha_\mathrm{N}$ component in \cliff, demonstrating the \Halpha emission associated with the satellite has a redshifted offset. Hence, this satellite could correspond to an inflow of pristine gas towards \cliff, and may therefore be associated with the observed low metallicity of this system.}
+\label{fig:satellites}
+\end{figure*}
+
+% While the low metallicity of \cliff could in principle result from the dilution of the ISM by massive pristine inflows \citep[e.g. preceding a `compaction' event; see][]{Dekel2023, Mannucci2010}, the narrow-line kinematics of \cliff suggests otherwise. 
+
+
+Analysis of the \Halpha emission in the vicinity of \cliff reveals a candidate \Halpha-emitting satellite located to the South, as illustrated in the left panel of Fig.~\ref{fig:satellites}. Its \Halpha emission is redshifted by about +380 \kms relative to the narrow \Halpha and \OIIIL components of \cliff (Fig.~\ref{fig:satellites}; right panel). Notably, this satellite lacks detectable \OIII or other emission features within the spectral coverage, indicative of low metallicity gas. The elongated morphology and redshifted velocity of the satellite may trace a tidally stretched, accreting system, potentially associated with the redshifted absorber of \cliff identified in Section~\ref{sec:Fitting_Ha}.
+
+The detection of this potential satellite suggests that \cliff resides in an environment characterised by the accretion of metal-poor gas \citep[e.g. preceding a `compaction' event; see][]{Dekel2023, Mannucci2010}, and this may explain the low metallicity of the galaxy.
+
+However, while the \Halpha identification is the most plausible explanation of the observed feature, we cannot exclude the possibility that it originates from a system at a different redshift which is not physically associated with \cliff. 
+Furthermore, the narrow emission lines of \cliff exhibit a remarkably low velocity dispersion ($\sigma_\mathrm{N}\sim38$ \kms), providing no clear evidence for the turbulence typically associated with an ongoing inflow. Higher-sensitivity, deeper follow-up observations are required to robustly confirm the physical association of the satellite with \cliff and further constrain its nature.
+
+\subsection{Dynamical mass}\label{sec:M_dyn}
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/Mbh_comparison.pdf}
+\caption{Constraints on the BH mass of \cliff from several different calibrations, based on both $\Halpha$ and $\Hbeta$ \citep{Greene2005, Vestergaard2006, Parlanti2025, ReinesVolonteri2015}.
+Our \Hbeta BH mass measurements and associated $1\sigma$ uncertainties are shown by the topmost three points; these measurements are combined to derive our fiducial BH mass (the magenta point), which is quoted in Table~\ref{table:galaxyproperties}. 
+We also show the `electron scattering' scenario BH mass as determined from our \Halpha fit, following the argument of \citet{Rusakov2026}; this represents a more conservative estimate of the BH mass, and is also quoted in Table~\ref{table:galaxyproperties}.
+The dashed gray line and shaded region show the BH mass estimate from \citet{deGraaff2025} along with its $1\sigma$ uncertainty.}
+\label{fig:BHmassconstraint}
+\end{figure}
+
+
+In this work, we do not attempt to directly measure the stellar mass of \cliff. 
+$M_\ast$ has proven difficult to measure across the wider LRD population, for reasons including but not limited to: degeneracies between AGN and stellar light \citep[e.g.][]{Labbe2024, Greene2024}, non-stellar Balmer breaks \citep[e.g.][]{Ji2025}, and systematic uncertainties in SED fitting \citep[e.g.][]{deGraaff2025, Durodola2025}. 
+Additionally, stellar masses inferred from the optical continuum of LRDs may be unreliable, as some LRDs have been found to exhibit a time-variable rest-frame optical continuum \citep{Ji2025, Naidu2025}, suggesting the optical continuum may be AGN- rather than SF-dominated. 
+In fact, in the case of \cliff, \cite{deGraaff2025} have already demonstrated the difficulties in measuring $M_\ast$ by fitting the spectral energy distribution (SED) of this object, as SED models favour an implausibly high stellar mass, and stellar emission is insufficient to explain the strength of the observed Balmer break. 
+Furthermore, attempts to measure $M_\ast$ of \cliff from its spectral continuum may be affected by contamination from the nearby foreground galaxy (see Fig.~\ref{fig:fov}).
+Consequently, in this work we adopt the dynamical mass of \cliff as a strong upper constraint on its stellar mass.
+
+As discussed earlier, the small velocity dispersion inferred from \OIIIL and the narrow component of \Hbeta (see Section~\ref{sec:fitting_Hb_OIII} and Table~\ref{table:fit_properties}) indicates that the dynamical mass of \cliff's host galaxy is likely fairly low. 
+To constrain the dynamical mass, we adopt the same approach outlined in other high-redshift studies \citep[e.g.][]{Ji2025, Ubler2023, Maiolino2024_JADES, Ivey2026} of estimating the dynamical mass through the calibration of \cite{VanDerWel22}:
+\begin{equation}
+M_\mathrm{dyn} = \beta(n)K(q)\frac{\sigma_\ast^2 R_e}{G},
+    \label{eq:dynmass}
+\end{equation}
+where $\beta(n) = 8.87 - 0.831n+0.0241n^2$ with Sérsic index $n$ following \cite{Cappellari2006}, and $K(q) = [0.87+0.38e^{-3.71(1-q)}]^2$ with axis ratio $q$ following \cite{VanDerWel22}. 
+Given we lack information about $q$ beyond the fit to the PSF, we adopt $q=1$ as this yields a conservative estimate of the upper limit on the dynamical mass (taking $q = 0$ would reduce $M_\mathrm{dyn}$ by a factor of $\sim2$). 
+For the Sérsic index we assume $n=1$ as is the case for the majority of high-$z$ SFGs \citep[][]{Ormerod2024, Danhaive2026}, including AGN-host galaxies \citep{Maiolino2024_JADES,Juodzbalis2026_JADEScensus}. $R_e$ is the effective radius, already estimated by \cite{deGraaff2025} from morphological fitting of \jwst/NIRCam F200W imaging to be $38.6^{+7.4}_{-6.9}\ \mathrm{pc}$, which we adopt here as we have determined \cliff to be spatially unresolved.
+Finally, in Equation~\ref{eq:dynmass}, $\sigma_\ast$ is the stellar velocity dispersion. 
+To estimate $\sigma_\ast$, we use our constraint on the narrow line width to measure the gas velocity dispersion, 
+$\sigma_\mathrm{gas} \approx 38\
+ \mathrm{km} \ \mathrm{s}^{-1}$, and then apply a correction of $\Delta \log(\sigma_\mathrm{gas} / [\mathrm{km} \ \mathrm{s}^{-1}]) = +0.1$ following \cite{Ubler2023},
+since galaxies with low integrated ionised gas velocity dispersion tend to have a higher integrated stellar velocity dispersion
+\citep{Bezanson18}\footnote{Tests of this relation at high-redshift \citep[e.g.][]{Carnall2023,DEugenio2024_Nature, Pascalau2026} indicate that it does appear to hold at high redshift, though this result refers to systems much more massive than \cliff.}. 
+By adopting these assumptions, we obtain $2.6\times 10^8 \ M_\odot$ as a conservative upper limit on the dynamical mass of \cliff. 
+Hence, we obtain an upper limit on the stellar mass of $M_\ast < 2.6\times 10^8 \ M_\odot$ (Table~\ref{table:galaxyproperties}). We note that dark matter and gas fractions are likely to be high \citep[see e.g.][]{Danhaive2026,McClymont2026_BH}, hence this is a very conservative upper limit.
+
+\cite{InayoshiMaiolino2025} have recently proposed that dense gas clouds in the vicinity of an AGN accretion disc can give rise to strong Balmer series absorption, including both line and bound-free absorption, i.e. the same phenomena happening in the atmosphere of hot stars ($T_\mathrm{eff}\sim10^4\ \mathrm{K}$). 
+\cite{Ji2025} have verified that such a model can indeed produce the strong Balmer break and Balmer absorption lines such as those we observe in \cliff and in the case of QSO1, without the need to invoke massive, evolved stellar populations. 
+Although QSO1 has a weaker Balmer break than \cliff, a similar argument certainly applies here, meaning a small $M_\ast$ is entirely reasonable. 
+
+
+\begin{figure*}
+\centering
+   \includegraphics[width=0.85\paperwidth]{Figures/Mbh_mstar.pdf}
+\caption{The location of \cliff on the $M_\mathrm{BH}$--$M_\ast$ plane, for both the fiducial \Hbeta-measured BH mass (magenta circle) and the scattering scenario BH mass (black circle). 
+The grey points correspond to measurements from other \jwst observations of low mass AGN \citep{Juodzbalis2026_JADEScensus, Juodzbalis2025_QSO1, Harikane2023, Kokorev2023, Furtak2024, Maiolino2024_Nature, Carnall2023} and quasars \citep{Stone2024, Yue2024, Ding2023}, along with the sample of 3 < z < 7 broad-line AGN from \citet{JonesKocevski2025} and the mean stacks of low-mass AGN from \citet{Geris2026}. 
+The solid purple line shows the local scaling relation from \citet{ReinesVolonteri2015}, with its scatter indicated by the shaded region. 
+The other purple lines indicate constant $M_\mathrm{BH}/M_\ast$ ratios. 
+Regardless of the BH mass adopted, \cliff is overmassive relative to the local relation, a conclusion made stronger by noting that $M_\ast$ presented here is a conservative upper limit estimated from $M_\mathrm{dyn}$ (see Section~\ref{sec:M_dyn}).}
+\label{fig:MstarMBH}
+\end{figure*}
+
+
+\subsection{Black hole mass}\label{sec:BH_mass}
+
+
+The inferred metallicity provides important constraints for models and simulations, but becomes more powerful when accompanied by measurements of BH mass.
+
+In this work, we estimate the black hole mass of \cliff by assuming the local virial relations between BH mass, and the broad line luminosity \citep[e.g.][]{Greene2005, Vestergaard2006, ReinesVolonteri2015}, which are calibrated either through reverberation mapping or direct measurements. 
+It is not obvious that these locally-calibrated relations apply at high redshift. 
+In fact, we note that BH mass measurement at high-$z$ remains a contentious topic, with arguments that \jwst-measured BH masses are inaccurately estimated by these calibrations, for example due to super-Eddington accretion \citep[e.g.][]{Marconi2008, Marconi2009, Lambrides2024, Lupi2024} or electron scattering \citep[e.g.][]{Rusakov2026, Naidu2025, Chang2026}.
+
+The black hole mass of \cliff was previously estimated by \cite{deGraaff2025} as $\log(M_\mathrm{BH}/M_\odot) = 7.18^{+0.07}_{-0.06}$, based on the profile of broad \Halpha. 
+However, the medium-resolution spectra result in a lack of strong constraints on the narrow line kinematics or the Balmer line absorption component, which have now been revealed by the G235H observations. 
+% Furthermore, their broad \Halpha luminosity measurement does not account for the true depth of the absorber now seen in the G235H spectrum, nor do they fully account for the observed complexity of the \Halpha emission. 
+
+In this work, as we have the best constraints on the narrow and broad components of \Hbeta (compared to \Halpha), we primarily utilise the results of our \Hbeta fit to determine an estimate of $M_\mathrm{BH}$. We take $\mathrm{FWHM}_\mathrm{B}$ as measured from our spectral fit to the \Hbeta-\OIIIL complex, and calculate the luminosity of broad \Hbeta. 
+We utilise 3 different \Hbeta-based single epoch calibrations to determine the BH mass: \cite{Greene2005, Vestergaard2006} and \cite{Parlanti2025}. 
+For the \cite{Vestergaard2006} and \cite{Parlanti2025} calibrations, when calculating uncertainties we incorporate the quoted intrinsic scatters of $0.43$ and $0.40$ dex, respectively. 
+
+There is a spread of $\sim 0.2 \ \mathrm{dex}$ across the $M_\mathrm{BH}$ values obtained from the various \Hbeta calibrations, but all of the measurements are consistent within $1\sigma$, and this spread is lower than the $\sim0.3-0.4$ dex scatter on the BH mass calibrations overall. 
+Hence, to obtain a single \Hbeta-determined value for $M_\mathrm{BH}$, we combine these three measurements with an uncertainty-weighted average and propagate their uncertainties, to obtain the \textit{Mean} BH mass measurement of $\log(M_\mathrm{BH}/M_\odot) = 7.35\pm0.24$. 
+This \textit{fiducial} BH mass measurement will be used in discussions and analysis throughout the rest of this work.
+
+ 
+Noting that the \Halpha line profile was parameterised by a model compatible with the proposed electron scattering scenario \citep{Rusakov2026}, we obtain an alternative, more conservative estimate of BH mass, by using $\mathrm{FWHM}_\mathrm{B, \Halpha}=480\pm50$ \kms as associated with the intrinsic Gaussian. 
+For this calculation, we utilise the single-epoch \Halpha calibrations of \cite{ReinesVolonteri2015}. 
+This yields a BH mass an order of magnitude smaller than our fiducial estimate, $\log(M_\mathrm{BH}/M_\odot) = 6.32\pm0.22$. 
+% This approach was proposed by \cite{Rusakov2026} to alleviate some of the tension on the local $M_\ast-M_\mathrm{BH}$ relation at high redshift by suggesting that high-redshift AGN found by \jwst are not necessarily truly overmassive relative to their hosts.
+However, we emphasise that exponential profiles are not necessarily tracing electron scattering and that simple models of the (virialised) BLR can also naturally result in exponential profiles \citep{Scholtz2026_LRD,Madau2026b}. In particular, \citet{Madau2026b} have recently shown that the black hole masses derived by modelling LRD exponential profiles through BLR stratification, without invoking electron scattering, are fully consistent with standard single epoch estimates.
+
+Finally, one could measure BH mass from \Halpha using the calibration of \cite{ReinesVolonteri2015}, now by using the overall FWHM of the broad component as estimated from its overall profile, $920\pm110$ \kms (which is still significantly lower than the FWHM of $\Hbeta_\mathrm{N}$, $2770\pm210$ \kms). This approach yields a measurement of $\log(M_\mathrm{BH}/M_\odot) = 6.91\pm0.23$, which is consistent with both our fiducial, mean \Hbeta BH mass measurement and the earlier estimate of \cite{deGraaff2025} (within $2\sigma$). For clarity, in this work we will limit further discussion to the \Hbeta-measured and \Halpha `scattering scenario' masses as these correspond to the extreme scenarios and therefore enable a better exploration of the parameter space.
+
+
+In Fig.~\ref{fig:BHmassconstraint}, we present an overview of the BH masses of \cliff determined in this work (the various coloured points); we also compare to the earlier measurement from \cite{deGraaff2025} (the dotted gray line, with a shaded region illustrating the $1\sigma$ uncertainty).
+Our fiducial, mean \Hbeta-estimated BH mass (the magenta circle) is consistent with the value from \cite{deGraaff2025} within $1\sigma$. 
+We will discuss the implications of our BH mass estimates in Section~\ref{sec:overmassive}.
+
+
+\section{Discussion}\label{sec:Discussion}
+
+
+
+\subsection{An overmassive black hole}\label{sec:overmassive}
+% discuss uncertainties on stellar/dyb mass
+% As discussed previously, determining the stellar mass of \cliff is nontrivial. 
+% \cite{deGraaff2025} already fitted stellar SED models to \cliff and inferred implausibly high $M_\ast$, certainly exceeding the physical limit we impose through measuring the dynamical mass (Section~\ref{sec:M_dyn}).
+% Difficulty in $M_\ast$ measurement does indeed appear to be a consistent problem across the wider LRD population, for reasons including degeneracy between AGN and stellar light \citep[e.g.][]{Labbe2024, Greene2024}, non-stellar Balmer breaks \citep[e.g.][]{Ji2025}, and systematic uncertainties in SED fitting \citep[e.g.][]{deGraaff2025, Durodola2025}. 
+
+% uncertainties on Mbh
+Beyond the challenges for stellar mass measurements discussed in the previous section (Section~\ref{sec:M_dyn}), as, discussed, BH mass measurements for LRDs are also subject to critical systematic uncertainties. 
+While virial, locally-calibrated single-epoch SMBH mass estimators are widely adopted to measure BH masses for \jwst-discovered AGN, their reliability is limited by extensive systematic uncertainties in BLR geometry, ionisation and kinematics. 
+Furthermore, single-epoch BH mass estimates can vary by up to $\sim0.5$ dex depending on the line used (e.g. \Halpha, \Hbeta) and the adopted calibration \citep[e.g.][]{DallaBonta2025}. 
+These systematics are particularly important when considering LRDs, which are effectively a new class of AGN. 
+Direct measurements of BH mass are essential for independently validating the single epoch estimators for high redshift AGN and LRDs.
+However, while a few direct BH mass measurements exist outside of the local Universe \citep[e.g.][]{Abuter2024, Shen2024, Liao2025, GRAVITYcollab2026}, the only direct $M_\mathrm{BH}$ measurement in an LRD to date is that of QSO1 at $z\approx 7.04$ by \cite{Juodzbalis2025_QSO1}. 
+$M_\mathrm{BH}$ of QSO1 was shown to be consistent with that from the single-epoch mass estimates, but this single measurement is insufficient for making any broad conclusions about whether the single epoch estimators are applicable to the wider early AGN population. 
+
+With these caveats on virial BH masses in mind, we compare the upper limit on $M_\ast$ of \cliff (Section~\ref{sec:M_dyn}) to $M_\mathrm{BH}$ inferred from the virial relations (Section~\ref{sec:BH_mass}). 
+We interpret this comparison in the context of both local BH-galaxy scaling relations and of other high-redshift \jwst-observed AGN.
+Fig.~\ref{fig:MstarMBH} illustrates the relationship between BH mass and host galaxy stellar mass. 
+We include \cliff in this figure (the magenta circle), together with other high-$z$ \jwst AGN sources from the literature whose masses were also estimated with single-epoch virial calibrations \citep[or direct dynamical measurement in the case of QSO1;][]{Juodzbalis2025_QSO1}. 
+We find that even when adopting the lower of our two BH mass estimates (the BH mass derived assuming the scattering scenario, shown by the black circle), \cliff remains overmassive relative to the local scaling relations. 
+If we instead adopt the fiducial BH mass inferred from \Hbeta, \cliff appears even more overmassive ($M_\mathrm{BH}/M_\ast \gtrsim 0.1$), though we note that both measured BH masses render \cliff consistent with the wider population of high-$z$ \jwst AGN shown in this figure.
+It is crucial to note that as we have adopted an upper limit on $M_\ast$, the black hole of \cliff is likely even more overmassive than our measurements suggest, as indicated by the arrows on the plot. This argument is further strengthened by recent findings that \Halpha profiles with exponential wings are not direct evidence of electron scattering \citep{Brazzini2025, Brazzini2026}, because they can alternatively be explained by stratification of the BLR \citep{Scholtz2026_LRD, Madau2026b}.
+
+
+
+\subsection{Metal-poor LRDs and deviation from the MZR}\label{sec:mass-metal-relation}
+
+\begin{figure*}
+\centering
+   \includegraphics[width=\linewidth]{Figures/mass_metallicity.pdf}
+\caption{
+The mass-metallicity relation (MZR) for three different redshift ranges. For each plotted MZR, the dashed segments show the regions for which the relation is extrapolated, and the shaded area indicates the $1\sigma$ uncertainty of the relation.
+\textbf{Left panel}: The median MZR for the local Universe (teal line), derived by \citet{Curti2020} based on galaxies from the Sloan Digital Sky Survey (SDSS). 
+The unfilled orange circles illustrates the position of the local LRDs \citep{Lin2026} on the mass-metallicity plane, with $M_\mathrm{dyn}$ taken as an upper limit on $M_\ast$, following Equation~\ref{eq:dynmass}. 
+Here we plot the direct-$T_e$ method metallicities derived by \citet{Lin2026}; the corresponding uncertainties are $0.01-0.03$ dex, smaller than is visible on the scale of this plot.
+\textbf{Center panel}: The MZR for galaxies at $3 < z< 4$ (blue line), as derived by Isobe et al. (in prep.). 
+The position of \cliff ($z\sim3.5$) is shown by the filled magenta point, with $1\sigma$ uncertainties on its metallicity and $M_\mathrm{dyn}$ plotted as an upper limit on $M_\ast$.
+\textbf{Right panel:} The MZR for galaxies at $6.5 < z< 7.5$ (green line), as derived by Isobe et al. (in prep.).
+QSO1 ($z\sim7$) is shown by the unfilled purple point, using the stellar mass upper limit from \citet{Juodzbalis2025_QSO1}, and a metallicity derived from the $\OIIIL/\Hbeta_\mathrm{N}$ flux ratio measured by \citet{Maiolino2025_QSO1} via the Isobe et al. (in prep.) R3 calibration. 
+}
+\label{fig:massmetallicity}
+\end{figure*}
+
+\begin{figure*}
+\centering
+   \includegraphics[width=\linewidth]{Figures/key_tensions.pdf}
+\caption{
+A sketch illustrating the key tensions discussed in this work (see Section~\ref{sec:mass-metal-relation} for a full discussion). The black stars illustrate `real measurements' of observational properties for an LRD such as \cliff, with the hollow stars corresponding to hypothetical scenarios. In brief, from left to right: for an object such as \cliff, using $M_\mathrm{dyn}$ as an upper limit on $M_\ast$ means that if the true $M_\ast$ is substantially lower, the system will be in closer agreement with the corresponding MZR. However, this lower $M_\ast$ would also increase $M_\mathrm{BH}/M_\ast$, so matching the MZR would make the BH even more overmassive relative to the host galaxy. Matching both the MZR and the local $M_\mathrm{BH}\text{--}M_\ast$ relations requires the virial $M_\mathrm{BH}$ to be overestimated by $\sim4$ dex, a factor much larger than can be attributed to even the most extreme cases of electron scattering. A black hole mass this much smaller would increases the inferred Eddington ratio to $\lambda_\mathrm{Edd} \gtrsim 100$, resulting in a system too exotic to obey the typical BH scaling relations, and indicating that systems such as \cliff fundamentally deviate from the local scaling relations.}
+\label{fig:key_tensions}
+\end{figure*}
+
+As we have noted across the previous sections, \cliff exhibits a number of observational similarities to QSO1. This raises a number of questions: Do the formation pathways producing objects such as \cliff operate across cosmic time? Is low metallicity characteristic of unusual LRDs and therefore an indicator of rare pathways for BH seeding and evolution? 
+
+To further investigate the connection between \cliff and other extreme LRDs, Fig.~\ref{fig:massmetallicity} illustrates comparison of the mass-metallicity relation (MZR) to `unusual' LRDs across three different redshift regimes: $z\sim0$, $3<z<4$ and $6.5<z<7.5$. We note as a caveat for this discussion that this comparison requires extrapolation of MZRs to lower stellar masses. The center panel of Fig.~\ref{fig:massmetallicity}, presents a comparison of \cliff to the $3<z<4$ MZR determined from the calibrations of Isobe et al. (in prep.). Adopting the same calibrations for both the MZR and the strong-line metallicity measurement ensures a self-consistent comparison. 
+Visually, \cliff is clearly offset from the MZR at this redshift; its deviation of $\sim11 \sigma$ from the best-fit MZR statistically confirms its status as an outlier.
+Indeed, marginal consistency with the MZR (i.e. a $3 \sigma$ deviation) would require a stellar mass low enough to attain $M_\mathrm{BH}/M_\ast \sim 9$, a ratio larger than the lower limit determined for QSO1 ($M_\mathrm{BH}/M_\ast > 2$), which has been identified be a `nearly naked' black hole in an early stage of its evolution \citep{Juodzbalis2025_QSO1}. Even in the case of the electron scattering black hole mass, such a scenario results in $M_\mathrm{BH}/M_\ast \sim 1$. This hints at a fundamental tension between the MZR and $M_\mathrm{BH}-M_\ast$ relation for \cliff.
+
+In the left panel of Fig.~\ref{fig:massmetallicity}, we present a comparison of the so-called `local LRDs' \citep[$z\sim0.1-0.22$][]{Lin2026} to the local MZR from \cite{Curti2020}; these are 3 of a mere handful of local LRDs found to date \citep{Lin2025, Lin2026} and therefore, like \cliff, represent a rare population.
+We adopt the direct metallicity measurements of \cite{Lin2026} for this comparison.
+We additionally estimate the dynamical masses of the local LRDs of \cite{Lin2026} as an upper limit on their stellar masses using Equation~\ref{eq:dynmass}, adopting the narrow-line FWHMs measured by \cite{Lin2026} and the tightest available constraint on $R_e$ for each LRD \citep[i.e. from][]{Lin2026, Ji2026}.
+With these upper limits on stellar mass, even the highest-metallicity of the three local LRDs deviates from the median $z\sim0$ MZR by more than $5\sigma$. The deviation from the MZR is yet more significant for the other two local LRDs.
+
+Finally, in the rightmost panel of Fig.~\ref{fig:massmetallicity}, we present a comparison of QSO1 ($z\sim7$) to the $6.5<z<7.5$ MZR (also from Isobe et al. in prep.).
+We re-estimated the metallicity of QSO1 based on the \cite{Maiolino2025_QSO1} measurement of $F(\OIIIL)/F(\Hbeta_\mathrm{N} = 0.55\pm0.16$, now using the Isobe et al. (in prep.) R3 calibration to obtain a self-consistent comparison to the MZR.
+At the upper $M_\ast$ limit afforded by $M_\mathrm{dyn}$, we find QSO1 is also a clear outlier from the $6.5<z<7.5$ MZR by $\gtrsim7\sigma$.
+
+Taken together, these comparisons reveal a fundamental tension between extreme LRDs and the established galaxy-black hole scaling relations. The statistical significance with which \cliff, QSO1 and local LRDs deviate from the MZR suggests that standard frameworks for galaxy assembly do not apply to these systems. Indeed, these LRDs may follow a unique evolutionary trajectory, in which the processes governing black hole growth are decoupled from the metal enrichment and stellar assembly of the host galaxy.
+
+\subsection{The \texorpdfstring{$M_\mathrm{BH}$}{MBH}--\texorpdfstring{$M_\ast$}{M*}--\texorpdfstring{$Z$}{Z} tension}
+
+Fig.~\ref{fig:key_tensions} illustrates the key tensions highlighted by the previous sections. The dynamical mass of \cliff represents an upper limit on its stellar mass and a lower $M_\ast$ would therefore align \cliff more closely with the $3<z<4$ MZR (Fig.~\ref{fig:key_tensions}; left panel). However, reducing $M_\ast$ simultaneously pushes \cliff further into the `overmassive' regime on the $M_\mathrm{BH}-M_\ast$ plane. This holds true even when adopting a more conservative BH mass estimate calculated based on an electron scattering scenario, increasing the tension with the local $M_\mathrm{BH}-M_\ast$ relation (Fig.~\ref{fig:key_tensions}; centre panel). Consequently, under standard assumptions, objects like \cliff cannot simultaneously follow both scaling relations. Possible resolutions to this predicament involve invoking extreme density conditions (Section~\ref{sec:Accounting_for_density}), or assuming black hole masses are not measured accurately by the virial relations.
+
+If the virial BH masses are indeed overestimated, the tension with the local $M_\mathrm{BH}-M_\ast$ relation is reduced - however, this would require the BH mass to be overestimated by four orders of magnitude, much higher than then even the most extreme electron scattering scenarios. Additionally, this would require a extremely high Eddington ratios ($\lambda_\mathrm{Edd}\gtrsim 100$; right panel of Fig.~\ref{fig:key_tensions}). Such extreme Eddington ratios are virtually absent even from large-scale quasar surveys, which show that even the most rapidly accreting BHs rarely exceed $\lambda_\mathrm{Edd}\sim1-3$, and ratios significantly above 10 remain extreme outliers \citep[e.g.][]{Kollmeier2006, Jin2012}.
+% These observational ceilings suggest that a ratio of 100 might only be explained by exotic scenarios such as the `quasi-star' \citep{Begelman2006,Naidu2025}.
+
+In any case, if one accepts the possibility of such high $\lambda_\mathrm{Edd}$, there is no compelling reason to expect such objects would obey local scaling relations, invalidating the assumptions that led us to this extreme picture. Consequently, our findings suggest that these extreme LRDs, and potentially other high-$z$ \jwst AGN, inherently deviate from the local $M_\mathrm{BH}-M_\ast$ relation. This deviation is likely driven by selection biases which systematically miss lower $M_\mathrm{BH}$ sources \citep[e.g.][]{Geris2026, Ziparo2026}, while simulations indicate that these early overmassive black holes eventually evolve onto the local relation over time \citep{Hu2026}.
+
+As highlighted by Fig.~\ref{fig:massmetallicity}, \cliff is not the only object for which this set of tensions exists, pointing to a formation channel which can produce massive BHs in metal-poor environments across cosmic times. While low metallicity does appear to be characteristic of certain LRDs such as \cliff or QSO1, the evolutionary pathways that produce (or indeed maintain) such metal-poor states remain effectively unconstrained. These systems could have transitioned from an earlier metal-rich phase to their observed metal-poor state due to the efficient ejection of metals by galactic outflows; alternatively, the ISM could have been diluted by significant pristine gas inflows (e.g. in the case of \cliff, by accretion from a metal-poor satellite; see Section~\ref{sec:satellites}). Evaluating the feasibility of such pathways is limited by uncertainties associated with factors including metal transport and outflow efficiencies, for example. Consequently, numerical simulations of black hole formation and evolution provide a vital framework for interpreting the chemical histories and BH seeding pathways of LRDs such as \cliff.
+
+\subsection{Comparison to hydrodynamical simulations}\label{sec:Comparison_to_sims}
+
+\begin{figure*}
+\centering
+   \includegraphics[width=\linewidth]{Figures/sophie_simulations.pdf}
+\caption{Comparison of \cliff to results from \textsc{aesopica} hydrodynamical simulations run down to $z\sim3.5$ on the $M_\mathrm{BH}-Z$ (left) and $M_\mathrm{BH}/M_\ast-Z$ (right) diagrams. 
+Further descriptions of the simulations are provided in Section~\ref{sec:Comparison_to_sims} and Appendix~\ref{sec:sims}. 
+Contours enclose 68\%, 95\%, and 99\% of the simulations; simulations outside of the 99\% contours are plotted as individual points. 
+The large magenta and black circles illustrate the properties of \cliff for our fiducial and scattering scenario BH masses, respectively.}
+\label{fig:simcomparison}
+\end{figure*}
+
+In many scenarios of BH-galaxy co-evolution, it is unlikely for a BH to grow to a mass $>10^7 \ M_\odot$ in a metal-free environment. 
+This follows from the fact that the conditions conducive to rapid black hole growth (i.e abundant cold gas accretion) would also catalyse star formation, resulting in rapid metal enrichment. 
+Hence, the findings of this work (and those of \citealt{Maiolino2025_QSO1} and \citealt{Jones2026}, in the case of QSO1) are indicative of a route that could allow a black hole to form and grow within a chemically unevolved stellar system, seemingly at odds with any simple picture of galaxy--black hole co-evolution. 
+
+Due to the complexity and stochasticity of the processes involved in co-evolution, any quantitative approach to the question of whether black holes can grow significantly in pristine environments requires a simulation-based approach. 
+In this Section, we compare our findings for \cliff to predictions from the \textsc{Aesopica} simulations (Koudmani et al., in prep.; see Appendix~\ref{sec:sims} for a full description). 
+We stress that these simulations incorporate stellar and BH feedback capable of gas and metal removal, as well as merger and gas accretion capable of ISM dilution. 
+For the purposes of this work, we utilise two different simulation modes: (i) fiducial Eddington-limited accretion following \textsc{Fable} \citep[\textit{‘Fiducial’};][]{Henden2018} and (ii) boosted accretion with super-Eddington accretion up to ten times the Eddington limit (\textit{‘SuperEdd+BoostAcc’}). 
+
+Fig.~\ref{fig:simcomparison} shows the location of \cliff on the $M_\mathrm{BH}-Z$ plane (first column of panels) and $M_\mathrm{BH}/M_\ast-Z$ plane (second column). 
+The large symbols show the location of \cliff as inferred from our analysis: both the single-epoch virial BH mass (magenta circle) and the BH mass inferred in the electron-scattering scenario (black circle), plotted against our measurement of the metallicity. 
+Each panel shows the results of four different simulation runs, each associated with a different BH seed mass; the range of seed masses explored in these simulations is $10^2 - 10^5 \ \mathrm{M}_\odot$. 
+
+In the $M_\mathrm{BH}-Z$ plane, even when adopting the lower electron-scattering $M_\mathrm{BH}$ estimate, only simulations utilising the highest seed masses ($10^5 \ M_\odot$) successfully approach the observed parameter space of \cliff; this discrepancy is exacerbated when adopting the fiducial $M_\mathrm{BH}$ estimate.
+In particular, the mismatch relative to lower-mass seeds is so large that it is unlikely to be salvaged by earlier seeding.
+While a small subset of the highest seed mass simulations recover metallicities and BH masses comparable to \cliff, the simulation runs incorporating boosted accretion exhibit greater metallicity scatter in this plane, suggesting that super-Eddington growth phases may be a key evolutionary component for extreme objects like \cliff. Tracking the specific inflow and outflow histories of the simulated outliers could provide key insights into the mechanisms governing the evolution of \cliff.
+
+The $M_\mathrm{BH}/M_\ast-Z$ plane proves to be less constraining as \cliff overlaps more broadly with the parameter space of the simulation results, although heavy seeds ($10^4-10^5 \ M_\odot)$ remain favoured. 
+Crucially, as the stellar mass presented here corresponds to a strict upper limit, the true position of \cliff in this plane likely shifts toward the highest seed mass simulation runs or indeed the extreme outliers of the simulated population, depending on the BH mass estimate adopted.
+Collectively, these constraints point toward a rare evolutionary pathway for \cliff, defined by heavy black hole seeding and periods of super-Eddington growth.
+
+To evaluate whether gas inflows are predominantly responsible for the low-$Z$ outliers in the simulations, tracking the evolutionary history of individual outliers is required. Regardless of the underlying driver of these outliers, the left-hand panels of Fig~\ref{fig:simcomparison} demonstrate that \cliff remains $\sim 1$ dex below the simulation $M_\mathrm{BH}-Z$ relation, even for heavy seed simulations runs. Adopting an earlier seeding prescription would not resolve this tension, as the $M_\mathrm{BH}-Z$ relation appears to evolve towards higher metallicities as $M_\mathrm{BH}$ increases.
+
+% Two things you may consider adding are some form of the anwser to Sandro's comment above, and some form of the (better phrased) sentence. Hey, adding mass to the BH also increases the metallicity forming a MBH--Z relation evdineced in the left column (both Fiducial and boost+SE); this incidentally means that earlier seeding would not alleviate the tension, since one would expect the BH--galaxy tandem to keep going right and up, not just right. Feel free to ignore, just food for thought.
+
+To gain context for the rareness of objects such as \cliff in the simulations compared to the rareness of \cliff itself, it is key to account for the survey and simulation volumes.  
+The \textsc{Aesopica} simulation boxes have side length $60 \ \mathrm{cMpc}$, giving a total simulation volume of $2.16 \times10^5 \ \mathrm{cMpc}^3$ for the snapshot at $z\sim3.5$. 
+Adopting the same same cosmology used by \textsc{Aesopica} \citep[see][]{Henden2018} and the survey area of $\sim150 \ \mathrm{arcmin}^2$ \citep{RUBIES2025}, the RUBIES survey volume over the redshift range $3 < z < 4$  is $5.06 \times10^5 \ \mathrm{cMpc}^3$, i.e. about 2.3 times larger than the simulation volume. 
+\cliff is an extremely unique object within the RUBIES survey, and seems similarly rare within the simulations, and we conclude it is fair to evaluate the underlying seeding and evolutionary mechanisms as similarly rare. 
+
+One alternative scenario involving primordial black hole seeds (black holes theorised to form shortly after the Big Bang) may naturally produce such rare systems with overmassive BHs in chemically unevolved environments~\citep[for a review, see][]{Carr2020}. Recent hydrodynamical simulations by \citet{Zhang2025_hydrosim_QSO1,Zhang2025_hydrosim} have explored galaxy formation around massive PBH seeds with masses of $\sim 10^{6}-5\times10^{7}\,M_\odot$ (a mass scale motivated by \citealt{Carr2021PDU....3100755C}, for example), which act as deep gravitational potential wells for halo formation and subsequent baryonic inflow. In these models, strong accretion-driven feedback heats the surrounding gas and suppresses or delays stellar assembly. Once star formation begins, feedback-driven outflows expel metal-enriched gas, while continued baryonic inflow replenishes the system with pristine material. Such simulations reproduce several qualitative properties inferred for objects like \cliff\ or QSO1, including extremely low metallicities ($Z \lesssim 0.01\,Z_\odot$), compact morphologies ($R_{\rm e}\lesssim 50~\mathrm{pc}$), and BH-dominated mass budgets ($M_{\rm BH}/M_\ast \gtrsim 0.1$). Although these simulations currently stop at higher redshift, $z\sim7-9$, and are carried out in a small volume of $\sim 1~\mathrm{cMpc}^3$ (targeting a single halo around the PBH), they nonetheless illustrate that PBH seeds could provide a viable evolutionary pathway for near-pristine LRDs.\footnote{For details of the numerical setup and analysis, the reader should refer to \citet{Zhang2025_hydrosim, Zhang2025_hydrosim_QSO1}.}.
+In fact, sources like \cliff could present an opportunity to empirically constrain PBH abundance as a fraction of dark matter density, a key cosmological parameter \citep[see e.g.][]{Carr2021} which to date remains poorly understood. For simplicity, if one assumes that the comoving number density of such sources is approximately the inverse survey volume, i.e. $\sim 2\times10^{-6}\,\mathrm{cMpc}^{-3}$, then the corresponding PBH seed density fraction is roughly $f_{\rm PBH, seed} \sim 3.2\times10^{-11} \left(M_{\rm PBH} / 10^{6}\, M_\odot\right)$. This estimate is well below current observational upper limits over the mass range $\sim10^{6}$--$5\times10^{7}\,M_\odot$. If only a fraction of such objects are seeded by PBHs, the implied constraint would become correspondingly tighter.
+
+Due to the high computational costs and variety of relevant physical processes involved in running simulations down to low redshift, very few simulations targeted at BH formation and evolution in the early Universe reach $z\sim3.5$, so we caution that the models presented here represent a limited comparison and are certainly not intended to be exhaustive. 
+As an additional caveat for \textsc{Aesopica}, we must stress that the simulations are not necessarily developed with assumptions aimed at reproducing BHs similar to \cliff, nor do they directly model the multi-phase ISM structure which would be crucial to fully unravelling the origin of these pristine galaxies with overmassive BHs.
+Finally, it is crucial to note that simulations and observations do not infer metallicities in the same way, which can result in significant systematic differences between observational measurements and measurements derived from simulations. 
+For example, with forward modelling of metallicity, \cite{PayyoorVijayan2026} note a discrepancy between simulation-inferred and strong-line metallicities of up to 0.3 dex, which they find is driven by dust attenuation and properties of the underlying stellar population.
+Ultimately, future models and simulations will cover a wider parameter space, pushing to higher resolution and lower redshifts, offering a more comprehensive comparison with rare objects such as \cliff and offering better insight into the underlying physics.
+
+
+\section{Conclusions}\label{sec:Conclusions}
+We have presented new, high-resolution \jwst/NIRSpec-IFU observations of \cliff, a remarkable Little Red Dot at $z\sim3.55$. These observations have offered valuable new insights into the ISM properties and chemical enrichment of \cliff. In this work we have focused on the narrow components of the emission lines, \Hbeta and \OIIIall in particular, with the goal of obtaining constraints on BH mass and metallicity which could be combined with simulations to investigate potential BH growth and seeding pathways. The main findings of our analysis are as follows:
+
+\begin{itemize}
+    \item The \Hbeta and \OIIIL emission are spatially compact and unresolved beyond the scale of the PSF.
+    \item The high-resolution spectral observations reveal deep, redshifted absorption components in both \Halpha and \Hbeta, indicative of inflowing gas. 
+    \item We additionally identify a potential satellite south of \cliff detected only in \Halpha, possibly tidally stretched, which could trace pristine gas inflows onto \cliff. However, we note that confirming this satellite and performing a detailed characterisation will require deeper follow-up observations.
+    \item In the galaxy-integrated spectrum of \cliff, the \OIIIL[5007] line is weak relative to the narrow component of \Hbeta emission compared to the bulk of the galaxy population at the same redshift, with a flux ratio $F(\OIIIL)/F(\Hbeta_\mathrm{N}) = 1.59^{+0.26}_{-0.24}$.
+    \item Adopting the updated strong-line metallicity calibrations of Isobe et al. (in prep.), we estimate the metallicity of \cliff as $Z \approx 0.017\pm0.004 \ Z_\odot$.
+    \item This finding is reinforced by the non-detection of key low-ionisation lines (\OIIall, \NIIall and \SIIall). Alternative explanations for the low $\OIIIL/\Hbeta_\mathrm{N}$ ratio, such as collisional saturation or extreme ionisation parameters, are disfavoured. 
+    \item We identify \cliff as a significant outlier from the $3<z<4$ MZR (also derived from the calibrations of Isobe et al. in prep.), appearing exceptionally metal-poor for its stellar mass limit ($\log(M_\ast/M_\odot) < 8.41$).
+    \item By fitting the Balmer lines, we derive two separate black hole mass measurements: a fiducial virial mass of $\log(M_\mathrm{BH}/M_\odot) = 7.35\pm0.24$, and a scattering scenario mass of $\log(M_\mathrm{BH}/M_\odot) = 6.32\pm0.22$ (from \Halpha). 
+    \item In both scenarios, the black hole of \cliff is overmassive relative to the local $M_\mathrm{BH}-M_\ast$ scaling relation. Reconciling \cliff with the MZR would require an even lower stellar mass, further exacerbating its deviation from the $M_\mathrm{BH}-M_\ast$ relation.
+    \item The observed tension between the MZR and the $M_\mathrm{BH}-M_\ast$ relation could be resolved by a black hole mass overestimated by four orders of magnitude and an extreme super-Eddington growth phase, but the typical galaxy-black hole scaling relations would not be expected to hold for such a scenario. It is more likely that MZR deviation and overmassive BHs are in some way characteristic of the evolutionary pathway underpinning \cliff, meaning \cliff inherently deviates from these relations.
+    \item This tension is not limited to \cliff, but is also shown to apply to the local LRDs \citep[][]{Lin2026} and Abell2744-QSO1 \citep{Maiolino2025_QSO1, Juodzbalis2025_QSO1}, pointing to a potential rare evolutionary pathway shared by these unusual LRDs which operates across cosmic time.
+    \item While some simulations of BH growth from heavy seeds ($10^4-10^5 \ M_\odot$) with periods of super-Eddington accretion can capture the high $M_\mathrm{BH}$ and $M_\mathrm{BH}/M_\ast$, or low metallicity, of \cliff, these outcomes are rare. The existence of such a metal-poor, overmassive-BH system at $z\sim3.55$ remains difficult to capture within existing evolutionary frameworks. While a Primordial Black Hole origin for \cliff may be a possibility, this scenario requires further, more quantitative exploration. 
+\end{itemize}
+
+The constraints on the metallicity and black hole mass of \cliff, when combined with simulations of BH growth and evolution, suggest a rare BH seeding and growth pathway underpins this system. Without the context of a larger sample of similar systems, it remains unclear whether the MZR deviation and overmassive BH of \cliff are typical of other LRDs. Future simulations incorporating a resolved, multi-phase ISM will be essential to disentangle the mechanisms fuelling the growth of massive black holes within such metal-poor environments. Until then, \cliff represents a critical benchmark for understanding the formation and early evolution of Little Red Dots. 
+
+\section*{Acknowledgements}
+LRI, FDE, RM, XJ, GCJ and JS acknowledge support by the Science and Technology Facilities Council (STFC), European Research Council (ERC) Advanced Grant 695671 “QUENCH" and the UKRI Frontier Research grant RISEandFALL. RM also acknowledges funding from Royal Society research professorship. 
+YI is supported by JSPS KAKENHI grant number 24KJ0202. 
+Ĳ acknowledges support by the Huo Family Foundation through a P.C. Ho PhD Studentship. 
+SK is supported by a Junior Research Fellowship from St Catharine’s College, Cambridge and a Research Fellowship from the Royal Commission for the Exhibition of 1851. 
+MP acknowledges support through the grants PID2021-127718NB-I00, PID2024-159902NA-I00, and RYC2023-044853-I, funded by the Spain Ministry of Science and Innovation/State Agency of Research MCIN/AEI/10.13039/501100011033 and El Fondo Social Europeo Plus FSE+.
+SZ, VB and BL acknowledge the Texas Advanced Computing Center (TACC) for providing HPC resources under allocation AST23026. 
+AJB acknowledges funding from the "FirstGalaxies" Advanced Grant from the ERC under the European Union's Horizon 2020 research and innovation prograxm (Grant agreement No. 789056).
+SC acknowledges support by EU HE ERC Starting Grant No. 101040227 - WINGS.
+KI acknowledges support from the National Natural Science Foundation of China (12573015, 1251101148, 12233001, 12473037), and the China Manned Space Program (CMS-CSST-2025-A09.
+BL acknowledges the funding of the Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) under Germany's Excellence Strategy EXC 2181/1 - 390900948 (the Heidelberg STRUCTURES Excellence Cluster).
+RP acknowledges funding support from a STFC PhD studentship.
+PR and BR acknowledge support from JWST/NIRCam contract to the University of Arizona NAS5-02105.
+ST acknowledges support from the Royal Society Research Grant G125142.
+
+This work is based on observations made with the NASA/ESA/CSA James Webb Space Telescope. The data were obtained from the Mikulski Archive for Space Telescopes (MAST) at the Space Telescope Science Institute, which is operated by the Association of Universities for Research in Astronomy, Inc., under NASA contract NAS 5-03127 for JWST. These observations are associated with JWST program ID 9433.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Data Availability}
+
+The datasets used in this work were derived from a source in the public domain. The \jwst/NIRSpec data can be downloaded from the MAST (\url{https://mast.stsci.edu/portal/Mashup/Clients/Mast/Portal.html}) under PID 9433. Photometry was obtained from PID~1837 and PID~7814.
+  
+
+
+
+%%%%%%%%%%%%%%%%%%%% REFERENCES %%%%%%%%%%%%%%%%%%
+
+% The best way to enter references is to use BibTeX:
+
+\bibliographystyle{mnras}
+\bibliography{example} % if your bibtex file is called example.bib
+
+
+% Alternatively you could enter them by hand, like this:
+% This method is tedious and prone to error if you have lots of references
+%\begin{thebibliography}{99}
+%\bibitem[\protect\citeauthoryear{Author}{2012}]{Author2012}
+%Author A.~N., 2013, Journal of Improbable Astronomy, 1, 1
+%\bibitem[\protect\citeauthoryear{Others}{2013}]{Others2013}
+%Others S., 2012, Journal of Interesting Stuff, 17, 198
+%\end{thebibliography}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%% APPENDICES %%%%%%%%%%%%%%%%%%%%%
+
+\appendix
+
+\section{Modelling the NIRSpec/IFS Point Spread Function}\label{sec:IFSPSF}
+
+Our investigation of \cliff exploits the presence of a star within the instrument FoV (see Fig.~\ref{fig:fov}). To provide independent validation of the radial surface brightness profiles presented in Fig.~\ref{fig:surfacebrightnessprofiles}, we create a synthetic median image of the star in a 0.1-\textmu m spectral window centred on \cliff's \OIIIL emission (Fig.~\ref{fig:psfstar.a}). We then model this image with the Bayesian modelling tool \textsc{pysersic} \citep{PashaMiller2023}, with the setup outlined in \citet{DEugenio2026}, and using a S\'ersic profile with fixed index $n=0.5$ (i.e. representing a Gaussian). We tested a range of $n$ values and convolution methods to assess the stability of this model.
+% , which is not normally supported by the software.
+
+Our results are presented in Fig.~\ref{fig:psfstar}, where we show the PSF model (panel~\subref{fig:psfstar.b}), the relative residuals (panel~\subref{fig:psfstar.c}), and the circularised radial profile (panel~\subref{fig:psfstar.d}).
+
+\begin{figure}
+\centering
+  {\phantomsubcaption\label{fig:psfstar.a}
+   \phantomsubcaption\label{fig:psfstar.b}
+   \phantomsubcaption\label{fig:psfstar.c}
+   \phantomsubcaption\label{fig:psfstar.d}
+   \phantomsubcaption\label{fig:psfstar.e}
+   \phantomsubcaption\label{fig:psfstar.f}
+   \phantomsubcaption\label{fig:psfstar.g}
+   \phantomsubcaption\label{fig:psfstar.h}
+   \phantomsubcaption\label{fig:psfstar.i}
+   \phantomsubcaption\label{fig:psfstar.j}}
+   \includegraphics[width=\linewidth]{Figures/psf_model_2x2.pdf}
+\caption{Modelling the star near \cliff with \textsc{pysersic}. From left to right, from top to bottom, the panels show the data, best-fit model, relative residuals, and the circularised radial profile, using asinh scaling, to highlight the PSF wings. See Fig.~\ref{fig:surfacebrightnessprofiles} for a comparison of the radial profile of this best-fit model to the radial profile of various emission lines of \cliff.}\label{fig:psfstar}
+\end{figure}
+
+
+\section{Modelling the NIRSpec/IFS instrument gradient}\label{sec:instgrad}
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/Cliff_narrow_line_kinem.pdf}
+\caption{Narrow-line \OIIIL relative velocity map of \cliff, presented with a SNR cut of 5. The best-fit kinematic PA is shown by the black dashed line, while the instrumental PA is shown by the dotted magenta line. Even though the observed velocity gradient is perpendicular to the slices (as expected from an instrument artefact), its sign is opposite to the instrumental effect we infer from modelling the interloper \neigh.}
+\label{fig:cliffkinem}
+\end{figure}
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/foreground_lines.pdf}
+\caption{Portions of integrated spectra extracted from a $0.15''$ radius circular aperture centred on \neigh (see Fig.~\ref{fig:fov}), showing emission lines detected in this foreground galaxy. \textbf{Top panel:} The \Hbeta-\OIIIL spectral region. \textbf{Bottom panel:} The \Halpha spectral region, also showing a detection of \NIIall.}
+\label{fig:foregroundlines}
+\end{figure}
+
+At the time of writing this article, reconstructed NIRSpec/IFS datacubes are known to display an artificial velocity gradient\footnote{for more detail, see \hyperlink{https://jwst-docs.stsci.edu/known-issues-with-jwst-data/nirspec-known-issues/nirspec-ifu-known-issues/}{https://jwst-docs.stsci.edu/known-issues-with-jwst-data/nirspec-known-issues/nirspec-ifu-known-issues/} and e.g. \citealt{Pascalau2026_gradient}.}. This gradient is thought to be introduced by slice-to-slice astrometric drift, therefore any kinematic signal aligned with the NIRSpec position angle (P.A.) must be interpreted with caution \citep[as discussed in e.g.,][]{Juodzbalis2025_QSO1}.
+\cliff itself was observed with a NIRSpec P.A. of 198.31\textdegree, and we measure a velocity gradient of -15~\kms along the east--west direction, i.e. extremely close to the instrument P.A. (Fig.~\ref{fig:cliffkinem}).
+Given this alignment and the compactness of \cliff, there is therefore a non-negligible chance that the observed gradient may be artificial.
+
+To assess this possibility, we exploit the serendipitous presence of \neigh, an inclined galaxy within the NIRSpec FoV (Fig.~\ref{fig:fov}).
+This source displays strong \Hbeta, \OIIIall, \Halpha and \NIIall emission (see Fig.~\ref{fig:foregroundlines}), and is therefore suitable for kinematic modelling.
+We here present a simple model to assess whether the velocity gradient observed in \cliff is artificial and if galaxy kinematics can be used to constrain the artificial gradient. For this demonstration we combine tilted-disc kinematics, an arctan rotation curve and a constant instrument gradient; we do not take into account the non-uniform light profile of \neigh, nor the instrument PSF. While both effects are important, their careful modelling is beyond the exploratory scope of this appendix.
+
+We consider a fourteen parameter model: seven parameters describe the emission-line map (centre, total flux, half-light semi-major axis, projected axis ratio, S\'ersic index, and position angle), five are for the galaxy kinematics
+(kinematic position angle, inclination, intrinsic axis ratio, maximum velocity $v_\mathrm{max}$, and turnover radius), and two for the instrument (i.e. the magnitude and position angle of the artificial velocity gradient, $\nabla v_\mathrm{instr.}$ and P.A.$_\mathrm{instr.}$, respectively). We consider three models, Models~1--3 (Fig.~\ref{fig:grado3}), which differ only in whether these last two parameters are fixed or left free.
+
+We adopt a strong Gaussian probability prior over the kinematic position angle; the mean and standard deviation of $\Delta\,\mathrm{P.A.}\equiv\mathrm{P.A.}_\mathrm{kin.} - \mathrm{P.A.}$ are 0\textdegree\ and 5\textdegree, favouring solutions that are aligned to the morphological minor axis -- as appropriate for a rotating disc. Similarly, we strongly limit the intrinsic axis ratio, constraining in the range 0.05--$q$, where $q$ is the observed axis ratio.
+The model is optimised jointly to reproduce the flux and velocity maps, using the \textsc{emcee} MCMC integrator \citep{emcee2013}. Below we discuss only the \OIII-based inference, but we note that \Halpha yields a consistent picture (and statistically consistent results for $\nabla v_\mathrm{instr.}$), while \Hbeta suffers from larger uncertainties, and other lines such as \Hgamma and \NII are too noisy to draw any conclusions.
+
+\begin{figure}
+\centering
+  {\phantomsubcaption\label{fig:mapo3.a}
+   \phantomsubcaption\label{fig:mapo3.b}
+   \phantomsubcaption\label{fig:mapo3.c}
+   \phantomsubcaption\label{fig:mapo3.d}
+   \phantomsubcaption\label{fig:mapo3.e}
+   \phantomsubcaption\label{fig:mapo3.f}}
+   \includegraphics[width=\linewidth]{Figures/stage2_free_gradient_strength_long_fit.pdf}
+\caption{The fiducial joint fit of the foreground galaxy \neigh (panel~\subref{fig:mapo3.a}) using a constant instrument gradient 
+(panel~\subref{fig:mapo3.b}) plus a standard inclined-disc model.
+Middle row shows the data after removing the best-fit instrument model
+(panel~\subref{fig:mapo3.c}), which should match the best-fit disc model (panel~\subref{fig:mapo3.d}). Panel~\subref{fig:mapo3.e}) shows the best-fit model of the data (i.e., panels~\subref{fig:mapo3.b}+\subref{fig:mapo3.d}) and the relative residuals (panel~\subref{fig:mapo3.f}).
+Note how removing the instrument gradient mitigates the complexity of the observed velocity map. The best-fit instrument gradient has similar orientation but opposite sign to that measured in \cliff (Fig.~\ref{fig:cliffkinem}).}\label{fig:mapo3}
+\end{figure}
+
+
+\begin{figure}
+\centering
+  {\phantomsubcaption\label{fig:grado3.a}
+   \phantomsubcaption\label{fig:grado3.b}
+   \phantomsubcaption\label{fig:grado3.c}
+   \phantomsubcaption\label{fig:grado3.d}
+   \phantomsubcaption\label{fig:grado3.e}
+   \phantomsubcaption\label{fig:grado3.f}
+   \phantomsubcaption\label{fig:grado3.g}
+   \phantomsubcaption\label{fig:grado3.h}
+   \phantomsubcaption\label{fig:grado3.i}}
+   \includegraphics[width=\linewidth]{Figures/appendix_tests123_joint_corner_long.pdf}
+\caption{Comparison of the fiducial model of the artificial NIRSpec/IFS velocity gradient (Model~2) to the model where the instrument gradient is fixed to what measured in \cliff (Model~1), and to a model where both the gradient and its direction are free (Model~3). Model~2 is the only one that explains the observations, while also yielding a physically plausible intrinsic velocity for the foreground galaxy \neigh (note the rapidly rotating and kinematically twisted map of Model~1, and the non-rotating map of Model~3). Model~2 favours an instrument gradient opposite to what measured in \cliff (panel~\subref{fig:grado3.b}), implying an even stronger velocity gradient than the measured -15~\kms shown in Fig.~\ref{fig:cliffkinem}.}
+\label{fig:grado3}
+\end{figure}
+
+In the fiducial model, Model~2, we fix the gradient direction to the NIRSpec P.A., 198.31\textdegree.
+The resulting kinematic maps are shown in
+Fig.~\ref{fig:mapo3}. The galaxy model displays disc-like rotation as appropriate for an inclined disc, which is plausible for a galaxy of its mass and redshift. After adding the best-fit instrument gradient, the resulting model kinematics no longer resemble a disc, but match better the `tumbling' pattern seen in the observations (panels~\subref{fig:mapo3.a} and~\subref{fig:mapo3.e} of Fig.~\ref{fig:mapo3}).
+Surprisingly, the instrument gradient of $\nabla v_\mathrm{instr}=+11\pm1~\kms~\mathrm{spaxel}^{-1}$ is opposite to what observed in \cliff (cf. Fig.~\ref{fig:mapo3.b} and~\ref{fig:cliffkinem}).
+
+To validate this result, we compare it to the other two models. In Model~1 we fix both P.A.$_\mathrm{instr.}=198.31$\textdegree, and $\nabla v_\mathrm{instr}=-15$~\kms~spaxel$^{-1}$ (i.e. \cliff value; Fig.~\ref{fig:cliffkinem}).
+By comparing this model to the fiducial Model~2 (Fig.~\ref{fig:grado3}), we can reject the hypothesis that \cliff's observed velocity gradient is fully due to the
+NIRSpec instrument: Model~1 has considerably worse $\chi^2_\nu$ and $\Delta\text{BIC}$ than Model~2, displays poor convergence, and the best-fit galaxy model is an implausible combination of a rapidly rotating disc ($v_\mathrm{max}=446_{-8}^{+3}~\kms$; reaching the upper bounds of the probability prior) with strong kinematic asymmetry ($\Delta\,\text{P.A.}=-62\pm2$\textdegree, a 6 $\sigma$ deviation from the prior).
+In Model~3 we free both $\nabla v_\mathrm{instr.}$ and P.A.$_\mathrm{instr.}$. 
+This model finds $\nabla_\mathrm{instr} = +7.7\pm0.5$~\kms~spaxel$^{-1}$ and P.A.$_\mathrm{instr}=159_{-3}^{+5}$\textdegree, different from the NIRSpec P.A. (8~$\sigma$).
+While statistically consistent with the data (and achieving $\Delta\,\text{BIC}=-9$ and $-1$ for \OIII and \Halpha, respectively), Model~3 is optimised by collapsing $v_\mathrm{max}$ to only $7_{-6}^{+17}$~\kms, which we deem unlikely for a galaxy with $\log(M_\ast/\Msun)=9.6\pm0.1$ \citep{Muzzin2025}; indeed, the inferred rotation is so small that the implied virial mass is over 30 times smaller than $M_\ast$ (Fig.~\ref{fig:grado3}, bottom panels).
+More to the point, the magnitude and orientation of the NIRSpec gradient inferred from Model~3 are still opposite to what seen in \cliff, supporting the hypothesis that the observed gradient may be not only real, but actually even stronger than what is measured. 
+Still, substantial uncertainties remain. 
+Aside from the limits of our toy galaxy model, the instrument gradient may vary spatially, and in any case a single disc galaxy may be out of stationary equilibrium, as evidenced by residual tumbling motions even after subtracting the instrument model (e.g., Fig.~\ref{fig:mapo3.c}). 
+Before drawing scientific conclusions from applying our proposed correction, more observations and exploring more complex models are required.
+
+\section{Aperture Loss Correction Factors}\label{sec:ALC}
+
+In Fig.~\ref{fig:ALC} we present the curve used to calculate ALC factors for each emission line in this study, based on a \Halpha curve of growth analysis as discussed in Section~\ref{sec:Size}. 
+We derive this from the empirical ALC curve calculated from the PSF derived from \textsc{stpsf}\footnote{\hyperlink{https://stpsf.readthedocs.io/en/latest/}{https://stpsf.readthedocs.io/en/latest/}; the successor to \textsc{webbpsf} \citep{Perrin2015}. \textsc{stpsf} accounts for many properties of the NIRSpec instrument (e.g. geometric distortion, detector charge transfer effects), and therefore may be used to derive physical models of PSF wavelength dependence.} for our aperture (Fig.~\ref{fig:aperture}), which is rescaled to match the empirically measured \Halpha ALC factor of $1.88\pm0.05$. 
+For further detail regarding ALCs derived from the PSF, see \cite{Jones2026}.
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/ALC_plot.pdf}
+\caption{Aperture loss correction factors as function of observed wavelength for the aperture shown in Fig.~\ref{fig:aperture}. This was derived using the full PSF model from \textsc{stpsf}, rather than a Gaussian approximation. Values have been rescaled to match our empirically measured ALC factor for \Halpha found through a curve of growth analysis. The wavelengths of some key emission lines have been indicated with vertical dashed lines and labelled.}
+\label{fig:ALC}
+\end{figure}
+
+\section{Another argument against high density}\label{sec:density2}
+
+\begin{figure}
+\centering
+   \includegraphics[width=\linewidth]{Figures/density_constraint.pdf}
+\caption{Constraints on gas density for narrow-line emitting gas. The orange lines indicate the gas mass $M_\mathrm{g}$ enclosed within the aperture (Fig.~\ref{fig:aperture}) as a function of gas density $n_0$ at $R = 40$ pc, for a power-law radial distribution (Equation~\ref{eq:densprof})  with indices $\alpha = 2$ (solid) and $\alpha = 0$ (dashed). Each line is labelled by its corresponding filling factor and implied upper limit on single-cloud size. The blue lines indicate the mass of ionised gas constrained by the $\Hbeta_\mathrm{N}$ luminosity for the two power indices. The vertical dotted line indicates the density where collisional de-excitation of \OIIIL begins to affect its flux; the vertical dot-dashed line indicates the density required to suppress \OIIIL flux by a factor of 10. Explaining the weakness of \OIIIL via collisional de-excitation would require extremely low filling factors and small cloud sizes. The horizontal pink line indicates the upper limit on dynamical mass derived in Section~\ref{sec:M_dyn}.}
+\label{fig:supp_dens_constratint}
+\end{figure}
+
+In this section, we provide a supplemental argument against high density as an explanation for \OIIIL weakness, as outlined for QSO1 in \cite{Maiolino2025_QSO1}.
+
+Firstly, we assume the density follows a radial distribution described by a power law,
+\begin{equation}
+n(r) = n_0\left(\frac{r}{r_0}\right)^{-\alpha},
+\label{eq:densprof}
+\end{equation}
+where $n_0$ is the density at some reference radius $r_0$. Here we take $r_0 = 40$ pc, i.e. the effective radius of \cliff as inferred by \cite{deGraaff2025}; this is smaller than the aperture described in Section~\ref{sec:Size}, but a smaller $r_0$ is a more conservative assumption for obtaining a bound on the gas density. Furthermore, we assume that the clouds within this density profile have a filling factor $f$ defined by
+\begin{equation}
+    f = \frac{V_\mathrm{clouds}}{V_\mathrm{total}} = \frac{N_\mathrm{clouds}R_\mathrm{c}^3}{R^3_\mathrm{max}},
+    \label{eq:fillfactor}
+\end{equation}
+where $V_\mathrm{total}$ is the total volume enclosed by the aperture, assumed spherical with radius $R_\mathrm{max}$. $V_\mathrm{clouds}$ is the volume occupied by ionised gas clouds of radius $R_\mathrm{c}$, and $N_\mathrm{clouds}$ is the number of clouds. Assuming a medium comprising only hydrogen for simplicity, the mass of gas ($M_\mathrm{g}$) contained within the aperture is therefore given by
+\begin{equation}
+    M_\mathrm{g} = \int_{R_\mathrm{min}}^{R_\mathrm{max}}4\pi fm_\mathrm{p}n(r)r^2 \ dr,
+    \label{eq:gasmass}
+\end{equation}
+where $m_\mathrm{p}$ is the proton mass. We adopt $R_\mathrm{min} = 5 \ \mathrm{pc}$, as smaller radii would be entirely within the black hole sphere of influence and would therefore result in broader line emission\footnote{As in \cite{Maiolino2025_QSO1}, we note that adopting a smaller inner radius would simply strengthen the results.}. Hence, we plot the inferred gas mass as a function of density for different filling factors (Fig.~\ref{fig:supp_dens_constratint}), and determine the implied maximum cloud size (determined by assuming the extreme, very conservative case of $N_\mathrm{cloud} = 1$) associated with each filling factor. In reality, not all of the gas would be contained within a single cloud, so the clouds would be much smaller.
+
+We can compare the above estimate with the ionised gas mass, obtained from the luminosity of $\Hbeta_\mathrm{N}$
+\begin{equation}
+    L(\Hbeta_\mathrm{N}) = \int_{R_\mathrm{min}}^{R_\mathrm{max}}4\pi f\varepsilon(T)n(r)^2r^2 \ dr,
+\end{equation}
+where $\varepsilon(T)$ is the temperature-dependent emissivity of narrow \Hbeta. The total mass of ionised gas can then be inferred from the measured $L(\Hbeta_\mathrm{N})$, and is given by
+\begin{equation}
+    \frac{M_\mathrm{ion}}{M_\odot} \approx 10^9 \frac{L(\Hbeta_\mathrm{N})}{10^{43} \ \mathrm{erg} \ \mathrm{s}^{-1}} \frac{100 \ \mathrm{cm}^{-3}}{n_0} \frac{3-2\alpha}{3-\alpha} \frac{R^{3-\alpha}_\mathrm{max}-R^{3-\alpha}_\mathrm{min}}{R^{3-2\alpha}_\mathrm{max}-R^{3-2\alpha}_\mathrm{min}} r_0^{-\alpha}, 
+    \label{eq:iongasmass}
+\end{equation}
+where we have assumed a typical temperature $T = 10^4 \ \mathrm{K}$.
+
+Assuming $\alpha=2$, in order for the gas to have a density greater than $10^6~\mathrm{cm}^{-3}$, at which \OIIIL starts to be collisionally suppressed by a factor of 1.5, the ionised clouds would have extremely small filling factors ($f \lesssim 10^{-8} \ N_\mathrm{clouds}^{-1}$), and sizes $<0.09$ pc.
+Such extreme filling factors are unrealistic, as no gas phase is known to have such extreme values, especially the ionized phase (not even for the BLR of AGN). Even an extreme scenario with $\alpha=0$, i.e. uniform filling, would still yield $f \lesssim 10^{-7}\ N_\mathrm{clouds}^{-1}$. Adopting the same \textsc{Cloudy} models as \cite{Maiolino2025_QSO1}, we infer that to suppress \OIIIL by a factor of ten, the ISM would need to reach densities $>10^7 \ \mathrm{cm}^{-3}$. This would necessitate even lower filling factors and yet smaller clouds.
+We also note that such high density would imply an extremely low mass of ionized gas, less than $10~M_\odot$.
+
+\section{The Aesopica hydrodynamical simulations}\label{sec:sims}
+
+\textsc{Aesopica} is a new suite of large-volume cosmological simulations (Koudmani et al., in prep), built upon the \textsc{Fable} galaxy formation model \citep{Henden2018}; the \textsc{Fable} sub-grid models are themselves largely based on the Illustris galaxy formation model \citep{Vogelsberger2014}. In \textsc{Fable}, some aspects are unchanged from Illustris, namely the models for star formation \citep{SpringelHernquist2003}, radiative cooling \citep{Katz1996, Wiersma2009a} and chemical enrichment \citep{Wiersma2009b}. However, the models of stellar feedback \citep{Volgerssberger2013} and AGN feedback \citep{Sijacki2015} have been updated, incorporating thermal stellar feedback and AGN duty cycles as part of the simulations.
+
+\textsc{Aesopica} introduces targeted updates for modelling the growth of infant SMBHs in the early Universe. In particular, \textsc{Aesopica} explores three key modifications to fiducial galaxy formation models: enabling efficient accretion in the low-mass regime \citep{Koudmani2022}, incorporating super-Eddington accretion, and examining a broad range of seed masses ($10^2\  M_\odot$ to $10^5\ M_\odot$) following seed evolution from early cosmic epochs ($z \sim 20$); while this is earlier than the standard threshold in \textsc{Fable}, we note that seeding could occur even earlier.
+
+
+\section{Spectral Fitting Posteriors}\label{sec:fit_posteriors}
+In this section, we present the posteriors from the best-fit spectral models described in Section~\ref{sec:fitting_Hb_OIII} and \ref{sec:Fitting_Ha}. Fig.~\ref{fig:Hb_OIII_posteriors} shows the posteriors from fitting the \Hbeta-\OIIIL complex (Section~\ref{sec:fitting_Hb_OIII}), while Fig.~\ref{fig:Ha_fiducial_posteriors} and \ref{fig:Ha_secondary_posteriors} show the posteriors from the Fiducial and Secondary \Halpha model fits, respectively. We only include posteriors for the key fitted parameters to provide clarity about potential correlations, so for the sake of brevity fixed parameters (e.g. $\mathrm{FWHM}_\mathrm{N}$ for \Halpha) or parameters not key to our analysis (e.g. continuum slopes) have been omitted from these figures.
+
+\begin{figure*}
+\centering
+   \includegraphics[width=\linewidth]{Figures/Hb_OIII_posteriors.pdf}
+\caption{Posterior distributions of the fitted parameters in the \Hbeta-\OIIIL model, including the best fit values and their associated errors. Contours enclose 68\%, 95\%, and 99\% of the distributions.}
+\label{fig:Hb_OIII_posteriors}
+\end{figure*}
+
+
+\begin{figure*}
+\centering
+   \includegraphics[width=\linewidth]{Figures/Ha_fiducial_posteriors.pdf}
+\caption{Posterior distributions of the fitted parameters in the \textit{Fiducial} \Halpha model, including the best fit values and their associated errors. Contours enclose 68\%, 95\%, and 99\% of the distributions.}
+\label{fig:Ha_fiducial_posteriors}
+\end{figure*}
+
+\begin{figure*}
+\centering
+   \includegraphics[width=\linewidth]{Figures/Ha_secondary_posteriors.pdf}
+\caption{Posterior distributions of the fitted parameters in the \textit{Secondary} \Halpha model, including the best fit values and their associated errors. Contours enclose 68\%, 95\%, and 99\% of the distributions.}
+\label{fig:Ha_secondary_posteriors}
+\end{figure*}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Don't change these lines
+\bsp	% typesetting comment
+\label{lastpage}
+\end{document}
+
+% End of mnras_template.tex

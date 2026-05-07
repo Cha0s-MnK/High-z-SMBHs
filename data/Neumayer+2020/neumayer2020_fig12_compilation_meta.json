@@ -1,0 +1,13 @@
+{
+  "fit_full_intercept": 6.539189667978773,
+  "fit_full_slope": 0.4555460935377571,
+  "fit_high_quality_intercept": 6.1321445187013195,
+  "fit_high_quality_slope": 0.9179209486677836,
+  "n_fit_rows": 401,
+  "n_high_quality_rows": 37,
+  "n_total_rows": 405,
+  "paper_full_fit_intercept": 6.51,
+  "paper_full_fit_slope": 0.48,
+  "paper_high_quality_fit_intercept": 6.13,
+  "paper_high_quality_fit_slope": 0.92
+}

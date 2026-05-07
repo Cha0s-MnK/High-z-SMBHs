@@ -1,0 +1,3 @@
+name,sample,reference,z,logMstar,logMstar_err_lo,logMstar_err_hi,logMstar_upper_limit,logMBH,logMBH_err_lo,logMBH_err_hi,logMBH_upper_limit,plot_group,marker,color,source_note
+The Cliff fiducial H-beta,The Cliff,Ivey et al. 2026,3.55,8.41,0.12,0.12,True,7.35,0.24,0.24,False,cliff,o,#d81b60,Table 4 in the downloaded Cliff source: Mdyn upper limit is adopted as the Mstar upper limit; fiducial BH mass is from H-beta.
+The Cliff scattering scenario,The Cliff,Ivey et al. 2026,3.55,8.41,0.12,0.12,True,6.32,0.22,0.22,False,cliff,o,#000000,Table 4 in the downloaded Cliff source: Mdyn upper limit is adopted as the Mstar upper limit; BH mass is from the scattering scenario.

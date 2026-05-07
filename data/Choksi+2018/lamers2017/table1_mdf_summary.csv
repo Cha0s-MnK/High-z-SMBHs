@@ -1,0 +1,10 @@
+galaxy,boundary,object_type,inner_feh_lt_minus1,inner_feh_gt_minus1,outer_feh_lt_minus1,outer_feh_gt_minus1,source_note
+Cen A,15 kpc,Stars,0.095,0.905,0.159,0.841,Lamers et al. 2017 Table 1
+Cen A,15 kpc,Clusters,0.330,0.670,0.522,0.478,Lamers et al. 2017 Table 1
+Cen A,15 kpc,log(Rgcst ),0.54,-0.13,0.52,-0.24,Lamers et al. 2017 Table 1
+M31,~ 17 kpc,Stars,0.029,0.971,0.351,0.648,Lamers et al. 2017 Table 1
+M31,~ 17 kpc,Clusters,0.432,0.568,0.643,0.357,Lamers et al. 2017 Table 1
+M31,~ 17 kpc,log(Rgcst),1.17,-0.23,0.26,-0.26,Lamers et al. 2017 Table 1
+Fornax dSph,~ 17 kpc,Stars,0.482,0.517,,,Lamers et al. 2017 Table 1
+Fornax dSph,~ 17 kpc,Clusters,1.00,0.00,,,Lamers et al. 2017 Table 1
+Fornax dSph,~ 17 kpc,log(Rgcst),0.32,<-3,,,Lamers et al. 2017 Table 1

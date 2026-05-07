@@ -1,0 +1,152 @@
+#
+#   VizieR Astronomical Server vizier.cfa.harvard.edu
+#    Date: 2026-04-16T12:48:33 [V7.5.6]
+#   In case of problem, please report to:	cds-question@unistra.fr
+#
+#
+#Coosys	J2000:	eq_FK5 J2000
+#INFO	service_protocol=ASU	  IVOID of the protocol through which the data was retrieved
+#INFO	request_date=2026-04-16T12:48:33	  Query execution date
+#INFO	request=https://vizier.cfa.harvard.edu/viz-bin/asu-tsv?-source=J/ApJS/164/334/acsvcs	  Full request URL
+#INFO	contact=cds-question@unistra.fr	  Email or URL to contact publisher
+#INFO	server_software=VizieR/7.5.6	  Software version
+#INFO	publisher=CDS	  Data centre that produced the VOTable
+#INFO	MaxTuples=50000	
+
+#RESOURCE=yCat_21640334
+#Name: J/ApJS/164/334
+#Title: ACS Virgo Cluster Survey. VI (Ferrarese+, 2006)
+#INFO	ivoid=ivo://cds.vizier/j/apjs/164/334	    IVOID of underlying data collection
+#INFO	data_ivoid=ivo://cds.vizier/j/apjs/164/334	    IVOID of underlying data collection
+#INFO	creator=Ferrarese L.	    First author or institution
+#INFO	cites=bibcode:2006ApJS..164..334F	    Article or Data origin sources
+#INFO	journal=ApJS	    Journal name
+#INFO	original_date=2006	    Year of the article publication
+#INFO	reference_url=https://cdsarc.cds.unistra.fr/viz-bin/cat/J/ApJS/164/334	    Dataset landing page
+#INFO	citation=doi:10.26093/cds/vizier.21640334	    Dataset identifier that can be used for citation
+#INFO	publication_date=2021-08-10	    Date of first publication in the data centre
+#INFO	rights_uri=https://cds.unistra.fr/vizier-org/licences_vizier.html	    Licence URI
+#Table	J_ApJS_164_334_acsvcs:
+#Name: J/ApJS/164/334/acsvcs
+#Title: Morphological properties and peculiarities of program galaxies (tables 1 and 2 of the paper)
+#Column	n_ACSVCS	(A1)	VizieR added column, not part of original data	[ucd=meta.ref.url]
+#Column	ACSVCS	(I3)	Running source identification number (G1)	[ucd=meta.id;meta.main]
+#Column	R	(A1)	Note about this galaxy (from ``notes'' table)	[ucd=meta.ref.url]
+#Column	VCC	(I4)	Virgo Cluster Catalog identification number (G2)	[ucd=meta.id]
+#Column	RAJ2000	(A11)	NED Hour of Right Ascension (J2000)	[ucd=pos.eq.ra;meta.main]
+#Column	DEJ2000	(A11)	NED Degree of Declination (J2000)	[ucd=pos.eq.dec;meta.main]
+#Column	BTmag	(F5.2)	The VCC B_T_ plate magnitude (1)	[ucd=phot.mag;em.opt.B]
+#Column	E(B-V)	(F6.3)	The (B-V) color excess (2)	[ucd=phot.color.excess]
+#Column	Vsys	(I4)	NED heliocentric systemic velocity	[ucd=spect.dopplerVeloc;pos.heliocentric]
+#Column	MType	(a12)	The VCC morphological type	[ucd=src.morph.type]
+#Column	Dust	(A3)	[C1-4: ] Dust detection (1)	[ucd=meta.code;src.morph]
+#Column	SD	(A1)	[Y] Small-scale disk (2)	[ucd=meta.code;src.morph]
+#Column	LD	(A2)	[Y: ] Large-scale disk (2)	[ucd=meta.code;src.morph]
+#Column	N	(A2)	Presence of a nucleus (3)	[ucd=meta.code;src.morph]
+#Column	B	(A2)	[Y: ] Existence of a bar	[ucd=meta.code;src.morph]
+#Column	Simbad	(a6)	Simbad column added by the CDS	[ucd=meta.ref.url]
+#Column	NED	(A3)	NED column added by the CDS	[ucd=meta.ref.url]
+n_ACSVCS	ACSVCS	R	VCC	RAJ2000	DEJ2000	BTmag	E(B-V)	Vsys	MType	Dust	SD	LD	N	B	Simbad	NED
+ 	 	 	 	"h:m:s"	"d:m:s"	mag	mag	km/s	 	 	 	 	 	 	 	
+-	---	-	----	-----------	-----------	-----	------	----	------------	---	-	--	--	--	------	---
+P	  1	R	1226	12 29 46.79	+08 00 01.5	 9.31	 0.022	 997	E2/S0_1_(2) 	C1 	 	  	II	  	Simbad	NED
+P	  2	R	1316	12 30 49.42	+12 23 28.0	 9.58	 0.023	1307	E0          	C1 	 	  	0 	  	Simbad	NED
+P	  3	R	1978	12 43 39.66	+11 33 09.4	 9.81	 0.026	1117	S0_1_(2)    	   	 	  	II	  	Simbad	NED
+P	  4	R	 881	12 26 11.74	+12 56 46.4	10.06	 0.029	-244	S0_1_(3)/E3 	C1 	 	  	II	  	Simbad	NED
+P	  5	R	 798	12 25 24.04	+18 11 25.9	10.09	 0.030	 729	S0_1_(3) pec	C1:	 	Y:	II	  	Simbad	NED
+P	  6	R	 763	12 25 03.72	+12 53 13.2	10.26	 0.041	1060	E1          	C2 	 	  	0 	  	Simbad	NED
+P	  7	R	 731	12 24 28.20	+07 19 03.0	10.51	 0.021	1243	E3          	   	 	  	Ib	  	Simbad	NED
+ 	  8	R	1535	12 34 03.10	+07 41 59.0	10.61	 0.021	 448	S0_3_(6)    	C3 	 	  	0 	  	Simbad	NED
+P	  9	R	1903	12 42 02.40	+11 38 48.0	10.76	 0.032	 410	E4          	   	Y	  	Id	  	Simbad	NED
+P	 10	R	1632	12 35 39.82	+12 33 22.6	10.78	 0.041	 340	S0_1_(0)    	C1 	 	  	II	  	Simbad	NED
+P	 11	R	1231	12 29 48.87	+13 25 45.7	11.10	 0.028	2244	E5          	   	 	Y:	II	  	Simbad	NED
+P	 12	R	2095	12 52 56.00	+11 13 53.0	11.18	 0.022	 984	S0_1_(9)    	   	 	Y 	Ib	  	Simbad	NED
+P	 13	R	1154	12 29 00.03	+13 58 42.9	11.37	 0.045	1210	S0_3_(2)    	C3 	 	  	Id	  	Simbad	NED
+P	 14	R	1062	12 28 03.90	+09 48 14.0	11.40	 0.022	 532	SB0_1_(6)   	   	 	  	Id	  	Simbad	NED
+P	 15	R	2092	12 52 17.50	+11 18 50.0	11.51	 0.032	1377	SB0_1_(5)   	   	 	  	Ib	Y 	Simbad	NED
+P	 16	R	 369	12 19 45.42	+12 47 54.3	11.80	 0.047	1009	SB0_1_      	   	 	  	Ib	Y:	Simbad	NED
+P	 17	R	 759	12 24 55.50	+11 42 15.0	11.80	 0.036	 943	SB0_2_(r)(3)	C4 	 	  	II	Y 	Simbad	NED
+P	 18	R	1692	12 36 53.40	+07 14 47.0	11.82	 0.022	1730	S0_1_(7)/E7 	   	Y	Y 	Ic	  	Simbad	NED
+ 	 19	R	1030	12 27 40.49	+13 04 44.2	11.84	 0.022	 801	SB0_1_(6)   	C3 	 	Y 	0 	  	Simbad	NED
+P	 20	R	2000	12 44 31.95	+11 11 25.1	11.94	 0.034	1083	E3/S0_1_(3) 	   	 	Y 	Id	  	Simbad	NED
+P	 21	R	 685	12 23 57.90	+16 41 37.0	11.99	 0.028	1241	S0_1_(8)    	C4 	Y	Y 	0 	  	Simbad	NED
+P	 22	R	1664	12 36 26.86	+11 26 20.6	12.02	 0.033	1142	E6          	   	 	Y 	Ic	  	Simbad	NED
+P	 23	R	 654	12 23 35.28	+16 43 22.3	12.03	 0.026	 950	RSB0_2_(5)  	   	 	  	Ib	Y 	Simbad	NED
+P	 24	R	 944	12 26 50.53	+09 35 02.0	12.08	 0.025	 843	S0_1_(7)    	   	 	Y 	Ic	  	Simbad	NED
+P	 25	R	1938	12 42 47.40	+11 26 33.0	12.11	 0.026	1164	S0_1_(7)    	   	 	Y 	Ib	  	Simbad	NED
+P	 26	R	1279	12 30 17.39	+12 19 43.9	12.15	 0.024	1349	E2          	   	Y	  	Id	  	Simbad	NED
+P	 27	R	1720	12 37 30.61	+09 33 18.8	12.29	 0.021	2273	S0_1/2_(4)  	   	 	  	Ia	  	Simbad	NED
+P	 28	R	 355	12 19 30.61	+14 52 41.4	12.41	 0.036	1359	SB0_2/3_    	C1 	 	  	Id	Y 	Simbad	NED
+P	 29	R	1619	12 35 30.61	+12 13 15.4	12.50	 0.040	 381	E7/S0_1_(7) 	C1 	 	  	Ia	  	Simbad	NED
+P	 30	R	1883	12 41 32.70	+07 18 53.0	12.57	 0.025	1875	RSB0_1/2_   	   	 	  	Ia	Y 	Simbad	NED
+P	 31	R	1242	12 29 53.49	+14 04 07.0	12.60	 0.042	1609	S0_1_(8)    	   	 	Y 	Ia	  	Simbad	NED
+P	 32	R	 784	12 25 14.75	+15 36 27.2	12.67	 0.024	1069	S0_1_(2)    	   	 	  	Ia	  	Simbad	NED
+P	 33	R	1537	12 34 06.10	+11 19 17.0	12.70	 0.046	1374	SB0_2_(5)   	   	 	  	Id	Y 	Simbad	NED
+P	 34	R	 778	12 25 12.27	+14 45 43.8	12.72	 0.038	1375	S0_1_(3)    	   	 	  	Id	Y 	Simbad	NED
+P	 35	R	1321	12 30 52.21	+16 45 32.6	12.84	 0.028	 967	S0_1_(1)    	   	 	  	Id	  	Simbad	NED
+P	 36	R	 828	12 25 41.70	+12 48 38.0	12.84	 0.033	 561	E5          	   	 	  	Ia	  	Simbad	NED
+P	 37	R	1250	12 29 59.10	+12 20 55.0	12.91	 0.028	1970	S0_3_(5)    	C3 	 	  	Ia	  	Simbad	NED
+P	 38	R	1630	12 35 37.97	+12 15 50.5	12.91	 0.039	1172	E2          	   	Y	  	Ia	  	Simbad	NED
+P	 39	R	1146	12 28 57.56	+13 14 30.8	12.93	 0.023	 635	E1          	   	Y	  	Ia	  	Simbad	NED
+P	 40	R	1025	12 27 36.71	+08 09 14.8	13.06	 0.022	1071	E0/S0_1_(0) 	   	 	  	Ic	  	Simbad	NED
+P	 41	R	1303	12 30 40.64	+09 00 55.9	13.10	 0.020	 875	SB0_1_(5)   	   	 	  	Ib	  	Simbad	NED
+P	 42	R	1913	12 42 10.70	+07 40 37.0	13.22	 0.022	1892	E7          	   	Y	Y 	Ia	  	Simbad	NED
+P	 43	R	1327	12 30 57.56	+12 16 17.2	13.26	 0.023	 150	E2          	C4 	Y	  	II	  	Simbad	NED
+P	 44	R	1125	12 28 43.37	+11 45 21.0	13.30	 0.030	 195	S0_1_(9)    	   	Y	Y 	Ia	  	Simbad	NED
+P	 45	R	1475	12 33 04.95	+16 15 55.9	13.36	 0.031	 951	E2          	   	Y	  	Ib	  	Simbad	NED
+P	 46	R	1178	12 29 21.30	+08 09 23.0	13.37	 0.022	1243	E3          	   	 	  	Ib	  	Simbad	NED
+P	 47	R	1283	12 30 18.40	+13 34 40.9	13.45	 0.029	 876	SB0_2_(2)   	   	 	  	Ia	Y:	Simbad	NED
+P	 48	R	1261	12 30 10.39	+10 46 46.1	13.56	 0.029	1871	d:E5,N      	   	 	  	Ia	  	Simbad	NED
+P	 49	R	 698	12 24 05.00	+11 13 06.0	13.60	 0.026	2080	S0_1_(8)    	   	Y	Y 	Ia	  	Simbad	NED
+P	 50	R	1422	12 32 14.21	+10 15 05.0	13.64	 0.031	1288	E1,N:       	C1:	 	  	Ia	  	Simbad	NED
+P	 51	R	2048	12 47 15.32	+10 12 13.0	13.81	 0.032	1084	d:S0(9)     	   	 	Y 	Ia	  	Simbad	NED
+P	 52	R	1871	12 41 15.72	+11 23 13.5	13.86	 0.030	 567	E3          	   	 	  	Ia	  	Simbad	NED
+P	 53	R	   9	12 09 22.34	+13 59 33.1	13.93	 0.039	1804	dE1,N       	   	 	  	Ie	  	Simbad	NED
+P	 54	R	 575	12 22 43.31	+08 11 53.7	14.14	 0.025	1231	E4          	   	Y	Y 	Id	  	Simbad	NED
+P	 55	R	1910	12 42 08.69	+11 45 14.9	14.17	 0.031	 206	dE1,N       	   	 	  	Ia	  	Simbad	NED
+P	 56	R	1049	12 27 54.86	+08 05 25.2	14.20	 0.022	 716	S0(4)       	   	 	  	II	  	Simbad	NED
+P	 57	R	 856	12 25 57.81	+10 03 12.8	14.25	 0.024	1025	dE1,N       	   	 	  	Ia	  	Simbad	NED
+P	 58	R	 140	12 15 12.58	+14 25 59.1	14.30	 0.037	1072	S0_1/2_(4)  	   	 	  	Ia	  	Simbad	NED
+P	 59	R	1355	12 31 20.04	+14 06 53.5	14.31	 0.034	1332	dE2,N       	   	 	  	Ia	  	Simbad	NED
+P	 60	R	1087	12 28 14.90	+11 47 24.0	14.31	 0.027	 675	dE3,N       	   	 	  	Ia	  	Simbad	NED
+P	 61	R	1297	12 30 31.85	+12 29 26.0	14.33	 0.021	1555	E1          	   	 	  	Id	  	Simbad	NED
+P	 62	R	1861	12 40 58.54	+11 11 04.4	14.37	 0.029	 470	dE0,N       	   	 	  	Ia	  	Simbad	NED
+P	 63	R	 543	12 22 19.55	+14 45 38.6	14.39	 0.031	 985	dE5         	   	 	  	Ia	  	Simbad	NED
+P	 64	R	1431	12 32 23.37	+11 15 46.2	14.51	 0.051	1500	dE0,N       	   	 	  	Ia	  	Simbad	NED
+P	 65	R	1528	12 33 51.62	+13 19 21.3	14.51	 0.028	1608	d:E1        	   	 	  	Ia	  	Simbad	NED
+P	 66	R	1695	12 36 54.87	+12 31 12.5	14.53	 0.045	1547	dS0:        	   	 	  	Ia	  	Simbad	NED
+P	 67	R	1833	12 40 19.65	+15 56 07.2	14.54	 0.036	1679	S0_1_(6)    	   	 	  	II	  	Simbad	NED
+P	 68	R	 437	12 20 48.82	+17 29 13.4	14.54	 0.029	1474	dE5,N       	   	 	  	Ia	  	Simbad	NED
+P	 69	R	2019	12 45 20.42	+13 41 33.0	14.55	 0.022	1895	dE4,N       	   	 	  	Ia	  	Simbad	NED
+P	 70	R	  33	12 11 07.76	+14 16 29.8	14.67	 0.037	1093	d:E2,N:     	   	 	  	Ia	  	Simbad	NED
+P	 71	R	 200	12 16 33.68	+13 01 53.1	14.69	 0.030	  65	dE2,N       	   	 	  	Ia	  	Simbad	NED
+P	 72	R	 571	12 22 41.14	+07 57 01.1	14.74	 0.022	1047	SB0_1_(6)   	C2 	 	  	0 	  	Simbad	NED
+P	 73	R	  21	12 10 23.19	+10 11 17.6	14.75	 0.021	 506	dS0(4)      	   	 	  	Ie	  	Simbad	NED
+P	 74	R	1488	12 33 13.44	+09 23 49.8	14.76	 0.021	1157	E6:         	   	 	Y 	Ia	  	Simbad	NED
+P	 75	R	1779	12 39 04.67	+14 43 51.5	14.83	 0.028	1313	dS0(6):     	C1 	 	  	Ie	  	Simbad	NED
+P	 76	R	1895	12 41 52.00	+09 24 10.3	14.91	 0.017	1032	d:E6        	   	 	  	Ia	  	Simbad	NED
+P	 77	R	1499	12 33 19.79	+12 51 12.8	14.94	 0.030	-575	E3 pec or S0	   	 	  	II	  	Simbad	NED
+P	 78	R	1545	12 34 11.54	+12 02 55.9	14.96	 0.042	2050	E4          	   	 	  	Ia	  	Simbad	NED
+P	 79	R	1192	12 29 30.20	+07 59 34.0	15.04	 0.023	1426	E3          	   	 	  	Ia	  	Simbad	NED
+P	 80	R	1857	12 40 53.10	+10 28 34.0	15.07	 0.025	 634	dE4:,N?     	   	 	  	Ie	  	Simbad	NED
+P	 81	R	1075	12 28 12.29	+10 17 51.0	15.08	 0.027	1844	dE4,N       	   	 	  	Ia	  	Simbad	NED
+P	 82	R	1948	12 42 58.02	+10 40 54.5	15.10	 0.025	1672	dE3         	   	 	  	Ie	  	Simbad	NED
+P	 83	R	1627	12 35 37.25	+12 22 54.9	15.16	 0.039	 236	E0          	   	 	  	Ia	  	Simbad	NED
+P	 84	R	1440	12 32 33.39	+15 24 55.2	15.20	 0.028	 414	E0          	   	 	  	Ia	  	Simbad	NED
+P	 85	R	 230	12 17 19.64	+11 56 36.2	15.20	 0.028	1490	dE4:,N:     	   	 	  	Ia	  	Simbad	NED
+P	 86	R	2050	12 47 20.69	+12 09 58.7	15.20	 0.023	1193	dE5:,N      	   	 	  	Ia	  	Simbad	NED
+P	 87	R	1993	12 44 12.02	+12 56 30.1	15.30	 0.025	 875	E0          	   	 	  	Ib	  	Simbad	NED
+P	 88	R	 751	12 24 48.34	+18 11 42.0	15.30	 0.032	 710	dS0         	   	 	Y 	Ia	  	Simbad	NED
+P	 89	R	1828	12 40 13.38	+12 52 29.0	15.33	 0.037	1517	dE2,N       	   	 	  	Ia	  	Simbad	NED
+P	 90	R	 538	12 22 14.83	+07 10 00.8	15.40	 0.020	 500	E0          	   	 	  	Ia	  	Simbad	NED
+P	 91	R	1407	12 32 02.69	+11 53 24.8	15.49	 0.032	1001	dE2,N       	   	 	  	Ia	  	Simbad	NED
+P	 92	R	1886	12 41 39.41	+12 14 52.4	15.49	 0.033	1159	dE5,N       	   	 	  	Ia	  	Simbad	NED
+P	 93	R	1199	12 29 34.97	+08 03 31.4	15.50	 0.022	 900	E2          	   	Y	  	Ia	  	Simbad	NED
+P	 94	R	1743	12 38 06.77	+10 04 56.6	15.50	 0.019	1279	dE6         	   	 	  	Ib	  	Simbad	NED
+P	 95	R	1539	12 34 06.77	+12 44 30.1	15.68	 0.032	1390	dE0,N       	   	 	  	Ia	  	Simbad	NED
+P	 96	R	1185	12 29 23.43	+12 27 02.4	15.68	 0.023	 500	dE1,N       	   	 	  	Ia	  	Simbad	NED
+P	 97	R	1826	12 40 11.24	+09 53 45.9	15.70	 0.017	2033	dE2,N       	   	 	  	Ia	  	Simbad	NED
+P	 98	R	1512	12 33 34.56	+11 15 42.8	15.73	 0.050	 762	dS0 pec     	   	 	  	II	  	Simbad	NED
+P	 99	R	1489	12 33 13.84	+10 55 43.6	15.89	 0.034	  80	dE5,N?      	   	 	  	Ia	  	Simbad	NED
+P	100	R	1661	12 36 24.81	+10 23 04.6	15.97	 0.020	1400	dE0,N       	   	 	  	Ia	  	Simbad	NED
+

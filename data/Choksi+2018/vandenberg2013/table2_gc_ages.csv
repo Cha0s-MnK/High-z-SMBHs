@@ -1,0 +1,56 @@
+ngc_id,cluster,feh,age_gyr,age_err_gyr,source_note
+104,47 Tuc,-0.76,11.75,0.25,VandenBerg et al. 2013 Table 2
+288,NGC 288,-1.32,11.5,0.38,VandenBerg et al. 2013 Table 2
+362,NGC 362,-1.3,10.75,0.25,VandenBerg et al. 2013 Table 2
+1261,NGC 1261,-1.27,10.75,0.25,VandenBerg et al. 2013 Table 2
+1851,NGC 1851,-1.18,11.0,0.25,VandenBerg et al. 2013 Table 2
+2808,NGC 2808,-1.18,11.0,0.38,VandenBerg et al. 2013 Table 2
+3201,NGC 3201,-1.51,11.5,0.38,VandenBerg et al. 2013 Table 2
+4147,NGC 4147,-1.78,12.25,0.25,VandenBerg et al. 2013 Table 2
+4590,M68,-2.27,12.0,0.25,VandenBerg et al. 2013 Table 2
+4833,NGC 4833,-1.89,12.5,0.5,VandenBerg et al. 2013 Table 2
+5024,M53,-2.06,12.25,0.25,VandenBerg et al. 2013 Table 2
+5053,NGC 5053,-2.3,12.25,0.38,VandenBerg et al. 2013 Table 2
+5272,M3,-1.5,11.75,0.25,VandenBerg et al. 2013 Table 2
+5286,NGC 5286,-1.7,12.5,0.38,VandenBerg et al. 2013 Table 2
+5466,NGC 5466,-2.31,12.5,0.25,VandenBerg et al. 2013 Table 2
+5904,M5,-1.33,11.5,0.25,VandenBerg et al. 2013 Table 2
+5927,NGC 5927,-0.29,10.75,0.38,VandenBerg et al. 2013 Table 2
+5986,NGC 5986,-1.63,12.25,0.75,VandenBerg et al. 2013 Table 2
+6101,NGC 6101,-1.98,12.25,0.5,VandenBerg et al. 2013 Table 2
+6121,M4,-1.18,11.5,0.38,VandenBerg et al. 2013 Table 2
+6144,NGC 6144,-1.82,12.75,0.5,VandenBerg et al. 2013 Table 2
+6171,M107,-1.03,12.0,0.75,VandenBerg et al. 2013 Table 2
+6205,M13,-1.58,12.0,0.38,VandenBerg et al. 2013 Table 2
+6218,M12,-1.33,13.0,0.5,VandenBerg et al. 2013 Table 2
+6254,M10,-1.57,11.75,0.38,VandenBerg et al. 2013 Table 2
+6304,NGC 6304,-0.37,11.25,0.38,VandenBerg et al. 2013 Table 2
+6341,M92,-2.35,12.75,0.25,VandenBerg et al. 2013 Table 2
+6352,NGC 6352,-0.62,10.75,0.38,VandenBerg et al. 2013 Table 2
+6362,NGC 6362,-1.07,12.5,0.25,VandenBerg et al. 2013 Table 2
+6366,NGC 6366,-0.59,11.0,0.5,VandenBerg et al. 2013 Table 2
+6397,NGC 6397,-1.99,13.0,0.25,VandenBerg et al. 2013 Table 2
+6496,NGC 6496,-0.46,10.75,0.38,VandenBerg et al. 2013 Table 2
+6535,NGC 6535,-1.79,12.75,0.5,VandenBerg et al. 2013 Table 2
+6541,NGC 6541,-1.82,12.5,0.5,VandenBerg et al. 2013 Table 2
+6584,NGC 6584,-1.5,11.75,0.25,VandenBerg et al. 2013 Table 2
+6624,NGC 6624,-0.42,11.25,0.5,VandenBerg et al. 2013 Table 2
+6637,M69,-0.59,11.0,0.38,VandenBerg et al. 2013 Table 2
+6652,NGC 6652,-0.76,11.25,0.25,VandenBerg et al. 2013 Table 2
+6656,M22,-1.7,12.5,0.5,VandenBerg et al. 2013 Table 2
+6681,M70,-1.62,12.75,0.38,VandenBerg et al. 2013 Table 2
+6715,M54,-1.44,11.75,0.5,VandenBerg et al. 2013 Table 2
+6717,NGC 6717,-1.26,12.5,0.5,VandenBerg et al. 2013 Table 2
+6723,NGC 6723,-1.1,12.5,0.25,VandenBerg et al. 2013 Table 2
+6752,NGC 6752,-1.55,12.5,0.25,VandenBerg et al. 2013 Table 2
+6779,M56,-2.0,12.75,0.5,VandenBerg et al. 2013 Table 2
+6809,M55,-1.93,13.0,0.25,VandenBerg et al. 2013 Table 2
+6838,M71,-0.82,11.0,0.38,VandenBerg et al. 2013 Table 2
+6934,NGC 6934,-1.56,11.75,0.25,VandenBerg et al. 2013 Table 2
+6981,M72,-1.48,11.5,0.25,VandenBerg et al. 2013 Table 2
+7078,M15,-2.33,12.75,0.25,VandenBerg et al. 2013 Table 2
+7089,M2,-1.66,11.75,0.25,VandenBerg et al. 2013 Table 2
+7099,M30,-2.33,13.0,0.25,VandenBerg et al. 2013 Table 2
+,Arp 2,-1.74,12.0,0.38,VandenBerg et al. 2013 Table 2
+,Pal 12,-0.81,9.0,0.38,VandenBerg et al. 2013 Table 2
+,Ter 8,-2.34,13.0,0.38,VandenBerg et al. 2013 Table 2

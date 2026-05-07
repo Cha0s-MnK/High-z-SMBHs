@@ -188,7 +188,7 @@
 %% Mark off the abstract in the ``abstract'' environment. 
 \begin{abstract}
 
-This note summarizes the present implementation of the embedded intermediate-mass black hole (IMBH) treatment in the active Python version of the Gao+2023 globular-cluster (GC) model. The summary is restricted to behavior that is explicitly implemented in the current \texttt{src/} code. In the active pipeline, IMBH properties are assigned once at GC formation using a deterministic GC-scale seeding model in \texttt{src/IMBH.py}. The seeding step returns three birth-time quantities: a GC half-mass radius, a projected half-mass surface density, and an IMBH mass. These quantities are attached to each newly formed GC in \texttt{src/main\_spatial.py} and are then carried forward unchanged through the analytic disruption filter. No later IMBH update is present in the active \texttt{src/} evolution code.
+We describe the current semi-analytic nuclear-star-cluster (NSC) model used to connect globular cluster (GC) formation, GC orbital evolution, and intermediate-mass black hole (IMBH) seeding. The model paints GC formation onto cosmological halo merger trees, samples individual clusters from a Schechter initial cluster mass function, assigns birth radii from a Gao+2023 S{\'e}rsic spatial model, and evolves the clusters in an analytic, time-dependent galactic background. Stellar mass is removed by stellar evolution, continuous tidal stripping, direct tidal tearing, and dynamical friction-driven sinking. IMBHs are assigned once at cluster birth using a metallicity- and surface-density-dependent runaway-collision fit. If the stellar component of an IMBH-hosting GC is removed before the IMBH reaches the centre, the black hole is evolved as a wandering remnant until it either sinks or remains in the galaxy.
 
 \end{abstract}
 
@@ -214,115 +214,218 @@ This note summarizes the present implementation of the embedded intermediate-mas
 
 \section{Introduction} \label{sect:intro}
 
-\section{Methods} \label{sect:method}
+\section{Method} \label{sect:method}
 
-\subsection{Scope of the present implementation}
+The NSC model follows the ex-situ channel in which GCs form during hierarchical galaxy assembly, orbit in an evolving host potential, and contribute stellar mass to the nuclear region through stellar evolution, tidal stripping, direct tidal tearing, and dynamical-friction-driven sinking. The model is based on the semi-analytic GC framework of Choksi+2018 and Gao+2023, extended with the newer Chen+Gnedin2023 baryon-retention limit, the Chen+Gnedin2024 mass--metallicity relation, the Fragione+2019 local tidal-stripping prescription, and a formation-time IMBH seed module based on the FROST-CLUSTERS runaway-collision fits. Where the code contains multiple historical branches, this section describes the latest implemented physical branch used by the maintained NSC runs.
 
-In the present model, IMBH formation is treated as a birth property of each globular cluster. Every newly formed cluster is assigned a structural scale and an IMBH seed mass from its birth mass and metallicity. Thereafter the stellar cluster may lose mass through the adopted disruption prescription, but the IMBH seed itself is not further evolved. In particular, the current framework does not include later gas accretion, black-hole mergers, or any IMBH-dependent modification to the cluster orbit or tidal evolution.
+\subsection{GC formation} \label{subsect:gc_formation}
 
-\subsection{Cluster structural model at birth}
-
-The seed prescription is anchored to a formation-time three-dimensional half-mass radius,
+We paint GC formation onto fixed halo merger trees. Unless explicitly restricted to the main progenitor branch for a controlled test, the model walks all retained branches of each tree. A formation event is triggered when the specific halo growth rate between a progenitor and its descendant exceeds the threshold \(p_3\),
 \begin{equation}
-r_{\mathrm{h}}=
-\frac{f_{\mathrm{h}}R_{4}}{1.3}
-\left(\frac{M_{\mathrm{cl}}}{M_{\mathrm{pivot}}}\right)^{\beta},
+R_{\rm m} =
+\frac{M_{{\rm h},2}/M_{{\rm h},1}-1}{t_2-t_1}
+> p_3 ,
+\label{eq:formation_trigger}
 \end{equation}
-with the active default values listed in Table~\ref{tab:cfg}. Assuming a Plummer profile, this is converted to a projected half-mass radius,
+where \(M_{{\rm h},1}\) and \(M_{{\rm h},2}\) are the halo masses at cosmic times \(t_1\) and \(t_2\). The model then assigns a stellar mass to the host using the Behroozi et al. stellar mass--halo mass relation. Along each branch, the first stellar mass is drawn with scatter. Later timesteps preserve memory of the previous stellar mass by adding the change in the median relation multiplied by a lognormal fluctuation,
 \begin{equation}
-R_{\mathrm{h,proj}}=\frac{r_{\mathrm{h}}}{1.305},
+M_{\star,2} =
+M_{\star,1}+
+\left[\overline{M}_{\star}(M_{{\rm h},2},z_2)
+-\overline{M}_{\star}(M_{{\rm h},1},z_1)\right]
+10^{\mathcal{N}(0,\xi)} ,
 \end{equation}
-and hence to the projected half-mass surface density
+with
 \begin{equation}
-\Sigma_{\mathrm{h}}=\frac{M_{\mathrm{cl}}}{2\pi R_{\mathrm{h,proj}}^{2}}.
+\xi(z)=0.218+0.023\frac{z}{1+z}.
 \end{equation}
-The seed model therefore depends on the cluster birth mass through both the explicit mass term and the induced variation in cluster compactness.
+If the stochastic update would give an unphysical negative stellar mass, the previous stellar mass is retained.
 
-\begin{table}[ht]
-\centering
-\begin{tabular}{lc}
-\toprule
-Quantity & Adopted value \\
-\midrule
-\(f_{\mathrm{h}}\) & 0.125 \\
-\(\beta\) & 0.180 \\
-\(R_{4}\) & \(2.365~\mathrm{pc}\) \\
-\(M_{\mathrm{pivot}}\) & \(10^{4}\,M_{\odot}\) \\
-\(\log_{10}\Sigma_{\mathrm{h,sw}}\) & 5.22 \\
-\(M_{\mathrm{IMBH,min}}\) & \(100\,M_{\odot}\) \\
-\bottomrule
-\end{tabular}
-\caption{Adopted parameters of the IMBH seeding prescription in the current implementation.}
-\label{tab:cfg}
-\end{table}
-
-\subsection{Metallicity dependence and IMBH seed mass}
-
-The cluster metallicity is written in the usual form
+The cold gas mass is computed from the gas-to-stellar mass ratio
 \begin{equation}
-[\mathrm{Fe}/\mathrm{H}] = \log_{10}(Z/Z_{\odot}),
-\end{equation}
-so that
-\begin{equation}
-z \equiv Z/Z_{\odot} = 10^{[\mathrm{Fe}/\mathrm{H}]}.
-\end{equation}
-Before the IMBH fit is evaluated, the metallicity ratio is restricted to
-\begin{equation}
-10^{-2}\le z \le 1.
-\end{equation}
-Each newly formed GC receives an independent metallicity perturbation,
-\begin{equation}
-[\mathrm{Fe}/\mathrm{H}]_{\mathrm{GC}}=
-[\mathrm{Fe}/\mathrm{H}]_{\mathrm{event}}+\mathcal{N}(0,\sigma_{m}),
-\end{equation}
-with \(\sigma_{m}=0.3\) dex, and this scattered metallicity is used for the seed calculation.
-
-The IMBH mass itself is evaluated from metallicity-dependent fitting functions of \(\Sigma_{\mathrm{h}}\). In the lower-density regime the model adopts
-\begin{equation}
-M_{\mathrm{IMBH},9}=
+\eta(M_{\star},z) \equiv \frac{M_{\rm gas}}{M_{\star}} =
 \begin{cases}
-A(z)\log_{10}\Sigma_{\mathrm{h}}+
-B(z)\left[\log_{10}\Sigma_{\mathrm{h}}\right]^{2}+C(z), &
-\Sigma_{\mathrm{h}}\ge \Sigma_{\mathrm{crit}}(z),\\
-0, & \Sigma_{\mathrm{h}}<\Sigma_{\mathrm{crit}}(z),
+6.8\left(M_{\star}/10^9\,M_{\odot}\right)^{-n_M}
+\left[(1+z)/3\right]^{2.7}, & z<2,\\
+6.8\left(M_{\star}/10^9\,M_{\odot}\right)^{-n_M}
+\left[(1+z)/3\right]^{1.4}, & 2\le z\le 3,\\
+10.2\left(M_{\star}/10^9\,M_{\odot}\right)^{-n_M}, & z>3,
+\end{cases}
+\label{eq:gas_fraction}
+\end{equation}
+where \(n_M=0.33\) for \(M_{\star}\ge 10^9\,M_{\odot}\) and \(n_M=0.19\) below this mass. A 0.3 dex lognormal scatter is applied to this gas relation.
+
+For the baryon-retention limit, we use the newer Chen+Gnedin2023 branch implemented in the code. Defining \(f_{\star}=M_{\star}/(f_{\rm b}M_{\rm h})\) and \(f_{\rm gas}=M_{\rm gas}/(f_{\rm b}M_{\rm h})\), the sum \(f_{\star}+f_{\rm gas}\) is not allowed to exceed the accreted baryon fraction normalised by \(f_{\rm b}\),
+\begin{equation}
+f_{\rm in}=s\left(M_{\rm ch}(z)/M_{\rm h},2\right),
+\end{equation}
+where
+\begin{equation}
+s(x,y)=\left[1+\left(2^{y/3}-1\right)x^y\right]^{-3/y},
+\end{equation}
+\begin{equation}
+M_{\rm ch}(z)=1.69\times10^{10}\,M_{\odot}
+\exp\left[-0.63z-\ln\left(1+\exp\{(z/\beta)^{\gamma}\}\right)\right],
+\end{equation}
+and the current branch adopts \(z_{\rm rei}=6\), \(\gamma=15\), and
+\begin{equation}
+\beta=z_{\rm rei}
+\left[\ln\left(1.82\times10^3\exp[-0.63z_{\rm rei}]\right)-1\right]^{-1/\gamma}.
+\end{equation}
+If the baryon limit is exceeded, the gas mass is reduced to \(M_{\rm gas}=(f_{\rm in}-f_{\star})f_{\rm b}M_{\rm h}\).
+
+The total mass formed in clusters during the event is
+\begin{equation}
+M_{\rm GC,tot}=\frac{3\times10^{-5}p_2}{f_{\rm b}}M_{\rm gas},
+\label{eq:gc_total_mass}
+\end{equation}
+where \(p_2\) sets the overall GC formation efficiency. This is equivalent to the \(1.8\times10^{-4}p_2M_{\rm gas}\) form for the adopted cosmic baryon fraction \(f_{\rm b}=0.167\). Events with \(M_{\rm GC,tot}<10^5\,M_{\odot}\) do not form any cluster in the current NSC implementation.
+
+\subsection{GC sampling} \label{subsect:gc_sampling}
+
+\subsubsection{Mass sampling} \label{subsubsect:mass_sampling}
+
+Individual GC birth masses are sampled from a Schechter initial cluster mass function,
+\begin{equation}
+\frac{dN}{dM}\propto M^{-2}\exp(-M/M_{\rm c}),
+\label{eq:cimf}
+\end{equation}
+with \(M_{\rm min}=10^5\,M_{\odot}\). The cut-off mass \(M_{\rm c}\) is an input parameter through \(\log_{10}(M_{\rm c}/M_{\odot})\); the maintained IMBH--NSC runs use \(M_{\rm c}=10^7\,M_{\odot}\). For each formation event we first reserve the most massive cluster by solving the deterministic constraint that one cluster is expected above \(M_{\rm max}\),
+\begin{equation}
+1=\int_{M_{\rm max}}^{\infty}\frac{dN}{dM}\,dM .
+\end{equation}
+The rest of the cluster population is then drawn by inverse-transform sampling of the cumulative Schechter function until the event mass budget is exhausted. If the final draw would exceed the remaining mass budget, its mass is set to the remaining mass. The cluster list is shuffled before radii are assigned, so the deterministically reserved maximum-mass cluster is not always placed at the smallest S{\'e}rsic radius.
+
+\subsubsection{Spatial sampling} \label{subsubsect:spatial_sampling}
+
+Main-progenitor-branch clusters are treated as in-situ objects and are assigned birth galactocentric radii from the deprojected S{\'e}rsic profile used by Gao+2023,
+\begin{equation}
+\rho(r)=\rho_0\left(\frac{r}{R_{\rm e}}\right)^{-p}
+\exp\left[-b\left(\frac{r}{R_{\rm e}}\right)^{1/N_{\rm S}}\right],
+\label{eq:sersic_density}
+\end{equation}
+where
+\begin{equation}
+p=1-\frac{0.6097}{N_{\rm S}}+\frac{0.05563}{N_{\rm S}^2},
+\qquad
+b=2N_{\rm S}-\frac{1}{3}+\frac{0.009876}{N_{\rm S}}.
+\end{equation}
+The active model still uses the Gao+2023 halo-spin radius scale,
+\begin{equation}
+R_{\rm e}=\frac{j_{\rm sp}h}{20H(z)R_{\rm vir}},
+\end{equation}
+which is the code form of the Bullock-style spin proxy for the classical \(R_{\rm e}\simeq \lambda R_{\rm vir}/\sqrt{2}\) disc scaling. The S{\'e}rsic enclosed-mass fraction is inverted through the regularised incomplete gamma function,
+\begin{equation}
+r_{\rm GC}=R_{\rm e}
+\left[\frac{P^{-1}\{N_{\rm S}(3-p),u\}}{b}\right]^{N_{\rm S}},
+\end{equation}
+where \(u\) is the assigned enclosed mass fraction of a cluster within the formation event. Clusters that form on non-main branches are treated as accreted satellite clusters and are initially placed at \(0.5R_{\rm vir}\) of the descendant halo rather than in the central S{\'e}rsic component.
+
+\subsubsection{Metallicity assignment} \label{subsubsect:metallicity_assignment}
+
+When a formation event occurs, the host interstellar-medium metallicity is assigned from the newer Chen+Gnedin2024 mass--metallicity branch implemented in the code,
+\begin{equation}
+[\mathrm{Fe}/\mathrm{H}]_{\rm gal}
+=0.3\log_{10}\left(\frac{M_{\star}}{10^9\,M_{\odot}}\right)
+-\log_{10}(1+z)-0.5 .
+\label{eq:chen_mzr}
+\end{equation}
+The metallicity is capped at \([\mathrm{Fe}/\mathrm{H}]=0.3\). Each cluster then receives an independent internal metallicity perturbation,
+\begin{equation}
+[\mathrm{Fe}/\mathrm{H}]_{\rm GC}
+=[\mathrm{Fe}/\mathrm{H}]_{\rm gal}+\mathcal{N}(0,\sigma_m),
+\end{equation}
+with \(\sigma_m=0.3\) dex. This scattered cluster metallicity is used both for stellar-evolution bookkeeping and for the IMBH seed calculation.
+
+\subsection{GC evolution} \label{subsect:gc_evolution}
+
+The active evolution solver follows every formed GC in an analytic, evolving background from its formation time to \(z=0\). The halo history is read from the main-progenitor block of the fixed merger tree; the halo mass is linearly interpolated with cosmic time, and the spin normalisation is updated from the corresponding tree block. The dark-matter component is modelled with an NFW profile, the stellar component with a S{\'e}rsic background, and previously stripped model GCs contribute to the enclosed mass used in later timesteps. In the current code, the S{\'e}rsic shape used in the background-density call is fixed at \(N_{\rm S}=2.2\), while the GC birth radii can be scanned over the requested \(N_{\rm S}\) values. The event scheduler divides the full interval into 100 coarse background blocks and evolves the fastest-changing active object first within each block, with the timestep capped by the smaller of the mass-loss and orbital-decay timescales and by the maximum solver step of \(0.1\,{\rm Gyr}\).
+
+\subsubsection{Stellar evolution} \label{subsubsect:stellar_evolution}
+
+Bound stellar mass is reduced by a cumulative stellar-evolution loss fraction,
+\begin{equation}
+f_{\rm se}(t)=
+\max\left[
+0,
+-\frac{x^2}{100}+0.288x-1.42
+\right],
+\qquad
+x=\log_{10}\left(\frac{t}{\rm Gyr}\right)+9 ,
+\label{eq:stellar_evolution}
+\end{equation}
+where \(t\) is the cluster age. At each finite timestep, the increment \(\Delta f_{\rm se}\) removes the corresponding stellar mass from the bound cluster. The same stellar-evolution correction is also applied to stellar debris that was stripped at earlier timesteps, so the deposited stellar-mass profile tracks both unevolved and evolved stellar mass.
+
+\subsubsection{Tidal stripping} \label{subsubsect:tidal_stripping}
+
+For the continuous tidal-stripping branch we use the implemented Fragione+2019 mode, which is the latest available mode in the model. In code units \(M_5=M/(10^5\,M_{\odot})\), the stripping rate is
+\begin{equation}
+\dot{M}_{\rm tid}
+=\frac{2^{2/3}0.1M_5^{1/3}}{P(r)},
+\qquad
+P(r)=100\frac{r/{\rm kpc}}{v_{\rm c}/{\rm km\,s^{-1}}},
+\label{eq:tidal_stripping}
+\end{equation}
+where \(r\) is the instantaneous galactocentric radius and \(v_{\rm c}\) is the local circular velocity in the combined background and deposited-GC potential. The stripped stellar mass is added to the radial deposition bin occupied by the cluster at that timestep. If an IMBH is present, stripping is not allowed to remove the black-hole mass itself; only the stellar component can be lost.
+
+\subsubsection{Direct tidal tearing} \label{subsubsect:direct_tidal_tearing}
+
+In addition to continuous stripping, the model includes direct tidal tearing. At each active step the cluster half-mass density is approximated as
+\begin{equation}
+\rho_{\rm h}=
+\begin{cases}
+10^3, & M_5<1,\\
+10^3M_5^2, & 1\le M_5\le 10,\\
+10^5, & M_5>10,
+\end{cases}
+\label{eq:cluster_density}
+\end{equation}
+in the internal density units of the evolution solver. The cluster is directly destroyed if \(\rho_{\rm h}<\rho_{\rm tot}(r)\), where \(\rho_{\rm tot}\) is the sum of the analytic galactic background density and the mean enclosed density of previously deposited model GCs. A GC without an IMBH is then marked as torn and its remaining bound mass is deposited locally. A GC with an IMBH deposits its remaining stellar component, but the IMBH remnant survives as a wandering black hole.
+
+\subsubsection{Dynamical friction} \label{subsubsect:dynamical_friction}
+
+Dynamical friction drives the radial inspiral of both bound GCs and wandering IMBH remnants. The instantaneous inspiral rate is evaluated as
+\begin{equation}
+\dot{r}_{\rm df}=-\frac{M_5}{0.45\,r\,v_{\rm c}},
+\label{eq:dynamical_friction}
+\end{equation}
+where \(M_5\) is the current inspiralling mass in units of \(10^5\,M_{\odot}\). The code integrates this radial decay with a fourth-order Runge--Kutta estimate that re-evaluates the enclosed deposited mass and analytic background density at substeps. Objects reaching \(r_{\rm sink}=10^{-3}\,{\rm kpc}\) are counted as sunk into the central NSC channel. The command-line switch \texttt{--DF} can disable this radial decay for controlled tests, but the physical model described here uses dynamical friction.
+
+\subsection{IMBH} \label{subsect:imbh}
+
+\subsubsection{Runaway collisions and IMBH formation} \label{subsubsect:runaway_imbh}
+
+The IMBH module assigns a seed once, at GC birth. It follows the FROST-CLUSTERS runaway-collision prescription, in which dense, metal-poor clusters can build very massive stars through stellar collisions before those products collapse into IMBHs. The cluster structural scale is the three-dimensional half-mass radius
+\begin{equation}
+r_{\rm h}=
+\frac{f_{\rm h}R_4}{1.3}
+\left(\frac{M_{\rm cl}}{10^4\,M_{\odot}}\right)^{\beta},
+\label{eq:imbh_radius}
+\end{equation}
+with \(f_{\rm h}=0.125\), \(R_4=2.365\,{\rm pc}\), and \(\beta=0.180\). Assuming a Plummer profile, the projected half-mass radius is \(R_{\rm h}=r_{\rm h}/1.305\), and the projected half-mass surface density is
+\begin{equation}
+\Sigma_{\rm h}=\frac{M_{\rm cl}}{2\pi R_{\rm h}^2}.
+\label{eq:imbh_sigma}
+\end{equation}
+
+The metallicity input is \(Z/Z_{\odot}=10^{[\mathrm{Fe}/\mathrm{H}]_{\rm GC}}\), clipped to \(10^{-2}\le Z/Z_{\odot}\le 1\). The seed mass is then evaluated from two metallicity-dependent fits. Defining \(Q=\log_{10}[\Sigma_{\rm h}/(M_{\odot}\,{\rm pc}^{-2})]\), the calibrated-density branch is
+\begin{equation}
+M_{\bullet,9}=
+\begin{cases}
+A(Z)Q+B(Z)Q^2+C(Z),
+& Q\ge Q_{\rm crit}(Z),\\
+0, & Q<Q_{\rm crit}(Z),
 \end{cases}
 \end{equation}
-where \(A\), \(B\), \(C\), and \(\Sigma_{\mathrm{crit}}\) are piecewise-linear functions of \(\log_{10}z\). In the high-density regime the continuation
+where \(A\), \(B\), \(C\), and \(Q_{\rm crit}=\log_{10}[\Sigma_{\rm crit}/(M_{\odot}\,{\rm pc}^{-2})]\) are piecewise-linear functions of \(\log_{10}(Z/Z_{\odot})\) with the FROST-CLUSTERS coefficient intervals. For high surface densities, \(Q\ge 5.22\), the code switches to the high-density extrapolation
 \begin{equation}
-M_{\mathrm{IMBH},10}=
-\begin{cases}
-D(z)\log_{10}\Sigma_{\mathrm{h}}+E(z), &
-\log_{10}\Sigma_{\mathrm{h}}\ge 5.22,\\
-0, & \log_{10}\Sigma_{\mathrm{h}}<5.22
-\end{cases}
+M_{\bullet,10}=D(Z)Q+E(Z).
 \end{equation}
-is used instead. The transition between the two branches is set by
-\begin{equation}
-M_{\mathrm{IMBH}}=
-\begin{cases}
-M_{\mathrm{IMBH},10}, & \log_{10}\Sigma_{\mathrm{h}}\ge 5.22,\\
-M_{\mathrm{IMBH},9}, & \log_{10}\Sigma_{\mathrm{h}}<5.22.
-\end{cases}
-\end{equation}
-Finally, seeds below
-\begin{equation}
-M_{\mathrm{IMBH,min}}=100\,M_{\odot}
-\end{equation}
-are discarded. The metallicity breakpoints entering the coefficient interpolation are \((0.126,\,0.398)\) for the first branch and \((0.079,\,0.316)\) for the second.
+The adopted seed mass is \(M_{\bullet,10}\) above this density threshold and \(M_{\bullet,9}\) below it. Any seed with \(M_{\bullet}<100\,M_{\odot}\) is discarded. After assignment, the IMBH mass and the birth structural diagnostics \((r_{\rm h},\Sigma_{\rm h})\) are stored with the GC and are not updated by later stellar evolution or tidal stripping.
 
-\subsection{Coupling to GC formation and later evolution}
+\subsubsection{Wandered IMBHs} \label{subsubsect:wandered_imbh}
 
-The IMBH calculation is carried out once for every cluster formed in a GC-formation episode, including the most massive cluster in the event and all subsequent draws from the cluster initial mass function. The seeding step precedes the assignment of galactocentric radius, so the resulting IMBH mass depends only on the birth mass and metallicity of the cluster, not on its subsequent orbital placement within the host.
-
-After formation, the stellar cluster mass is evolved through the adopted analytic disruption prescription. The IMBH-related quantities,
-\begin{equation}
-\left(r_{\mathrm{h}},\,\Sigma_{\mathrm{h}},\,M_{\mathrm{IMBH}}\right),
-\end{equation}
-are then carried forward unchanged. Thus the present model allows the stellar component of a GC to evolve while keeping the associated IMBH seed mass and its birth structural proxies fixed.
-
-\subsection{Recorded quantities}
-
-Both the full formation catalog and the corresponding survivor catalog retain the IMBH-related birth properties of each cluster. In practice, the stored quantities are the galactocentric radius assigned to the cluster, the half-mass radius \(r_{\mathrm{h}}\), the projected half-mass surface density \(\Sigma_{\mathrm{h}}\), and the IMBH seed mass. The survivor catalog name is historical; if the calculation is terminated at a redshift \(z_{\mathrm{final}}>0\), it still refers to objects surviving to that chosen final epoch rather than strictly to \(z=0\).
+An IMBH-hosting GC can lose its stellar envelope before reaching the centre. This happens either when continuous stellar and tidal mass loss reduces the bound stellar mass down to the IMBH mass, or when direct tidal tearing removes the remaining stellar component. In that case the model deposits the residual stellar mass into the local radial bin and converts the object into a wandering IMBH. A wandering IMBH no longer undergoes stellar evolution or tidal stripping, but it continues to experience dynamical friction using its own mass. If it reaches \(r_{\rm sink}\), it is counted as a sunk wandering IMBH; otherwise it remains as a surviving off-centre remnant at the final redshift.
 
 %% Please use the acknowledgment and contribution environments. This will 
 %% be anonomyized when the "anonymous" style option is used. 
